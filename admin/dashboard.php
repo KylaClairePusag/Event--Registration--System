@@ -3,12 +3,11 @@ session_start(); // Resume the existing session
 
 // Check if the admin is logged in, otherwise redirect to login page
 if (!isset($_SESSION['email']) || !isset($_SESSION['admin_name'])) {
-    header("Location: ./login.php");
+    header("Location: ./signin.php");
     exit();
 }
 
-// Greet the admin
-$adminName = $_SESSION['admin_name']; // Assuming you have stored admin name in session during login
+$adminName = $_SESSION['admin_name'];
 ?>
 
 <!DOCTYPE html>
@@ -21,9 +20,9 @@ $adminName = $_SESSION['admin_name']; // Assuming you have stored admin name in 
     <style>
         @font-face {
             font-family: 'Geist';
-            src: url('fonts/Geist/Geist-Regular.woff2') format('woff2'),
-                url('fonts/Geist/Geist-Regular.woff') format('woff'),
-                url('fonts/Geist/Geist-Regular.otf') format('opentype');
+            src: url('Geist/Geist-Regular.woff2') format('woff2'),
+                url('Geist/Geist-Regular.woff') format('woff'),
+                url('Geist/Geist-Regular.otf') format('opentype');
             font-weight: 400;
             /* Normal weight */
             font-style: normal;
@@ -31,9 +30,9 @@ $adminName = $_SESSION['admin_name']; // Assuming you have stored admin name in 
 
         @font-face {
             font-family: 'Geist';
-            src: url('fonts/Geist/Geist-Medium.woff2') format('woff2'),
-                url('fonts/Geist/Geist-Medium.woff') format('woff'),
-                url('fonts/Geist/Geist-Medium.otf') format('opentype');
+            src: url('Geist/Geist-Medium.woff2') format('woff2'),
+                url('Geist/Geist-Medium.woff') format('woff'),
+                url('Geist/Geist-Medium.otf') format('opentype');
             font-weight: 500;
             /* Medium weight */
             font-style: normal;
@@ -41,9 +40,9 @@ $adminName = $_SESSION['admin_name']; // Assuming you have stored admin name in 
 
         @font-face {
             font-family: 'Geist';
-            src: url('fonts/Geist/Geist-SemiBold.woff2') format('woff2'),
-                url('fonts/Geist/Geist-SemiBold.woff') format('woff'),
-                url('fonts/Geist/Geist-SemiBold.otf') format('opentype');
+            src: url('Geist/Geist-SemiBold.woff2') format('woff2'),
+                url('Geist/Geist-SemiBold.woff') format('woff'),
+                url('Geist/Geist-SemiBold.otf') format('opentype');
             font-weight: 600;
             /* SemiBold weight */
             font-style: normal;
@@ -51,13 +50,15 @@ $adminName = $_SESSION['admin_name']; // Assuming you have stored admin name in 
 
         @font-face {
             font-family: 'Geist';
-            src: url('fonts/Geist/Geist-Bold.woff2') format('woff2'),
-                url('fonts/Geist/Geist-Bold.woff') format('woff'),
-                url('fonts/Geist/Geist-Bold.otf') format('opentype');
+            src: url('Geist/Geist-Bold.woff2') format('woff2'),
+                url('Geist/Geist-Bold.woff') format('woff'),
+                url('Geist/Geist-Bold.otf') format('opentype');
             font-weight: 700;
             /* Bold weight */
             font-style: normal;
         }
+
+        /* Repeat the pattern for other font weights and styles */
 
 
         * {
@@ -207,27 +208,10 @@ $adminName = $_SESSION['admin_name']; // Assuming you have stored admin name in 
             color: #F44336;
             font-weight: bold;
         }
-
-        .active-link {
-            font-weight: bold;
-            color: #333;
-        }
     </style>
 </head>
 
 <body>
-    <?php
-    // Assuming the URL is something like 'http://localhost/Event--Registration--System/admin/#overview.php'
-    $current_section = basename($_SERVER['REQUEST_URI'], ".php");
-
-    // Function to determine if the link is active
-    function is_active($section)
-    {
-        global $current_section;
-        return strpos($current_section, $section) !== false ? 'active-link' : '';
-    }
-    ?>
-
 
     <header>
         <nav>
@@ -236,6 +220,7 @@ $adminName = $_SESSION['admin_name']; // Assuming you have stored admin name in 
                 <ul>
                     <li><a href="#overview">Overview</a></li>
                     <li><a href="#rso">Rso</a></li>
+
                     <li><a href="#admin">Admin</a></li>
                     <li><a href="#settings">Settings</a></li>
                 </ul>
@@ -254,10 +239,11 @@ $adminName = $_SESSION['admin_name']; // Assuming you have stored admin name in 
 
 
     <main class="dashboard-grid">
+
         <div class="title">
             <h1>Dashboard</h1>
 
-            <section class="dashboard">
+            <section class="dashboard" id="dashboard-content">
                 <div class="card">
                     <div class="card-title">
                         <h2>Total Events</h2>
@@ -292,19 +278,39 @@ $adminName = $_SESSION['admin_name']; // Assuming you have stored admin name in 
                 </div>
             </section>
         </div>
-
+        <div id="content"></div>
     </main>
-    <script>
-        // JavaScript to add 'active' class to the current page in the sidebar
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const currentLocation = window.location.pathname.split('/').pop();
-            const menuItems = document.querySelectorAll('#sidebar a');
-            menuItems.forEach(item => {
-                if (item.getAttribute('href') === currentLocation) {
-                    item.classList.add('active');
-                }
-            });
+
+    <script type="text/javascript">
+
+        function toggleDashboard(display) {
+            var dashboard = document.getElementById('dashboard-content');
+            if (dashboard) {
+                dashboard.style.display = display ? '' : 'none';
+            }
+        }
+
+        function loadContent(hash) {
+            var contentDiv = document.getElementById('content');
+            if (hash === '#rso') {
+                // Load the try.php content
+                contentDiv.innerHTML = '<?php ob_start();
+                include 'try.php';
+                echo ob_get_clean(); ?>';
+                toggleDashboard(false); // Hide the dashboard
+            } else {
+                // Clear the content and show the dashboard
+                contentDiv.innerHTML = '';
+                toggleDashboard(true); // Show the dashboard
+            }
+        }
+
+        window.addEventListener('hashchange', function () {
+            loadContent(window.location.hash);
         });
+
+        // Trigger the event on page load
+        loadContent(window.location.hash);
     </script>
 </body>
 

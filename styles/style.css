@@ -87,7 +87,7 @@ section {
   justify-content: space-between;
   border-radius: 0 1rem 1rem 0;
   background-image: linear-gradient(#ed1b227a, #ed1b22f8),
-    url("./images/BSU.jpeg");
+    url("../images/BSU.jpeg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
