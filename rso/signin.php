@@ -11,12 +11,12 @@ $error = null; // Initialize the error variable
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-    $faculty_password = filter_input(INPUT_POST, 'faculty_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $rso_password = filter_input(INPUT_POST, 'rso_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    if (empty($email) || empty($faculty_password)) {
+    if (empty($email) || empty($rso_password)) {
         $error = "*** Please fill in all fields. ***"; // Set the error message
     } else {
-        $query = "SELECT * FROM tb_faculty WHERE email = ?";
+        $query = "SELECT * FROM tb_rso WHERE email = ?";
         $stmt = mysqli_prepare($conn, $query);
 
         if ($stmt) {
@@ -25,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             $result = mysqli_stmt_get_result($stmt);
             $row = mysqli_fetch_assoc($result);
 
-            // Directly compare the faculty_passwords (constb_facultyer using faculty_password hashing in production)
-            if ($row && $row['faculty_password'] === $faculty_password) {
+            // Directly compare the faculty_passwords (constb_facultyer using rso_password hashing in production)
+            if ($row && $row['rso_password'] === $rso_password) {
                 // Set session variables
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['faculty_name'] = $row['faculty_name'];
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="wtb_facultyth=device-wtb_facultyth, initial-scale=1.0">
-    <title>Faculty Portal</title>
+    <title>Admin Portal</title>
     <link rel="stylesheet" href="../styles/style.css">
 </head>
 
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
             <div class="box">
                 <div class="login-container">
-                    <h1>Admin Portal</h1>
+                    <h1>Rso Portal</h1>
                     <p>Please enter your contact details to connect.</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                         <div class="form-group">
@@ -70,8 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                             <input type="email" name="email" placeholder="Enter your email" required>
                         </div>
                         <div class="form-group">
-                            <label for="faculty_password">faculty_password</label>
-                            <input type="password" name="faculty_password" placeholder="Password" required>
+                            <label for="rso_password">rso_password</label>
+                            <input type="password" name="rso_password" placeholder="Password" required>
                         </div>
                         <div class="error<?php if (!empty($error))
                             echo ' show'; ?>">

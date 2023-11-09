@@ -226,7 +226,7 @@ $adminName = $_SESSION['email'];
                 <h3>Event</h3>
                 <ul>
                     <li><a href="dashboard.php">Overview</a></li>
-                    <li><a href="rso.php">RSO</a></li>
+                    <li><a href="#">Events</a></li>
                     <li><a href="#settings">Settings</a></li>
 
                 </ul>
@@ -276,7 +276,14 @@ $adminName = $_SESSION['email'];
                     <p>+12,234</p>
                     <span class="percentage">+20.1% from last month</span>
                 </div>
-
+                <div class="card">
+                    <div class="card-title">
+                        <h2>Admin</h2>
+                        <img src="../images/adminIcon.png" alt="" srcset="">
+                    </div>
+                    <p>+573</p>
+                    <span class="percentage">+20.1% from last month</span>
+                </div>
             </section>
         </div>
 

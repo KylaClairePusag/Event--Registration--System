@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
             <div class="box">
                 <div class="login-container">
-                    <h1>Admin Portal</h1>
+                    <h1>Student Portal</h1>
                     <p>Please enter your contact details to connect.</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                         <div class="form-group">
