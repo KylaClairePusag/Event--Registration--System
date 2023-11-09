@@ -8,15 +8,12 @@ if (!isset($_SESSION['email']) || !isset($_SESSION['admin_name'])) {
 }
 
 $adminName = $_SESSION['admin_name'];
-
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
@@ -146,80 +143,10 @@ $adminName = $_SESSION['admin_name'];
             align-items: center;
             justify-content: center;
         }
-
-
-        /* main */
-
-        main {
-            padding: 1.3rem 2rem 2rem;
-        }
-
-        .title h1 {
-            font-size: 1.8rem;
-            margin-bottom: 1.4rem;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .card-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-            margin-bottom: .4rem;
-        }
-
-        .card img {
-            width: 2rem;
-        }
-
-        .card h2 {
-            font-size: 1.1rem;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .card p {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: .5rem 0;
-        }
-
-        .card span {
-            font-size: .9rem;
-            font-weight: 500;
-        }
-
-
-        .card .increase {
-            color: #4CAF50;
-            font-weight: bold;
-        }
-
-        .card .decrease {
-            color: #F44336;
-            font-weight: bold;
-        }
-
-        #rso-section {
-            display: none;
-        }
     </style>
 </head>
 
 <body>
-
     <header>
         <nav>
             <div class="logo">
@@ -238,62 +165,6 @@ $adminName = $_SESSION['admin_name'];
                     <?php echo htmlspecialchars($_SESSION['admin_name']); ?>
                 </span>
                 <a href="logout.php">Logout</a>
-
             </div>
         </nav>
-
-
     </header>
-
-
-
-    <main class="dashboard-grid">
-
-        <div class="title">
-            <h1>Dashboard</h1>
-
-            <section class="dashboard" id="dashboard-content">
-                <div class="card">
-                    <div class="card-title">
-                        <h2>Total Events</h2>
-                        <img src="../images/eventIcon.png" alt="" srcset="">
-                    </div>
-                    <p>+4,123</p>
-                    <span class="percentage">+20.1% from last month</span>
-                </div>
-                <div class="card">
-                    <div class="card-title">
-                        <h2>Students</h2>
-                        <img src="../images/studentIcon.png" alt="" srcset="">
-                    </div>
-                    <p>+2350</p>
-                    <span class="percentage">+20.1% from last month</span>
-                </div>
-                <div class="card">
-                    <div class="card-title">
-                        <h2>Faculty</h2>
-                        <img src="../images/teacherIcon.png" alt="" srcset="">
-                    </div>
-                    <p>+12,234</p>
-                    <span class="percentage">+20.1% from last month</span>
-                </div>
-                <div class="card">
-                    <div class="card-title">
-                        <h2>Admin</h2>
-                        <img src="../images/adminIcon.png" alt="" srcset="">
-                    </div>
-                    <p>+573</p>
-                    <span class="percentage">+20.1% from last month</span>
-                </div>
-            </section>
-        </div>
-
-
-    </main>
-
-
-
-
-</body>
-
-</html>

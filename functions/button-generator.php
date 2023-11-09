@@ -4,7 +4,10 @@
 function generateButton($row)
 {
     // Start the button HTML string
-    $buttonHTML = '<button class="edit-button" data-rso-id="' . htmlspecialchars($row['rso_id']) . '" data-rso-name="' . htmlspecialchars($row['rso_name']) . '" data-rso-password="' . htmlspecialchars($row['rso_password']) . '"';
+    $buttonHTML = '<button class="edit-button" data-rso-id="' . htmlspecialchars($row['rso_id']) .
+        '" data-rso-name="' . htmlspecialchars($row['rso_name']) .
+        '" data-rso-password="' . htmlspecialchars($row['rso_password']) .
+        '" data-rso-email="' . htmlspecialchars($row['email']) . '"';
 
     // Add department data attribute only if department_id exists in the row
     if (isset($row['department_id'])) {

@@ -258,6 +258,8 @@ form {
   /* Show error when needed */
 }
 
+/* Zebra striping */
+
 /* Responsive design adjustments */
 @media (max-width: 768px) {
   .container {

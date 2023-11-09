@@ -2,12 +2,12 @@
 session_start(); // Resume the existing session
 
 // Check if the admin is logged in, otherwise redirect to login page
-if (!isset($_SESSION['email']) || !isset($_SESSION['admin_name'])) {
+if (!isset($_SESSION['email']) || !isset($_SESSION['email'])) {
     header("Location: ./signin.php");
     exit();
 }
 
-$adminName = $_SESSION['admin_name'];
+$adminName = $_SESSION['email'];
 
 
 ?>

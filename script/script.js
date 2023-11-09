@@ -9,11 +9,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const rsoId = this.getAttribute("data-rso-id");
             const rsoName = this.getAttribute("data-rso-name");
             const rsoPassword = this.getAttribute("data-rso-password");
+            const rsoEmail = this.getAttribute("data-rso-email");
             const departmentId = this.getAttribute("data-department-id");
 
             editForm.elements["rso_id"].value = rsoId;
             editForm.elements["rso_name"].value = rsoName;
             editForm.elements["rso_password"].value = rsoPassword;
+            editForm.elements["rso_email"].value = rsoEmail;
+
             editForm.elements["department_id"].value = departmentId;
 
             editDialog.style.display = "block";
@@ -35,3 +38,4 @@ element.addEventListener('event', () => {
 });
 
 searchInput.addEventListener('input');
+

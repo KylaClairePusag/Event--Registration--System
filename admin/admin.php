@@ -3,13 +3,13 @@ session_start();
 include '../config/config.php'; // Ensure this file contains the correct database connection setup.
 
 // Consistent use of the object-oriented style for database connection
-$sql = 'SELECT * FROM tb_rso';
+$sql = 'SELECT * FROM tb_admin';
 $result = $conn->query($sql);
-$rso = $result->fetch_all(MYSQLI_ASSOC);
+$admin = $result->fetch_all(MYSQLI_ASSOC);
 
 // Initialize variables and error messages
-$rso_name = $rso_password = $department = $rso_email = '';
-$rso_nameErr = $rso_passwordErr = $deptErr = $rso_emailErr = '';
+$admin_name = $admin_password = $department = $admin_email = '';
+$admin_nameErr = $admin_passwordErr = $deptErr = $admin_emailErr = '';
 ;
 
 $departments = [];
@@ -23,18 +23,18 @@ if ($dept_result->num_rows > 0) {
 
 // Check if the form is submitted and the request method is POST
 if (isset($_POST['action']) && $_POST['action'] === 'create') {
-    // Validate RSO Name
-    if (empty(trim($_POST['rso_name']))) {
-        $rso_nameErr = 'Name is required';
+    // Validate admin Name
+    if (empty(trim($_POST['admin_name']))) {
+        $admin_nameErr = 'Name is required';
     } else {
-        $rso_name = $conn->real_escape_string(trim($_POST['rso_name']));
+        $admin_name = $conn->real_escape_string(trim($_POST['admin_name']));
     }
 
-    // Validate RSO Password
-    if (empty(trim($_POST['rso_password']))) {
-        $rso_passwordErr = 'Password is required';
+    // Validate admin Password
+    if (empty(trim($_POST['admin_password']))) {
+        $admin_passwordErr = 'Password is required';
     } else {
-        $rso_password = $conn->real_escape_string(trim($_POST['rso_password']));
+        $admin_password = $conn->real_escape_string(trim($_POST['admin_password']));
     }
 
     // Validate Department
@@ -44,20 +44,20 @@ if (isset($_POST['action']) && $_POST['action'] === 'create') {
         $department = $conn->real_escape_string($_POST['department_id']);
     }
 
-    if (empty(trim($_POST['rso_email']))) {
-        $rso_emailErr = 'Email is required';
+    if (empty(trim($_POST['admin_email']))) {
+        $admin_emailErr = 'Email is required';
     } else {
-        $rso_email = $conn->real_escape_string(trim($_POST['rso_email']));
+        $admin_email = $conn->real_escape_string(trim($_POST['admin_email']));
     }
 
 
     // Proceed with insertion if there are no errors
-    if (empty($rso_nameErr) && empty($rso_passwordErr) && empty($deptErr)) {
-        $stmt = $conn->prepare("INSERT INTO tb_rso (rso_email, rso_name, rso_password, department_id) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssi", $rso_email, $rso_name, $rso_password, $department);
+    if (empty($admin_nameErr) && empty($admin_passwordErr) && empty($deptErr)) {
+        $stmt = $conn->prepare("INSERT INTO tb_admin (admin_email, admin_name, admin_password, department_id) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("sssi", $admin_email, $admin_name, $admin_password, $department);
 
         if ($stmt->execute()) {
-            $_SESSION['success_message'] = "RSO created successfully.";
+            $_SESSION['success_message'] = "admin created successfully.";
             header('Location: ' . $_SERVER['PHP_SELF']);
             exit;
         } else {
@@ -75,9 +75,9 @@ if (isset($_SESSION['success_message'])) {
 
 // Delete operation
 if (isset($_POST['action']) && $_POST['action'] == 'delete') {
-    $rso_id = $conn->real_escape_string($_POST['rso_id']);
+    $admin_id = $conn->real_escape_string($_POST['admin_id']);
 
-    $sql = "DELETE FROM tb_rso WHERE rso_id='$rso_id'";
+    $sql = "DELETE FROM tb_admin WHERE admin_id='$admin_id'";
 
     if ($conn->query($sql) === TRUE) {
         header('Location: ' . $_SERVER['PHP_SELF']);
@@ -89,13 +89,13 @@ if (isset($_POST['action']) && $_POST['action'] == 'delete') {
 
 // Update operation
 if (isset($_POST['action']) && $_POST['action'] == 'edit') {
-    $rso_id = $conn->real_escape_string($_POST['rso_id']);
-    $rso_name = $conn->real_escape_string($_POST['rso_name']);
-    $rso_password = $conn->real_escape_string($_POST['rso_password']);
+    $admin_id = $conn->real_escape_string($_POST['admin_id']);
+    $admin_name = $conn->real_escape_string($_POST['admin_name']);
+    $admin_password = $conn->real_escape_string($_POST['admin_password']);
     $department_id = $conn->real_escape_string($_POST['department_id']);
-    $rso_email = $conn->real_escape_string($_POST['rso_email']);
+    $admin_email = $conn->real_escape_string($_POST['admin_email']);
 
-    $sql = "UPDATE tb_rso SET rso_name='$rso_name', rso_email='$rso_email', rso_password='$rso_password', department_id='$department_id' WHERE rso_id='$rso_id'";
+    $sql = "UPDATE tb_admin SET admin_name='$admin_name', admin_email='$admin_email', admin_password='$admin_password', department_id='$department_id' WHERE admin_id='$admin_id'";
 
 
     if ($conn->query($sql) === TRUE) {
@@ -123,32 +123,32 @@ if (isset($_GET['search_query'])) {
 }
 
 if (!empty($searchQuery)) {
-    $stmt = $conn->prepare("SELECT * FROM tb_rso WHERE rso_name LIKE ?");
+    $stmt = $conn->prepare("SELECT * FROM tb_admin WHERE admin_name LIKE ?");
     $likeQuery = '%' . $searchQuery . '%';
     $stmt->bind_param('s', $likeQuery);
     $stmt->execute();
     $result = $stmt->get_result();
-    $rso = $result->fetch_all(MYSQLI_ASSOC);
+    $admin = $result->fetch_all(MYSQLI_ASSOC);
     $stmt->close();
 }
 
 $perPage = 10;
 $startAt = ($page - 1) * $perPage;
 
-$stmt = $conn->prepare("SELECT * FROM tb_rso WHERE rso_name LIKE ? LIMIT ?, ?");
+$stmt = $conn->prepare("SELECT * FROM tb_admin WHERE admin_name LIKE ? LIMIT ?, ?");
 $likeQuery = '%' . $searchQuery . '%';
 $stmt->bind_param('sii', $likeQuery, $startAt, $perPage);
 $stmt->execute();
 $result = $stmt->get_result();
-$rso = $result->fetch_all(MYSQLI_ASSOC);
+$admin = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-$totalResults = $conn->query("SELECT COUNT(*) as count FROM tb_rso WHERE rso_name LIKE '%$searchQuery%'")->fetch_assoc()['count'];
+$totalResults = $conn->query("SELECT COUNT(*) as count FROM tb_admin WHERE admin_name LIKE '%$searchQuery%'")->fetch_assoc()['count'];
 $totalPages = ceil($totalResults / $perPage);
 
 $rows = [];
-foreach ($rso as $item) {
-    // Find the department name for the current RSO item
+foreach ($admin as $item) {
+    // Find the department name for the current admin item
     $departmentName = '';
     foreach ($departments as $dept) {
         if ($dept['department_id'] == $item['department_id']) {
@@ -159,10 +159,10 @@ foreach ($rso as $item) {
 
     // Append a new row to the $rows array
     $rows[] = [
-        'rso_id' => $item['rso_id'],
+        'admin_id' => $item['admin_id'],
         'email' => $item['email'],
-        'rso_name' => $item['rso_name'],
-        'rso_password' => $item['rso_password'],
+        'admin_name' => $item['admin_name'],
+        'admin_password' => $item['admin_password'],
         'department_id' => $item['department_id'],
         'department_name' => $departmentName
 
@@ -170,7 +170,7 @@ foreach ($rso as $item) {
 }
 
 // Headers for the table
-$headers = ['RSO ID', 'RSO EMAIL', 'RSO NAME', 'PASSWORD', 'DEPARTMENT'];
+$headers = ['admin ID', 'admin EMAIL', 'admin NAME', 'PASSWORD', 'DEPARTMENT'];
 
 ?>
 
@@ -179,7 +179,7 @@ $headers = ['RSO ID', 'RSO EMAIL', 'RSO NAME', 'PASSWORD', 'DEPARTMENT'];
 
 <head>
 
-    <link rel="stylesheet" href="../styles/rso.css">
+    <link rel="stylesheet" href="../styles/admin.css">
 </head>
 
 <body>
@@ -187,19 +187,19 @@ $headers = ['RSO ID', 'RSO EMAIL', 'RSO NAME', 'PASSWORD', 'DEPARTMENT'];
 
     <main>
         <form method="post" action="">
-            RSO Email: <input type="email" name="rso_email" required>
+            admin Email: <input type="email" name="admin_email" required>
             <span class="error">
-                <?php echo $rso_emailErr; ?>
+                <?php echo $admin_emailErr; ?>
             </span><br>
 
             <input type="hidden" name="action" value="create">
-            RSO Name: <input type="text" name="rso_name" required>
+            admin Name: <input type="text" name="admin_name" required>
             <span class="error">
-                <?php echo $rso_nameErr; ?>
+                <?php echo $admin_nameErr; ?>
             </span><br>
-            Password: <input type="password" name="rso_password" required>
+            Password: <input type="password" name="admin_password" required>
             <span class="error">
-                <?php echo $rso_passwordErr; ?>
+                <?php echo $admin_passwordErr; ?>
             </span><br>
             Department: <select name="department_id" required>
                 <?php foreach ($departments as $dept) { ?>
@@ -213,7 +213,7 @@ $headers = ['RSO ID', 'RSO EMAIL', 'RSO NAME', 'PASSWORD', 'DEPARTMENT'];
             <span class="error">
                 <?php echo $deptErr; ?>
             </span><br>
-            <input type="submit" value="Create RSO">
+            <input type="submit" value="Create admin">
         </form>
         <br>
         <br>
@@ -221,7 +221,7 @@ $headers = ['RSO ID', 'RSO EMAIL', 'RSO NAME', 'PASSWORD', 'DEPARTMENT'];
         <?php
         include '../functions/search.php';
         ?>
-        <!--display rso -->
+        <!--display admin -->
         <?php
         include '../functions/button-generator.php';
         include '../functions/table-generator.php';
@@ -238,13 +238,13 @@ $headers = ['RSO ID', 'RSO EMAIL', 'RSO NAME', 'PASSWORD', 'DEPARTMENT'];
         <div id="edit-dialog">
             <div class="edit-dialog-content">
                 <span id="close-edit-dialog" class="close-button">&times;</span>
-                <h2>Edit RSO</h2>
+                <h2>Edit admin</h2>
                 <form method="post" action="">
                     <input type="hidden" name="action" value="edit">
-                    <input type="hidden" name="rso_id" id="edit-rso-id" value="">
-                    RSO Email: <input type="email" name="rso_email" id="edit-rso-email" required>
-                    RSO Name: <input type="text" name="rso_name" required>
-                    Password: <input type="password" name="rso_password" required>
+                    <input type="hidden" name="admin_id" id="edit-admin-id" value="">
+                    admin Email: <input type="email" name="admin_email" id="edit-admin-email" required>
+                    admin Name: <input type="text" name="admin_name" required>
+                    Password: <input type="password" name="admin_password" required>
                     Department:
                     <select name="department_id" required>
 
@@ -256,7 +256,7 @@ $headers = ['RSO ID', 'RSO EMAIL', 'RSO NAME', 'PASSWORD', 'DEPARTMENT'];
                             </option>
                         <?php } ?>
                     </select>
-                    <input type="submit" value="Update RSO">
+                    <input type="submit" value="Update admin">
                 </form>
             </div>
         </div>
