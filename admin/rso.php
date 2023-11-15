@@ -1,267 +1,257 @@
 <?php
-session_start();
-include '../config/config.php'; // Ensure this file contains the correct database connection setup.
+// Database connection setup
+$host = "localhost";
+$username = "root";
+$password = "";
+$dbname = "db_ba3101";
 
-// Consistent use of the object-oriented style for database connection
-$sql = 'SELECT * FROM tb_rso';
-$result = $conn->query($sql);
-$rso = $result->fetch_all(MYSQLI_ASSOC);
-
-// Initialize variables and error messages
-$rso_name = $rso_password = $department = $rso_email = '';
-$rso_nameErr = $rso_passwordErr = $deptErr = $rso_emailErr = '';
-;
-
-$departments = [];
-$dept_query = "SELECT department_id, department_name FROM tb_department";
-$dept_result = $conn->query($dept_query);
-if ($dept_result->num_rows > 0) {
-    while ($row = $dept_result->fetch_assoc()) {
-        $departments[] = $row;
-    }
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+    die();
 }
 
-// Check if the form is submitted and the request method is POST
-if (isset($_POST['action']) && $_POST['action'] === 'create') {
-    // Validate RSO Name
-    if (empty(trim($_POST['rso_name']))) {
-        $rso_nameErr = 'Name is required';
+// Get the current request URI
+$requestUri = $_SERVER['REQUEST_URI'];
+
+// Add new RSO
+if (isset($_POST["add_rso"])) {
+    // Sanitize input
+    $rso_name = htmlspecialchars($_POST["rso_name"], ENT_QUOTES, "UTF-8");
+    $rso_password = htmlspecialchars($_POST["rso_password"], ENT_QUOTES, "UTF-8");
+    $rso_email = htmlspecialchars($_POST["email"], ENT_QUOTES, "UTF-8");
+    $department_id = $_POST["department_id"];
+
+    // Insert data into the database
+    $query = $pdo->prepare("INSERT INTO tb_rso (rso_name, rso_password, rso_email, department_id) VALUES (:rso_name, :rso_password, :rso_email, :department_id)");
+    if ($query->execute([':rso_name' => $rso_name, ':rso_password' => $rso_password, ':rso_email' => $rso_email, ':department_id' => $department_id])) {
+        header("Location: " . $requestUri);
+        exit();
     } else {
-        $rso_name = $conn->real_escape_string(trim($_POST['rso_name']));
+        echo "Error adding rso.";
     }
+}
 
-    // Validate RSO Password
-    if (empty(trim($_POST['rso_password']))) {
-        $rso_passwordErr = 'Password is required';
+// Delete RSO
+if (isset($_POST["delete_rso"])) {
+    $rso_id = filter_input(INPUT_POST, "delete_rso", FILTER_VALIDATE_INT);
+
+    // Delete data from the database
+    $query = $pdo->prepare("DELETE FROM tb_rso WHERE rso_id = :rso_id");
+    if ($query->execute([':rso_id' => $rso_id])) {
+        header("Location: " . $requestUri);
     } else {
-        $rso_password = $conn->real_escape_string(trim($_POST['rso_password']));
+        echo "Error deleting rso.";
     }
+}
 
-    // Validate Department
-    if (empty($_POST['department_id'])) {
-        $deptErr = 'Department is required';
+// Edit RSO
+if (isset($_POST["edit_rso"])) {
+    $edit_rso_id = filter_input(INPUT_POST, "edit_rso_id", FILTER_VALIDATE_INT);
+    $edit_rso_name = htmlspecialchars($_POST["edit_rso_name"], ENT_QUOTES, "UTF-8");
+    $edit_rso_password = htmlspecialchars($_POST["edit_rso_password"], ENT_QUOTES, "UTF-8");
+    $edit_rso_email = htmlspecialchars($_POST["edit_rso_email"], ENT_QUOTES, "UTF-8");
+    $edit_department_id = $_POST["edit_department_id"];
+
+    // Update data in the database
+    $query = $pdo->prepare("UPDATE tb_rso SET rso_name = :rso_name, rso_password = :rso_password, rso_email = :rso_email, department_id = :department_id WHERE rso_id = :rso_id");
+    if ($query->execute([':rso_name' => $edit_rso_name, ':rso_password' => $edit_rso_password, ':rso_email' => $edit_rso_email, ':department_id' => $edit_department_id, ':rso_id' => $edit_rso_id])) {
+        header("Location: " . $requestUri);
+        exit();
     } else {
-        $department = $conn->real_escape_string($_POST['department_id']);
-    }
-
-    if (empty(trim($_POST['rso_email']))) {
-        $rso_emailErr = 'Email is required';
-    } else {
-        $rso_email = $conn->real_escape_string(trim($_POST['rso_email']));
-    }
-
-
-    // Proceed with insertion if there are no errors
-    if (empty($rso_nameErr) && empty($rso_passwordErr) && empty($deptErr)) {
-        $stmt = $conn->prepare("INSERT INTO tb_rso (rso_email, rso_name, rso_password, department_id) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssi", $rso_email, $rso_name, $rso_password, $department);
-
-        if ($stmt->execute()) {
-            $_SESSION['success_message'] = "RSO created successfully.";
-            header('Location: ' . $_SERVER['PHP_SELF']);
-            exit;
-        } else {
-            echo 'ERROR: ', $conn->error;
-        }
-        $stmt->close();
+        echo "Error editing rso.";
     }
 }
 
-// Check for a success message in the session and clear it after displaying
-if (isset($_SESSION['success_message'])) {
-    echo $_SESSION['success_message'];
-    unset($_SESSION['success_message']);
-}
+// Pagination setup
+$limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
 
-// Delete operation
-if (isset($_POST['action']) && $_POST['action'] == 'delete') {
-    $rso_id = $conn->real_escape_string($_POST['rso_id']);
+// Search functionality
+$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
-    $sql = "DELETE FROM tb_rso WHERE rso_id='$rso_id'";
+try {
+    // Query to get a subset of records based on search and pagination
+    $query = $pdo->prepare("SELECT * FROM tb_rso WHERE rso_name LIKE :searchTerm OR rso_email LIKE :searchTerm LIMIT :limit OFFSET :offset");
+    $query->bindValue(':searchTerm', '%' . $searchTerm . '%', PDO::PARAM_STR);
+    $query->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $query->bindValue(':offset', $offset, PDO::PARAM_INT);
 
-    if ($conn->query($sql) === TRUE) {
-        header('Location: ' . $_SERVER['PHP_SELF']);
-        exit;
-    } else {
-        echo "Error deleting record: " . $conn->error;
-    }
-}
-
-// Update operation
-if (isset($_POST['action']) && $_POST['action'] == 'edit') {
-    $rso_id = $conn->real_escape_string($_POST['rso_id']);
-    $rso_name = $conn->real_escape_string($_POST['rso_name']);
-    $rso_password = $conn->real_escape_string($_POST['rso_password']);
-    $department_id = $conn->real_escape_string($_POST['department_id']);
-    $rso_email = $conn->real_escape_string($_POST['rso_email']);
-
-    $sql = "UPDATE tb_rso SET rso_name='$rso_name', rso_email='$rso_email', rso_password='$rso_password', department_id='$department_id' WHERE rso_id='$rso_id'";
-
-
-    if ($conn->query($sql) === TRUE) {
-        header('Location: ' . $_SERVER['PHP_SELF']);
-        exit;
-    } else {
-        echo "Error updating record: " . $conn->error;
-    }
-}
-
-// Pagination and Search Query Logic
-$searchQuery = '';
-$page = 1;
-
-if (isset($_GET['search_query'])) {
-    $searchQuery = $conn->real_escape_string($_GET['search_query']);
-    if (!isset($_SESSION['last_search_query']) || $searchQuery != $_SESSION['last_search_query']) {
-        $_SESSION['last_search_query'] = $searchQuery;
-    } else {
-        $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-    }
-} else {
-    $_SESSION['last_search_query'] = '';
-    $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-}
-
-if (!empty($searchQuery)) {
-    $stmt = $conn->prepare("SELECT * FROM tb_rso WHERE rso_name LIKE ?");
-    $likeQuery = '%' . $searchQuery . '%';
-    $stmt->bind_param('s', $likeQuery);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $rso = $result->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-}
-
-$perPage = 10;
-$startAt = ($page - 1) * $perPage;
-
-$stmt = $conn->prepare("SELECT * FROM tb_rso WHERE rso_name LIKE ? LIMIT ?, ?");
-$likeQuery = '%' . $searchQuery . '%';
-$stmt->bind_param('sii', $likeQuery, $startAt, $perPage);
-$stmt->execute();
-$result = $stmt->get_result();
-$rso = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
-
-$totalResults = $conn->query("SELECT COUNT(*) as count FROM tb_rso WHERE rso_name LIKE '%$searchQuery%'")->fetch_assoc()['count'];
-$totalPages = ceil($totalResults / $perPage);
-
-$rows = [];
-foreach ($rso as $item) {
-    // Find the department name for the current RSO item
-    $departmentName = '';
-    foreach ($departments as $dept) {
-        if ($dept['department_id'] == $item['department_id']) {
-            $departmentName = $dept['department_name'];
-            break; // Exit the loop once the department is found
-        }
+    if (!$query->execute()) {
+        throw new Exception("Query failed: " . implode(" ", $query->errorInfo()));
     }
 
-    // Append a new row to the $rows array
-    $rows[] = [
-        'rso_id' => $item['rso_id'],
-        'email' => $item['email'],
-        'rso_name' => $item['rso_name'],
-        'rso_password' => $item['rso_password'],
-        'department_id' => $item['department_id'],
-        'department_name' => $departmentName
-
-    ];
+    // Fetch results
+    $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $ex) {
+    echo "Error: " . $ex->getMessage();
+    die();
 }
-
-// Headers for the table
-$headers = ['RSO ID', 'RSO EMAIL', 'RSO NAME', 'PASSWORD', 'DEPARTMENT'];
-
 ?>
-
 <!DOCTYPE html>
 <html>
 
 <head>
-
-    <link rel="stylesheet" href="../styles/rso.css">
+    <title>rso List</title>
 </head>
 
 <body>
-    <?php include('header.php'); ?>
+    <?php
 
-    <main>
-        <form method="post" action="">
-            RSO Email: <input type="email" name="rso_email" required>
-            <span class="error">
-                <?php echo $rso_emailErr; ?>
-            </span><br>
-
-            <input type="hidden" name="action" value="create">
-            RSO Name: <input type="text" name="rso_name" required>
-            <span class="error">
-                <?php echo $rso_nameErr; ?>
-            </span><br>
-            Password: <input type="password" name="rso_password" required>
-            <span class="error">
-                <?php echo $rso_passwordErr; ?>
-            </span><br>
-            Department: <select name="department_id" required>
-                <?php foreach ($departments as $dept) { ?>
-                    <option value="<?php echo $dept['department_id']; ?>">
-                        <?php echo htmlspecialchars($dept['department_name']); ?>
-                    </option>
-                <?php } ?>
-
-
-            </select>
-            <span class="error">
-                <?php echo $deptErr; ?>
-            </span><br>
-            <input type="submit" value="Create RSO">
-        </form>
-        <br>
-        <br>
-        <!-- Search form -->
+    include '../functions/pagination.php';
+    generatePaginationLinks($pdo, $searchTerm, $limit);
+    ?>
+    <div>
+        <h1>rso List</h1>
         <?php
         include '../functions/search.php';
         ?>
-        <!--display rso -->
+        <?php if (!empty($searchTerm)): ?>
+            <button type="button" onclick="clearSearch()">Clear Search</button>
+        <?php endif; ?>
         <?php
-        include '../functions/button-generator.php';
-        include '../functions/table-generator.php';
-
-        // Use the generateTable function
-        generateTable($headers, $rows);
+        include '../functions/limit.php';
         ?>
 
-        <!-- Pagination link generation with search query included -->
+        <button type="button" onclick="document.getElementById('addModal').showModal()">Add rso</button>
         <?php
-        include '../functions/pagination.php';
+        include '../functions/table.component.php';
+
+        $head = array('ID', 'Name', 'Password', 'Email', 'Department', 'Actions');
+        $body = array();
+
+        foreach ($rows as $row) {
+            $rso_id = $row["rso_id"];
+            $rso_name = $row["rso_name"];
+            $rso_password = $row["rso_password"];
+            $rso_email = $row["rso_email"];
+            $department_id = $row["department_id"];
+            $department_name = '';
+
+            $departmentQuery = $pdo->prepare("SELECT department_name FROM tb_department WHERE department_id = :department_id");
+            $departmentQuery->execute([':department_id' => $department_id]);
+            if ($deptRow = $departmentQuery->fetch()) {
+                $department_name = $deptRow['department_name'];
+            }
+
+            $actions = '<button type="button" onclick="viewRso(' . $rso_id . ', \'' . $rso_name . '\', \'' . $rso_password . '\', \'' . $rso_email . '\', \'' . $department_id . '\')">View</button> <button type="button" onclick="showDeleteModal(' . $rso_id . ')">Delete</button>';
+            $body[] = array($rso_id, $rso_name, $rso_password, $rso_email, $department_name, $actions);
+
+        }
+        createTable($head, $body);
         ?>
 
-        <div id="edit-dialog">
-            <div class="edit-dialog-content">
-                <span id="close-edit-dialog" class="close-button">&times;</span>
-                <h2>Edit RSO</h2>
-                <form method="post" action="">
-                    <input type="hidden" name="action" value="edit">
-                    <input type="hidden" name="rso_id" id="edit-rso-id" value="">
-                    RSO Email: <input type="email" name="rso_email" id="edit-rso-email" required>
-                    RSO Name: <input type="text" name="rso_name" required>
-                    Password: <input type="password" name="rso_password" required>
-                    Department:
-                    <select name="department_id" required>
+        <dialog id="addModal" class="modal">
+            <div class="modal-content">
+                <button class="close" onclick="document.getElementById('addModal').close()">&times;</button>
+                <h2>Add rso</h2>
+                <form method="POST" action="">
+                    <label for="rso-name">Name:</label>
+                    <input type="text" id="rso-name" name="rso_name">
+                    <label for="rso-password">Password:</label>
+                    <input type="password" id="rso-password" name="rso_password">
+                    <label for="rso-email">Email:</label>
+                    <input type="email" id="rso-email" name="email">
+                    <label for="department">Department:</label>
+                    <select id="department" name="department_id">
+                        <?php
+                        $departmentQuery = $pdo->prepare("SELECT department_id, department_name FROM tb_department");
+                        $departmentQuery->execute();
 
-                        <?php foreach ($departments as $department) { ?>
-                            <option value="<?php echo $department['department_id']; ?>" <?php if
-                               ($department['department_id'] == $editDepartmentId)
-                                   echo 'selected'; ?>>
-                                <?php echo htmlspecialchars($department['department_name']); ?>
-                            </option>
-                        <?php } ?>
+                        while ($deptRow = $departmentQuery->fetch()) {
+                            echo "<option value='" . $deptRow['department_id'] . "'>" . $deptRow['department_name'] . "</option>";
+                        }
+                        ?>
                     </select>
-                    <input type="submit" value="Update RSO">
+                    <button type="submit" name="add_rso">Add rso</button>
                 </form>
             </div>
-        </div>
-    </main>
+        </dialog>
+        <dialog id="viewModal" class="modal">
+            <div class="modal-content">
+                <button class="close" onclick="document.getElementById('viewModal').close()">&times;</button>
+                <h2>View rso</h2>
+                <form method="POST" action="">
+                    <input type="hidden" id="edit-rso-id" name="edit_rso_id">
+                    <label for="edit-rso-name">Name:</label>
+                    <input type="text" id="edit-rso-name" name="edit_rso_name">
+                    <label for="edit-rso-password">Password:</label>
+                    <input type="password" id="edit-rso-password" name="edit_rso_password">
+                    <label for="edit-email">Email:</label>
+                    <input type="email" id="edit-email" name="edit_rso_email">
+                    <label for="edit-department">Department:</label>
+                    <select id="edit-department" name="edit_department_id">
+                        <?php
+                        $departmentQuery = $pdo->prepare("SELECT department_id, department_name FROM tb_department");
+                        $departmentQuery->execute();
+
+                        while ($deptRow = $departmentQuery->fetch()) {
+                            $selected = ($deptRow['department_id'] == $row['department_id']) ? "selected" : "";
+                            echo "<option value='" . $deptRow['department_id'] . "' $selected>" . $deptRow['department_name'] . "</option>";
+                        }
+                        ?>
+                    </select>
+                    <button type="submit" name="edit_rso">Save</button>
+                </form>
+            </div>
+        </dialog>
+        <dialog id="deleteModal" class="modal">
+            <div class="modal-content">
+                <button class="close" onclick="closeModal('deleteModal')">&times;</button>
+                <h2>Delete rso</h2>
+                <p>Are you sure you want to delete this rso?</p>
+                <div class="clearfix">
+                    <button type="button" class="cancelbtn" onclick="closeModal('deleteModal')">Cancel</button>
+                    <button type="button" class="deletebtn" onclick="deleteRso()">Delete</button>
+                </div>
+            </div>
+        </dialog>
+    </div>
+    <script src="../script/rso.js">
+
+    </script>
+    <script>
+        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+        // Function to show delete modal and handle delete button click
+        function showDeleteModal(rso_id) {
+            showModal("deleteModal");
+            const deleteBtn = document.getElementById("deleteModal").querySelector(".deletebtn");
+            deleteBtn.addEventListener("click", function () {
+                const form = document.createElement("form");
+                form.setAttribute("method", "POST");
+                form.setAttribute("action", "<?php echo $_SERVER['REQUEST_URI']; ?>");
+                const hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", "delete_rso");
+                hiddenField.setAttribute("value", rso_id);
+                form.appendChild(hiddenField);
+                document.body.appendChild(form);
+                form.submit();
+            });
+        }
+
+        function deleteRso() {
+            const rso_id = document.getElementById("edit-rso-id").value;
+
+            // Create and submit form dynamically
+            const form = document.createElement("form");
+            form.setAttribute("method", "POST");
+            form.setAttribute("action", base_url);
+
+            const hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", "delete_rso");
+            hiddenField.setAttribute("value", rso_id);
+
+            form.appendChild(hiddenField);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+
 </body>
-<script src="../script/script.js"></script>
 
 </html>

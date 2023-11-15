@@ -1,22 +1,29 @@
 <?php
-// Ensure $totalPages and $page variables are passed to this file before including it.
+// pagination.php
 
-if (!isset($totalPages) || !isset($page)) {
-    // Handle error: required variables not set
-    exit('Pagination requires totalPages and currentPage variables.');
+function generatePaginationLinks($pdo, $searchTerm, $limit)
+{
+    try {
+        $paginationQuery = $pdo->prepare("SELECT COUNT(*) AS total FROM tb_rso WHERE rso_name LIKE :searchTerm OR rso_email LIKE :searchTerm");
+        $paginationQuery->bindValue(':searchTerm', '%' . $searchTerm . '%', PDO::PARAM_STR);
+
+        if (!$paginationQuery->execute()) {
+            throw new Exception("Pagination query failed: " . implode(" ", $paginationQuery->errorInfo()));
+        }
+
+        $result = $paginationQuery->fetch();
+        $totalRecords = $result['total'];
+        $totalPages = ceil($totalRecords / $limit);
+
+        echo "<div>";
+        for ($i = 1; $i <= $totalPages; $i++) {
+            echo "<a href='" . $_SERVER['PHP_SELF'] . "?page=" . $i . "&search=" . urlencode($searchTerm) . "&limit=" . $limit . "'>" . $i . "</a> ";
+            ;
+        }
+        echo "</div>";
+    } catch (Exception $ex) {
+        echo "Error: " . $ex->getMessage();
+        die();
+    }
 }
-
-$searchQuery = $_GET['search_query'] ?? '';
 ?>
-
-<!-- Pagination link generation with search query included -->
-<ul class="pagination">
-    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-        <?php $link = '?page=' . $i . (!empty($searchQuery) ? '&search_query=' . urlencode($searchQuery) : ''); ?>
-        <li class='page-item <?= ($page === $i) ? 'active' : '' ?>'>
-            <a class='page-link' href='<?= $link ?>'>
-                <?= $i ?>
-            </a>
-        </li>
-    <?php endfor; ?>
-</ul>
