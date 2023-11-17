@@ -15,10 +15,10 @@ function generatePaginationLinks($pdo, $searchTerm, $limit)
         $totalRecords = $result['total'];
         $totalPages = ceil($totalRecords / $limit);
 
-        echo "<div>";
+        echo "<div class='pagination-container'>";
         for ($i = 1; $i <= $totalPages; $i++) {
-            echo "<a href='" . $_SERVER['PHP_SELF'] . "?page=" . $i . "&search=" . urlencode($searchTerm) . "&limit=" . $limit . "'>" . $i . "</a> ";
-            ;
+            $class = ($i == $_GET['page']) ? 'current-page' : '';
+            echo "<a class='$class' href='" . $_SERVER['PHP_SELF'] . "?page=" . $i . "&search=" . urlencode($searchTerm) . "&limit=" . $limit . "'>" . $i . "</a> ";
         }
         echo "</div>";
     } catch (Exception $ex) {

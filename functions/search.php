@@ -5,7 +5,6 @@ $searchQuery = $_GET['searchTerm'] ?? '';
 
 <!-- Search form -->
 <form id="searchForm" method="GET" action="javascript:void(0);">
-    <label for="search">Search:</label>
-    <input type="text" id="search" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>">
-    <button type="submit">Submit</button>
+    <input type="text" id="search" name="search" placeholder="Search..."
+        value="<?php echo htmlspecialchars($searchTerm); ?>" required>
 </form>

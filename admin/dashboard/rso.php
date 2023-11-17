@@ -130,7 +130,7 @@ try {
 
 
             <?php
-            include '../../table.component.php';
+            include '../../functions/table.component.php';
 
             $head = array('ID', 'Name', 'Email', 'Department', 'Actions'); // Remove 'Password' from the $head array
             $body = array();
