@@ -97,7 +97,7 @@ try {
 <head>
     <title>rso List</title>
 
-    <link rel="stylesheet" href="../../styles/rsos.css">
+    <link rel="stylesheet" href="../../styles/rso.css">
 
 </head>
 
