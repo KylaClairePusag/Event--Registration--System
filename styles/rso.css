@@ -44,6 +44,10 @@ th {
   border-bottom: 1px solid #ddd;
 }
 
+tbody {
+  min-height: 100%;
+}
+
 tbody tr:hover {
   background-color: #f5f5f5;
 }
@@ -57,7 +61,8 @@ tbody tr:hover {
 }
 
 #searchForm {
-  width: 100%;
+  width: 60%;
+  margin-right: 0.5rem;
 }
 
 #search {
@@ -65,7 +70,7 @@ tbody tr:hover {
   font-size: 1.1rem;
   padding: 0.4rem 0.6rem;
   border-radius: 0.5rem;
-  width: 50%;
+  width: 100%;
 }
 
 #search::placeholder {
@@ -73,13 +78,14 @@ tbody tr:hover {
 }
 
 #search:focus {
-  outline: 1px solid rgb(132, 132, 132);
+  outline: 1px solid #848484;
 }
 
 .headbtn {
   display: flex;
   width: 20%;
   justify-content: flex-end;
+  white-space: nowrap;
 }
 
 .headbtn select,
@@ -98,6 +104,11 @@ tbody tr:hover {
   margin-right: 1rem;
 }
 
+#limit option {
+  background-color: #a71515;
+  color: #000;
+}
+
 .headbtn button {
   background: #12181c;
   color: #ffffff;
@@ -106,10 +117,19 @@ tbody tr:hover {
   align-items: center;
 }
 
+.icon {
+  max-width: 2rem;
+  max-height: 2rem;
+}
+
 .headbtn img {
   width: 0.8rem;
   height: 0.7rem;
   margin-left: 0.4rem;
+}
+
+.tableContainer {
+  flex-grow: 1;
 }
 
 table button:nth-child(1) {
@@ -169,4 +189,173 @@ table button {
 .paginationCont {
   margin-top: auto;
   margin-bottom: 1rem;
+}
+
+.searchCont {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+dialog {
+  border: none;
+  border-radius: 0.5rem;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+.error-container2,
+.error-container {
+  display: none;
+  width: 100%;
+  background: #ff9f9f41;
+  padding: 1rem;
+  text-align: center;
+  color: rgb(219, 14, 14);
+  border: 1px solid rgba(255, 0, 0, 0.769);
+  margin-top: 5px;
+}
+
+.modal-content {
+  background-color: #fff;
+  min-width: 400px;
+  padding: 20px;
+  position: relative;
+}
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content label {
+  margin-top: 10px;
+}
+
+.modal-content input,
+.modal-content select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 0.5rem;
+}
+
+.modal-content button {
+  background: #12181c;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+}
+
+dialog .close {
+  background: #12181c;
+  color: #fff;
+  padding: 0.3rem 0.8rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 1rem;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.modal-content button:hover {
+  background-color: #323232;
+}
+
+.error-container2,
+.error-container {
+  display: none;
+  color: red;
+  margin-top: 5px;
+}
+
+/* Optional: Add some additional styling for better appearance */
+.modal-content h2 {
+  text-align: center;
+}
+
+.clearfix {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.clearfix .cancelbtn {
+  margin-right: 0.5rem;
+  background: #eeeeef;
+  color: #12181c;
+}
+
+.clearfix .cancelbtn:hover {
+  margin-right: 0.5rem;
+  background: #d3d3d3;
+  color: #12181c;
+}
+
+.modal-content h2 {
+  margin-top: 1.5rem;
+}
+
+.modal-content p {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.modal-content select {
+  border-radius: 0.5rem;
+  background: #eeeeef;
+  color: #040404;
+  border: 1px solid #eeeeef;
+  outline: none;
+}
+
+.passcont {
+  border-radius: 0.5rem;
+  border: 1px solid #848484;
+  display: flex;
+  align-items: center;
+}
+
+.passcont img {
+  width: 1.5rem;
+  margin-right: 0.3rem;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+#edit-rso-password {
+  border: none;
+  margin: 0;
+  outline: none;
+}
+
+.hide {
+  display: none;
+}
+
+.modal-content input {
+  border: 1px solid #848484;
+}
+
+dialog:-internal-dialog-in-top-layer::backdrop {
+  position: fixed;
+  inset: 0px;
+  background: rgba(0, 0, 0, 0.429);
+}
+
+input:focus {
+  outline: none;
 }
