@@ -105,7 +105,7 @@ try {
         <section class="head">
             <div class="searchCont">
                 <?php
-                include '../../functions/search.php';
+                include '../../components/search.php';
                 ?>
                 <?php if (!empty($searchTerm)): ?>
                     <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
@@ -113,7 +113,7 @@ try {
             </div>
             <div class="headbtn">
                 <?php
-                include '../../functions/limit.php';
+                include '../../components/limit.php';
                 ?>
                 <button type="button" onclick="document.getElementById('addModal').showModal()">Add rso <img
                         src='../../images/plus.png' alt='Image' class="icon" /> </button>
@@ -122,7 +122,7 @@ try {
 
         <section class="tableContainer">
             <?php
-            include '../../functions/table.component.php';
+            include '../../components/table.component.php';
 
             $head = array('ID', 'Name', 'Password', 'Email', 'Department', 'Actions');
             $body = array();
@@ -236,7 +236,7 @@ try {
         <section class="paginationCont">
 
             <?php
-            include '../../functions/pagination.php';
+            include '../../components/pagination.php';
             generatePaginationLinks($pdo, $searchTerm, $limit);
             ?>
         </section>
