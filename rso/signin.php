@@ -1,43 +1,38 @@
 <?php
-// Start a new session
 session_start();
-if (isset($_SESSION['email'])) {
-    header("Location: ./dashboard.php");
+if (isset($_SESSION['rso_email'])) {
+    header("Location: ./dashboard");
     exit;
 }
 
 include '../config/config.php';
-$error = null; // Initialize the error variable
+$error = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $rso_email = filter_input(INPUT_POST, 'rso_email', FILTER_SANITIZE_EMAIL);
     $rso_password = filter_input(INPUT_POST, 'rso_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    if (empty($email) || empty($rso_password)) {
-        $error = "*** Please fill in all fields. ***"; // Set the error message
+    if (empty($rso_email) || empty($rso_password)) {
+        $error = "*** Please fill in all fields. ***";
     } else {
-        $query = "SELECT * FROM tb_rso WHERE email = ?";
-        $stmt = mysqli_prepare($conn, $query);
+        try {
+            $query = "SELECT * FROM tb_rso WHERE rso_email = :rso_email";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':rso_email', $rso_email, PDO::PARAM_STR);
+            $stmt->execute();
 
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, 's', $email);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-            $row = mysqli_fetch_assoc($result);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Directly compare the faculty_passwords (constb_facultyer using rso_password hashing in production)
             if ($row && $row['rso_password'] === $rso_password) {
-                // Set session variables
-                $_SESSION['email'] = $row['email'];
-                $_SESSION['faculty_name'] = $row['faculty_name'];
-                // Redirect to dashboard
-                header("Location: ./dashboard.php");
+                $_SESSION['rso_email'] = $row['rso_email'];
+                $_SESSION['rso_name'] = $row['rso_name'];
+                header("Location: ./dashboard");
                 exit;
             } else {
-                $error = "*** Invalid Faculty Login Credentials. ***"; // Set the error message
+                $error = "*** Invalid Login Credentials. ***";
             }
-        } else {
-            $error = "Failed to prepare the statement: " . mysqli_error($conn); // Set the error message
+        } catch (PDOException $e) {
+            $error = "Failed to prepare the statement: " . $e->getMessage();
         }
     }
 }
@@ -48,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="wtb_facultyth=device-wtb_facultyth, initial-scale=1.0">
-    <title>Admin Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSO Portal</title>
     <link rel="stylesheet" href="../styles/style.css">
 </head>
 
@@ -57,20 +52,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     <main>
         <section class="first-section">
             <div class="header">
-
                 <h1>Event Registration</h1>
             </div>
             <div class="box">
                 <div class="login-container">
-                    <h1>Rso Portal</h1>
+                    <h1>RSO Portal</h1>
                     <p>Please enter your contact details to connect.</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                         <div class="form-group">
                             <label>Email address</label>
-                            <input type="email" name="email" placeholder="Enter your email" required>
+                            <input type="email" name="rso_email" placeholder="Enter your email" required>
                         </div>
                         <div class="form-group">
-                            <label for="rso_password">rso_password</label>
+                            <label for="password">Password</label>
                             <input type="password" name="rso_password" placeholder="Password" required>
                         </div>
                         <div class="error<?php if (!empty($error))
@@ -83,32 +77,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         </div>
 
                         <button type="submit" name="submit">Sign in</button>
-                        <h5>By using this service, you understood and agree to the
-                            Event Online Registration BSU Terms of Use and Privacy
-                            Statement
-                        </h5>
+                        <h5>By using this service, you understood and agree to the Event Online Registration BSU Terms
+                            of Use and Privacy Statement</h5>
                     </form>
                 </div>
-
             </div>
-
         </section>
         <section class="second-section">
             <div class="yellow"></div>
             <div class="container">
-
                 <div class="title">
                     <h1>BATANGAS STATE UNIVERSITY</h1>
                     <h3>The National Engineering University</h3>
                     <img src="../images/Batangas_State_Logo.png" alt="Batangas State University Logo">
                 </div>
                 <div class="welcome-context">
-                    <h3>
-                        Welcome to the university portal
-                    </h3>
+                    <h3>Welcome to the university portal</h3>
                     <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque enim repudiandae dolorum
-                        magnam?
-                        Sequi repellendus alias sed nisi tempore.</span>
+                        magnam? Sequi repellendus alias sed nisi tempore.</span>
                 </div>
             </div>
         </section>
