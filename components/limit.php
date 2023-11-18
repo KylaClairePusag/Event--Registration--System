@@ -6,8 +6,6 @@ $searchQuery = $_GET['limit'] ?? '';
 
 </label>
 <select id="limit" name="limit" onchange="changeLimit(this.value)">
-    <option value="5" <?php if ($limit == 5)
-        echo 'selected'; ?>>Limit: 5 </option>
     <option value="10" <?php if ($limit == 10)
         echo 'selected'; ?>>Limit: 10</option>
     <option value="15" <?php if ($limit == 15)
