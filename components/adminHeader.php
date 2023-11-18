@@ -37,7 +37,7 @@ $adminName = $_SESSION['admin_name'];
 
                 <?php echo htmlspecialchars($_SESSION['admin_name']); ?>
                 </span>
-                <a href="logout.php">Logout</a>
+                <a href="../logout.php">Logout</a>
             </div>
         </nav>
     </header>

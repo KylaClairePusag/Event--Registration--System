@@ -2,7 +2,7 @@
 // Start a new session
 session_start();
 if (isset($_SESSION['admin_email'])) {
-    header("Location: ./dashboard.php");
+    header("Location: ./dashboard");
     exit;
 }
 
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                 $_SESSION['admin_email'] = $row['admin_email']; // Change session variable to admin_email
                 $_SESSION['admin_name'] = $row['admin_name'];
                 // Redirect to dashboard
-                header("Location: ./dashboard.php");
+                header("Location: ./dashboard");
                 exit;
             } else {
                 $error = "*** Invalid Login Credentials. ***"; // Set the error message
@@ -55,8 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 </head>
 
 <body>
-    <ma
-in>
+    <ma in>
         <section class="first-section">
             <div class="header">
                 <h1>Event Registration</h1>
@@ -78,9 +77,9 @@ in>
                         <div class="error<?php if (!empty($error))
                             echo ' show'; ?>">
                             <?php if (!empty($error)): ?>
-                                    <p>
-                                        <?php echo $error; ?>
-                                    </p>
+                                <p>
+                                    <?php echo $error; ?>
+                                </p>
                             <?php endif; ?>
                         </div>
 
@@ -114,7 +113,7 @@ in>
                 </div>
             </div>
         </section>
-    </main>
+        </main>
 </body>
 
 </html>
