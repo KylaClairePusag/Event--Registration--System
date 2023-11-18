@@ -1,5 +1,4 @@
 <?php
-// Start a new session
 session_start();
 if (isset($_SESSION['admin_email'])) {
     header("Location: ./dashboard");
@@ -7,42 +6,37 @@ if (isset($_SESSION['admin_email'])) {
 }
 
 include '../config/config.php';
-$error = null; // Initialize the error variable
+$error = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-    $admin_email = filter_input(INPUT_POST, 'admin_email', FILTER_SANITIZE_EMAIL); // Change variable name to admin_email
+    $admin_email = filter_input(INPUT_POST, 'admin_email', FILTER_SANITIZE_EMAIL);
     $admin_password = filter_input(INPUT_POST, 'admin_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     if (empty($admin_email) || empty($admin_password)) {
-        $error = "*** Please fill in all fields. ***"; // Set the error message
+        $error = "*** Please fill in all fields. ***";
     } else {
-        $query = "SELECT * FROM tb_admin WHERE admin_email = ?"; // Change column name to admin_email
-        $stmt = mysqli_prepare($conn, $query);
+        try {
+            $query = "SELECT * FROM tb_admin WHERE admin_email = :admin_email";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':admin_email', $admin_email, PDO::PARAM_STR);
+            $stmt->execute();
 
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, 's', $admin_email);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-            $row = mysqli_fetch_assoc($result);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Directly compare the passwords (consider using password hashing in production)
             if ($row && $row['admin_password'] === $admin_password) {
-                // Set session variables
-                $_SESSION['admin_email'] = $row['admin_email']; // Change session variable to admin_email
+                $_SESSION['admin_email'] = $row['admin_email'];
                 $_SESSION['admin_name'] = $row['admin_name'];
-                // Redirect to dashboard
                 header("Location: ./dashboard");
                 exit;
             } else {
-                $error = "*** Invalid Login Credentials. ***"; // Set the error message
+                $error = "*** Invalid Login Credentials. ***";
             }
-        } else {
-            $error = "Failed to prepare the statement: " . mysqli_error($conn); // Set the error message
+        } catch (PDOException $e) {
+            $error = "Failed to prepare the statement: " . $e->getMessage();
         }
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -68,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         <div class="form-group">
                             <label>Email address</label>
                             <input type="email" name="admin_email" placeholder="Enter your email" required>
-
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
@@ -84,32 +77,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         </div>
 
                         <button type="submit" name="submit">Sign in</button>
-                        <h5>By using this service, you understood and agree to the
-                            Event Online Registration BSU Terms of Use and Privacy
-                            Statement
-                        </h5>
+                        <h5>By using this service, you understood and agree to the Event Online Registration BSU Terms
+                            of Use and Privacy Statement</h5>
                     </form>
                 </div>
-
             </div>
-
         </section>
         <section class="second-section">
             <div class="yellow"></div>
             <div class="container">
-
                 <div class="title">
                     <h1>BATANGAS STATE UNIVERSITY</h1>
                     <h3>The National Engineering University</h3>
                     <img src="../images/Batangas_State_Logo.png" alt="Batangas State University Logo">
                 </div>
                 <div class="welcome-context">
-                    <h3>
-                        Welcome to the university portal
-                    </h3>
+                    <h3>Welcome to the university portal</h3>
                     <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque enim repudiandae dolorum
-                        magnam?
-                        Sequi repellendus alias sed nisi tempore.</span>
+                        magnam? Sequi repellendus alias sed nisi tempore.</span>
                 </div>
             </div>
         </section>

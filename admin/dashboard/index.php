@@ -8,17 +8,7 @@
 </head>
 
 <body>
-    <nav>
-        <div class="logo">
-            <h3>Event</h3>
-            <ul>
-                <li><a href="#/">Overview</a></li>
-                <li><a href="rso.php">RSO</a></li>
-                <li><a href="#/admin">Admin</a></li>
-                <li><a href="#/reports">Reports</a></li>
-            </ul>
-        </div>
-    </nav>
+    <?php include '../../components/adminHeader.php'; ?>
 
 </body>
 
