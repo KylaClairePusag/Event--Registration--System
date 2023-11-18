@@ -1,12 +1,9 @@
 <?php
 // pagination.php
 
-function generatePaginationLinks($pdo, $searchTerm, $limit)
+function generatePaginationLinks($pdo, $searchTerm, $limit, $paginationQuery)
 {
     try {
-        $paginationQuery = $pdo->prepare("SELECT COUNT(*) AS total FROM tb_rso WHERE rso_name LIKE :searchTerm OR rso_email LIKE :searchTerm");
-        $paginationQuery->bindValue(':searchTerm', '%' . $searchTerm . '%', PDO::PARAM_STR);
-
         if (!$paginationQuery->execute()) {
             throw new Exception("Pagination query failed: " . implode(" ", $paginationQuery->errorInfo()));
         }

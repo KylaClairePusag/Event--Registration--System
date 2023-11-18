@@ -85,6 +85,8 @@ try {
 
     // Fetch results
     $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+    $paginationQuery = $pdo->prepare("SELECT COUNT(*) AS total FROM tb_rso WHERE rso_name LIKE :searchTerm OR rso_email LIKE :searchTerm");
+    $paginationQuery->bindValue(':searchTerm', '%' . $searchTerm . '%', PDO::PARAM_STR);
 } catch (Exception $ex) {
     echo "Error: " . $ex->getMessage();
     die();
@@ -237,7 +239,7 @@ try {
 
             <?php
             include '../../components/pagination.php';
-            generatePaginationLinks($pdo, $searchTerm, $limit);
+            generatePaginationLinks($pdo, $searchTerm, $limit, $paginationQuery);
             ?>
         </section>
     </main>

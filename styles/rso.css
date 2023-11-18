@@ -10,6 +10,7 @@
 body {
   line-height: 1.5;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 main {
@@ -24,15 +25,17 @@ table {
   border-collapse: collapse;
   width: 100%;
   background-color: #fff;
+  overflow: auto;
 }
 
 th,
 td {
-  padding: 12px;
+  padding: 0.3rem;
   text-align: center;
 }
 
 td {
+  padding: 2re;
   font-size: 0.9rem;
   color: #1e1e1e;
 }
@@ -331,11 +334,12 @@ dialog .close {
 
 .passcont img {
   width: 1.5rem;
-  margin-right: 0.3rem;
+  margin-right: 0.5rem;
   cursor: pointer;
   opacity: 0.7;
 }
 
+#edit-admin-password,
 #edit-rso-password {
   border: none;
   margin: 0;
