@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 </head>
 
 <body>
-    <ma in>
+    <main>
         <section class="first-section">
             <div class="header">
                 <h1>Event Registration</h1>
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                 </div>
             </div>
         </section>
-        </main>
+    </main>
 </body>
 
 </html>
