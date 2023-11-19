@@ -1,2 +1,5 @@
 .vscode/
-images/profiles
+
+# Ignore files inside images/profiles
+images/profiles/*
+
