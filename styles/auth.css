@@ -1,0 +1,227 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;0,6..12,1000;1,6..12,200;1,6..12,300;1,6..12,400;1,6..12,500;1,6..12,600;1,6..12,700;1,6..12,800;1,6..12,900;1,6..12,1000&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  height: 100vh;
+  font-size: 16px;
+  font-family: "Nunito Sans", sans-serif;
+  line-height: 1.3;
+}
+
+main {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+section {
+  display: flex;
+  flex: 1;
+  height: 100vh;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.first-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.second-section {
+  display: flex;
+  justify-content: end;
+}
+
+.title h3 {
+  font-weight: lighter;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 0 1rem 1rem 0;
+  background-image: linear-gradient(#ed1b227a, #ed1b22f8),
+    url("../images/BSU.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: white;
+  text-align: center;
+  width: 90%;
+  height: 100%;
+  overflow: hidden;
+}
+
+section h1 {
+  margin-top: 4rem;
+  font-size: 2.4rem;
+  font-weight: 600;
+  letter-spacing: 0.2rem;
+}
+
+section img {
+  width: 300px;
+  margin: 2rem 0;
+}
+
+h3 {
+  font-size: 1.36rem;
+  font-weight: 400;
+  letter-spacing: 0.16rem;
+}
+
+.welcome-context {
+  max-width: 100%;
+  text-align: start;
+  margin: 6rem 2rem;
+}
+
+.welcome-context h3 {
+  font-size: 2.2rem;
+}
+
+.welcome-context span {
+  opacity: 0.7;
+}
+
+.form-group {
+  margin-bottom: 1em;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5em;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  padding: 1rem;
+  font-size: 1.1rem;
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  border-radius: 0.7rem;
+}
+
+button {
+  width: 100%;
+  padding: 1em;
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #333;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.box {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  align-items: center;
+}
+
+.login-container {
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  max-width: 500px;
+}
+
+.login-container h1 {
+  font-size: 4rem;
+  font-weight: 600;
+  margin: 0%;
+}
+
+.login-container p {
+  font-size: 1.2rem;
+  font-weight: 100;
+  color: #000000e4;
+}
+
+h5 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  text-align: start;
+  line-height: 1.5;
+}
+
+label {
+  display: flex;
+  justify-self: start;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
+
+form {
+  margin-top: 3rem;
+}
+
+.header {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: start;
+}
+
+.header h1 {
+  font-size: 1.3rem;
+  margin: 0;
+  background: linear-gradient(
+    258deg,
+    #000 41.18%,
+    rgba(226, 53, 53, 0.85) 89.21%,
+    rgba(255, 25, 25, 0) 137.25%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.yellow {
+  width: 1rem;
+  height: 100%;
+  background: #faae36;
+  margin-right: 0.3rem;
+}
+
+.error {
+  display: none;
+  color: red;
+}
+
+.error p {
+  font-weight: 400;
+  color: red;
+  margin: 1rem 0;
+}
+
+.error.show {
+  display: block;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+}

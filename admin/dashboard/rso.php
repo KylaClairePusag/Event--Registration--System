@@ -84,6 +84,7 @@ try {
 
 <head>
     <link rel="stylesheet" href="../../styles/rso.css">
+    <title>Rso</title>
 </head>
 
 <body>
