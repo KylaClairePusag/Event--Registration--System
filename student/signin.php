@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION['student_email'])) {
-    header("Location: ./dashboard");
+    header("Location: ./home");
     exit;
 }
 
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             if ($row && $row['student_password'] === $student_password) {
                 $_SESSION['student_email'] = $row['student_email'];
                 $_SESSION['student_name'] = $row['firstname'] . ' ' . $row['lastname'];
-                header("Location: ./dashboard");
+                header("Location: ./home");
                 exit;
             } else {
                 $error = "*** Invalid Login Credentials. ***";
