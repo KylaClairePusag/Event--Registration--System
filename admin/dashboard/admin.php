@@ -152,7 +152,6 @@ try {
 
 <head>
     <link rel="stylesheet" href="../../styles/rso.css">
-    <title>Admin</title>
 </head>
 
 <body>

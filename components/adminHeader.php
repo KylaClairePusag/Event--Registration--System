@@ -15,25 +15,21 @@ $username = "root";
 $password = "";
 $dbname = "db_ba3101";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+try {
+    // Create PDO connection
+    $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    // Prepare and execute the query to get admin profile
+    $sql = "SELECT admin_profile FROM tb_admin WHERE admin_email = :admin_email";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(":admin_email", $_SESSION['admin_email']);
+    $stmt->execute();
+    $adminProfile = $stmt->fetchColumn();
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
-// Prepare and execute the query to get admin profile
-$sql = "SELECT admin_profile FROM tb_admin WHERE admin_email = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $_SESSION['admin_email']);
-$stmt->execute();
-$stmt->bind_result($adminProfile);
-$stmt->fetch();
-$stmt->close();
-
-// Close the database connection
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +40,6 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../styles/header.css" type="text/css">
     <title>Dashboard</title>
-
 </head>
 
 <body>
@@ -70,7 +65,6 @@ $conn->close();
             <div class="profile">
                 <?php echo htmlspecialchars($_SESSION['admin_name']); ?>
                 <?php echo '<img src="../../' . $adminProfile . '" alt="Admin Profile Image" class="profile"'; ?>
-
             </div>
             <a href="../logout.php">Logout</a>
         </nav>
