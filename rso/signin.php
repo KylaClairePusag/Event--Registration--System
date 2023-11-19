@@ -26,6 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             if ($row && $row['rso_password'] === $rso_password) {
                 $_SESSION['rso_email'] = $row['rso_email'];
                 $_SESSION['rso_name'] = $row['rso_name'];
+
+                // Assuming 'department_id' is the name of the column in your tb_rso table
+                $_SESSION['department_id'] = $row['department_id'];
+
                 header("Location: ./dashboard");
                 exit;
             } else {
@@ -36,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         }
     }
 }
+
 ?>
 
 <!DOCTYPE html>
