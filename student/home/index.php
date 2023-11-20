@@ -110,7 +110,10 @@ try {
                         <button id="viewBtn"
                             onclick="window.location.href='event.php?event_id=<?php echo $event_id; ?>'">View
                             Event</button>
-                        <button>Attend</button>
+                        <?php
+                        include '../../components/attendButton.php';
+                        generateAttenButton($event_id, $pdo);
+                        ?>
                     </div>
 
 
