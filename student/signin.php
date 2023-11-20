@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             if ($row && $row['student_password'] === $student_password) {
                 $_SESSION['student_email'] = $row['student_email'];
                 $_SESSION['student_name'] = $row['firstname'] . ' ' . $row['lastname'];
+                $_SESSION['department_id'] = $row['department_id'];
                 header("Location: ./home");
                 exit;
             } else {
