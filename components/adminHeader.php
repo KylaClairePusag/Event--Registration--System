@@ -60,6 +60,9 @@ try {
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'class="active"' : ''; ?>>
                         <a href="reports.php">Reports</a>
                     </li>
+                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'class="active"' : ''; ?>>
+                        <a href="settings.php">Settings</a>
+                    </li>
                 </ul>
             </div>
             <div class="profile">
