@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                 $_SESSION['student_email'] = $row['student_email'];
                 $_SESSION['student_name'] = $row['firstname'] . ' ' . $row['lastname'];
                 $_SESSION['department_id'] = $row['department_id'];
+                $_SESSION['student_id'] = $row['studid'];
                 header("Location: ./home");
                 exit;
             } else {
