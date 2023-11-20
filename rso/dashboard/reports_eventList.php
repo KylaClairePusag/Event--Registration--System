@@ -33,11 +33,11 @@ try {
 </head>
 
 <body>
-    <main>
-        <?php include '../../components/rsoHeader.php'; ?>
 
-        <section class="tableContainer">
-            <?php include '../../components/table.component.php';
+    <?php include '../../components/rsoHeader.php'; ?>
+
+    <section class="tableContainer">
+        <?php include '../../components/table.component.php';
 
             $head = array('Events', 'Action');
             $body = array();
@@ -53,8 +53,8 @@ try {
 
             createTable($head, $body);
             ?>
-        </section>
-    </main>
+    </section>
+
     <?php
 
     $requestUri = $_SERVER['REQUEST_URI'];
