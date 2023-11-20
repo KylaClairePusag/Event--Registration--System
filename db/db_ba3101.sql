@@ -109,7 +109,8 @@ CREATE TABLE `tb_faculty` (
   `faculty_name` varchar(255) NOT NULL,
   `faculty_password` varchar(20) NOT NULL,
   `department_id` int(11) DEFAULT NULL,
-  `faculty_email` varchar(255) NOT NULL
+  `faculty_email` varchar(255) NOT NULL,
+  `faculty_profile` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -124,7 +125,7 @@ CREATE TABLE `tb_rso` (
   `rso_password` varchar(20) NOT NULL,
   `department_id` int(11) DEFAULT NULL,
   `rso_email` varchar(255) NOT NULL,
-  `profile_image` longblob DEFAULT NULL
+  `rso_profile` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
