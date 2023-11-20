@@ -107,18 +107,16 @@ try {
                         </p>
                     </div>
                     <div class="events_button">
-                        <a href="event.php?event_id=<?php echo $event_id; ?>">View Event</a>
-
+                        <button id="viewBtn"
+                            onclick="window.location.href='event.php?event_id=<?php echo $event_id; ?>'">View
+                            Event</button>
                         <button>Attend</button>
-
-
-
                     </div>
-                </div>
 
-            <?php } ?>
 
-        </div>
+                <?php } ?>
+
+            </div>
     </main>
 </body>
 
