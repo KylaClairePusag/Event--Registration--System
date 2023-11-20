@@ -26,11 +26,18 @@ $adminName = $_SESSION['rso_name'];
             <div class="logo">
                 <h3>Event</h3>
                 <ul>
-                    <li><a href="./">Overview</a></li>
-                    <li><a href="events.php">Events</a></li>
-                    <li><a href="attendees.php">Attendees</a></li>
-                    <li><a href="reports.php">Reports</a></li>
-
+                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'class="active"' : ''; ?>>
+                        <a href="./">Overview</a>
+                    </li>
+                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'events.php' ? 'class="active"' : ''; ?>>
+                        <a href="events.php">Events</a>
+                    </li>
+                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'attendees.php' ? 'class="active"' : ''; ?>>
+                        <a href="attendees.php">Attendees</a>
+                    </li>
+                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'class="active"' : ''; ?>>
+                        <a href="reports.php">Reports</a>
+                    </li>
                 </ul>
             </div>
             <div class="profile">
