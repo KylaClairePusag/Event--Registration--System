@@ -1,0 +1,48 @@
+.box-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.event-box {
+  border: 1px solid #ccc;
+  overflow: hidden;
+  border-radius: 0.6rem;
+}
+
+.event-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-content {
+  padding: 10px;
+}
+
+.event-content p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* Number of lines to show before adding ellipsis */
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  /* Allow word wrap within the specified number of lines */
+}
+
+.header {
+  height: 150px;
+  background-color: #ccc;
+}
+
+h2 {
+  font-size: 1rem;
+}
+
+p {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: rgba(0, 0, 0, 0.836);
+}
