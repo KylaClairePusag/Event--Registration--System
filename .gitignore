@@ -1,8 +1,4 @@
 .vscode/
 
-# Ignore files inside images/profiles
-images/profiles/*
-
-images/events/*
 
 .DS_Store
