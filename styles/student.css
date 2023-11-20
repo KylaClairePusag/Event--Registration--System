@@ -45,4 +45,47 @@ p {
   font-size: 0.9rem;
   font-weight: 300;
   color: rgba(0, 0, 0, 0.836);
+  text-transform: capitalize;
+}
+
+#date {
+  display: flex;
+  align-items: center;
+}
+#date img {
+  width: 1.3rem;
+  height: 1.3rem;
+  margin-right: 0.5rem;
+}
+
+h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+#date img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.upcoming-event,
+.ongoing-event,
+.ended-event {
+  padding: 0 10px;
+  border-radius: 5px;
+  display: inline-block;
+  color: white;
+  font-weight: 500;
+}
+
+.upcoming-event {
+  background-color: rgba(0, 0, 255, 0.767);
+}
+
+.ongoing-event {
+  background-color: rgba(44, 177, 44, 0.707);
+}
+
+.ended-event {
+  background-color: grey;
 }
