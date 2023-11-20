@@ -89,3 +89,30 @@ h3 {
 .ended-event {
   background-color: grey;
 }
+
+.events_button {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.events_button button {
+  padding: 0.3rem 0.9rem;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  background-color: #0c0c0d;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#viewBtn {
+  margin: 0 10px;
+  background-color: #fcfdff;
+  color: #000000d8;
+  border: 1px solid #3b3b3da3;
+}
