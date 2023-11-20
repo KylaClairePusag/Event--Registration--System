@@ -106,6 +106,14 @@ try {
                             <?php echo $attendee_count; ?>
                         </p>
                     </div>
+                    <div class="events_button">
+                        <a href="event.php?event_id=<?php echo $event_id; ?>">View Event</a>
+
+                        <button>Attend</button>
+
+
+
+                    </div>
                 </div>
 
             <?php } ?>
