@@ -1,4 +1,7 @@
 <?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 // Resume the existing session
 include '../../config/config.php';
 // Check if the admin is logged in, otherwise redirect to the login page

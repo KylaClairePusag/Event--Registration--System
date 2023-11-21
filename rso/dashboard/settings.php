@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Database connection setup
 include '../../config/config.php';
 

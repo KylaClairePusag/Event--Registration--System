@@ -11,5 +11,3 @@ try {
     echo "Connection failed: " . $e->getMessage();
     die();
 }
-
-session_start();

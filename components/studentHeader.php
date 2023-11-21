@@ -1,4 +1,7 @@
 <?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 include '../../config/config.php';
 
 // Check if the student is logged in, otherwise redirect to the login page
