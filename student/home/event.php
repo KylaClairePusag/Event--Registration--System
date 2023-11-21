@@ -1,6 +1,6 @@
 <?php
 include '../../config/config.php';
-session_start();
+
 
 // Database connection setup
 $conn = new mysqli('localhost', 'root', '', 'db_ba3101');
