@@ -53,6 +53,9 @@ try {
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'class="active"' : ''; ?>>
                         <a href="./">Overview</a>
                     </li>
+                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'class="active"' : ''; ?>>
+                        <a href="settings.php">Settings</a>
+                    </li>
                     <!-- Add other student-specific menu items as needed -->
                 </ul>
             </div>
