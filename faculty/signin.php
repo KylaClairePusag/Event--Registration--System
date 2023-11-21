@@ -1,7 +1,11 @@
 <?php
+
+// Enable error reporting for debugging (remove in production)
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
 include '../../config/config.php';
 
-if (isset($_SESSION['email'])) {
+if (isset($_SESSION['faculty_email'])) {
     header("Location: ./dashboard.php");
     exit;
 }
@@ -10,17 +14,17 @@ include '../config/config.php';
 $error = null; // Initialize the error variable
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $faculty_email = filter_input(INPUT_POST, 'faculty_email', FILTER_SANITIZE_EMAIL);
     $faculty_password = filter_input(INPUT_POST, 'faculty_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    if (empty($email) || empty($faculty_password)) {
+    if (empty($faculty_email) || empty($faculty_password)) {
         $error = "*** Please fill in all fields. ***"; // Set the error message
     } else {
-        $query = "SELECT * FROM tb_faculty WHERE email = ?";
+        $query = "SELECT * FROM tb_faculty WHERE faculty_email = ?";
         $stmt = mysqli_prepare($conn, $query);
 
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, 's', $email);
+            mysqli_stmt_bind_param($stmt, 's', $faculty_email);
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
             $row = mysqli_fetch_assoc($result);
@@ -28,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             // Directly compare the faculty_passwords (constb_facultyer using faculty_password hashing in production)
             if ($row && $row['faculty_password'] === $faculty_password) {
                 // Set session variables
-                $_SESSION['email'] = $row['email'];
+                $_SESSION['faculty_email'] = $row['faculty_email'];
                 $_SESSION['faculty_name'] = $row['faculty_name'];
                 // Redirect to dashboard
                 header("Location: ./dashboard.php");
@@ -62,15 +66,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
             <div class="box">
                 <div class="login-container">
-                    <h1>Admin Portal</h1>
+                    <h1>Faculty Portal</h1>
                     <p>Please enter your contact details to connect.</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                         <div class="form-group">
                             <label>Email address</label>
-                            <input type="email" name="email" placeholder="Enter your email" required>
+                            <input type="email" name="faculty_email" placeholder="Enter your email" required>
                         </div>
                         <div class="form-group">
-                            <label for="faculty_password">faculty_password</label>
+                            <label for="faculty_password">Password</label>
                             <input type="password" name="faculty_password" placeholder="Password" required>
                         </div>
                         <div class="error<?php if (!empty($error))
@@ -83,10 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         </div>
 
                         <button type="submit" name="submit">Sign in</button>
-                        <h5>By using this service, you understood and agree to the
-                            Event Online Registration BSU Terms of Use and Privacy
-                            Statement
-                        </h5>
                     </form>
                 </div>
 
