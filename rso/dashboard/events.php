@@ -1,7 +1,7 @@
 <?php
 // Database connection setup
 include '../../config/config.php';
-session_start();
+
 
 // Get the current request URI
 $requestUri = $_SERVER['REQUEST_URI'];
