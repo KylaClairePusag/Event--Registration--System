@@ -1,6 +1,6 @@
 <?php
-session_start(); // Resume the existing session
-
+// Resume the existing session
+include '../../config/config.php';
 // Check if the admin is logged in, otherwise redirect to the login page
 if (!isset($_SESSION['admin_email']) || !isset($_SESSION['admin_name'])) {
     header("Location: ../signin.php");

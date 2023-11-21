@@ -1,5 +1,5 @@
 <?php
-session_start();
+include '../../config/config.php';
 if (isset($_SESSION['rso_email'])) {
     header("Location: ./dashboard");
     exit;

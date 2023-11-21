@@ -1,11 +1,9 @@
 <?php
-session_start();
+include '../config/config.php';
 if (isset($_SESSION['admin_email'])) {
     header("Location: ./dashboard");
     exit;
 }
-
-include '../config/config.php';
 $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {

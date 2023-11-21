@@ -186,7 +186,7 @@ try {
                 $admin_profile = $row["admin_profile"];
 
                 $actions = '<button type="button" onclick="editAdmin(' . $admin_id . ', \'' . $admin_name . '\', \'' . $admin_password . '\', \'' . $admin_email . '\')">Edit</button> <button type="button" onclick="showDeleteModal(' . $admin_id . ')">Delete</button>';
-                $body[] = array($admin_id, '<img src="../../' . $admin_profile . '" alt="Admin Profile Image"  style="width: 30px; height: 30px; border-radius: 50px;">', $admin_name, $admin_password, $admin_email, $actions);
+                $body[] = array($admin_id, $admin_profile, $admin_name, $admin_password, $admin_email, $actions);
 
             }
             createTable($head, $body);

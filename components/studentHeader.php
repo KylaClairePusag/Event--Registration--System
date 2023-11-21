@@ -1,5 +1,5 @@
 <?php
-session_start(); // Resume the existing session
+include '../../config/config.php';
 
 // Check if the student is logged in, otherwise redirect to the login page
 if (!isset($_SESSION['student_email'])) {

@@ -1,6 +1,6 @@
 <?php
-// Start a new session
-session_start();
+include '../../config/config.php';
+
 if (isset($_SESSION['email'])) {
     header("Location: ./dashboard.php");
     exit;

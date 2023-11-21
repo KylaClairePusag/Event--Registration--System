@@ -1,6 +1,4 @@
 <?php
-session_start();
-// Database connection setup
 include '../../config/config.php';
 
 // Get the current request URI
@@ -123,11 +121,11 @@ if (isset($_POST["edit_admin"])) {
     </main>
 
     <script>
-    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
 
-    function resetEditForm() {}
+        function resetEditForm() { }
 
-    function togglePasswordVisibility(passwordFieldId) {}
+        function togglePasswordVisibility(passwordFieldId) { }
     </script>
     <script src="../../script/admin.js"></script>
 </body>
