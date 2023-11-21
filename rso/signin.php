@@ -1,5 +1,4 @@
 <?php
-include '../../config/config.php';
 if (isset($_SESSION['rso_email'])) {
     header("Location: ./dashboard");
     exit;
@@ -75,9 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         <div class="error<?php if (!empty($error))
                             echo ' show'; ?>">
                             <?php if (!empty($error)): ?>
-                                <p>
-                                    <?php echo $error; ?>
-                                </p>
+                            <p>
+                                <?php echo $error; ?>
+                            </p>
                             <?php endif; ?>
                         </div>
 

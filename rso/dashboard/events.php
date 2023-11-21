@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Database connection setup
 include '../../config/config.php';
 
@@ -235,7 +236,7 @@ try {
             <div class="searchCont">
                 <?php include '../../components/search.php'; ?>
                 <?php if (!empty($searchTerm)): ?>
-                    <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
+                <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
                 <?php endif; ?>
             </div>
             <div class="headbtn">
@@ -327,8 +328,8 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
-        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
-        const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'event_date')); ?>;
+    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+    const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'event_date')); ?>;
     </script>
     <script src="../../script/event.js"></script>
 </body>
