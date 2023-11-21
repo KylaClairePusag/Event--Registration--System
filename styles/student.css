@@ -9,6 +9,9 @@
   border: 1px solid #ccc;
   overflow: hidden;
   border-radius: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .event-box img {
