@@ -16,10 +16,10 @@ try {
 if (isset($_POST["add_faculty"])) {
     $faculty_name = htmlspecialchars($_POST["faculty_name"], ENT_QUOTES, "UTF-8");
     $faculty_password = htmlspecialchars($_POST["faculty_password"], ENT_QUOTES, "UTF-8");
-    $email = htmlspecialchars($_POST["email"], ENT_QUOTES, "UTF-8");
+    $faculty_email = htmlspecialchars($_POST["faculty_email"], ENT_QUOTES, "UTF-8");
     $department_id = $_POST["department_id"]; // Added department_id
-    $query = $pdo->prepare("INSERT INTO tb_faculty (faculty_name, faculty_password, email, department_id) VALUES (:faculty_name, :faculty_password, :email, :department_id)");
-    if ($query->execute([':faculty_name' => $faculty_name, ':faculty_password' => $faculty_password, ':email' => $email, ':department_id' => $department_id])) {
+    $query = $pdo->prepare("INSERT INTO tb_faculty (faculty_name, faculty_password, faculty_email, department_id) VALUES (:faculty_name, :faculty_password, :faculty_email, :department_id)");
+    if ($query->execute([':faculty_name' => $faculty_name, ':faculty_password' => $faculty_password, ':faculty_email' => $faculty_email, ':department_id' => $department_id])) {
         header("Location: " . $_SERVER["PHP_SELF"]);
         exit();
     } else {
@@ -42,10 +42,10 @@ if (isset($_POST["edit_faculty"])) {
     $edit_faculty_id = filter_input(INPUT_POST, "edit_faculty_id", FILTER_VALIDATE_INT);
     $edit_faculty_name = htmlspecialchars($_POST["edit_faculty_name"], ENT_QUOTES, "UTF-8");
     $edit_faculty_password = htmlspecialchars($_POST["edit_faculty_password"], ENT_QUOTES, "UTF-8");
-    $edit_email = htmlspecialchars($_POST["edit_email"], ENT_QUOTES, "UTF-8");
+    $edit_faculty_email = htmlspecialchars($_POST["edit_faculty_email"], ENT_QUOTES, "UTF-8");
     $edit_department_id = $_POST["edit_department_id"];
-    $query = $pdo->prepare("UPDATE tb_faculty SET faculty_name = :faculty_name, faculty_password = :faculty_password, email = :email, department_id = :department_id WHERE faculty_id = :faculty_id");
-    if ($query->execute([':faculty_name' => $edit_faculty_name, ':faculty_password' => $edit_faculty_password, ':email' => $edit_email, ':department_id' => $edit_department_id, ':faculty_id' => $edit_faculty_id])) {
+    $query = $pdo->prepare("UPDATE tb_faculty SET faculty_name = :faculty_name, faculty_password = :faculty_password, faculty_email = :faculty_email, department_id = :department_id WHERE faculty_id = :faculty_id");
+    if ($query->execute([':faculty_name' => $edit_faculty_name, ':faculty_password' => $edit_faculty_password, ':faculty_email' => $edit_faculty_email, ':department_id' => $edit_department_id, ':faculty_id' => $edit_faculty_id])) {
         header("Location: " . $_SERVER["PHP_SELF"]);
         exit();
     } else {
@@ -80,7 +80,7 @@ $query->execute();
             $faculty_id = $row["faculty_id"];
             $faculty_name = $row["faculty_name"];
             $faculty_password = $row["faculty_password"];
-            $email = $row["email"];
+            $faculty_email = $row["faculty_email"];
             $department_id = $row["department_id"]; // Added department_id
             $department_name = ''; // Initialize department_name
         
@@ -91,8 +91,8 @@ $query->execute();
                 $department_name = $deptRow['department_name'];
             }
 
-            $actions = '<button type="button" onclick="viewfaculty(' . $faculty_id . ', \'' . $faculty_name . '\', \'' . $faculty_password . '\', \'' . $email . '\', \'' . $department_id . '\')">View</button> <button type="button" onclick="showDeleteModal(' . $faculty_id . ')">Delete</button>';
-            $body[] = array($faculty_id, $faculty_name, $faculty_password, $email, $department_name, $actions);
+            $actions = '<button type="button" onclick="viewfaculty(' . $faculty_id . ', \'' . $faculty_name . '\', \'' . $faculty_password . '\', \'' . $faculty_email . '\', \'' . $department_id . '\')">View</button> <button type="button" onclick="showDeleteModal(' . $faculty_id . ')">Delete</button>';
+            $body[] = array($faculty_id, $faculty_name, $faculty_password, $faculty_email, $department_name, $actions);
         }
 
         createTable($head, $body);
@@ -106,8 +106,8 @@ $query->execute();
                     <input type="text" id="faculty-name" name="faculty_name">
                     <label for="faculty-password">Password:</label>
                     <input type="password" id="faculty-password" name="faculty_password">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email">
+                    <label for="faculty_email">Email:</label>
+                    <input type="email" id="faculty_email" name="faculty_email">
                     <label for="department">Department:</label>
                     <select id="department" name="department_id">
                         <?php
@@ -133,8 +133,8 @@ $query->execute();
                     <input type="text" id="edit-faculty-name" name="edit_faculty_name">
                     <label for="edit-faculty-password">Password:</label>
                     <input type="password" id="edit-faculty-password" name="edit_faculty_password">
-                    <label for="edit-email">Email:</label>
-                    <input type="email" id="edit-email" name="edit_email">
+                    <label for="edit-faculty-email">Email:</label>
+                    <input type="email" id="edit-faculty-email" name="edit_faculty_email">
                     <label for="edit-department">Department:</label>
                     <select id="edit-department" name="edit_department_id">
                         <?php
@@ -191,11 +191,11 @@ $query->execute();
         deleteModal.close();
     }
 
-    function viewfaculty(faculty_id, faculty_name, faculty_password, email, department_id) {
+    function viewfaculty(faculty_id, faculty_name, faculty_password, faculty_email, department_id) {
         document.getElementById("edit-faculty-id").value = faculty_id;
         document.getElementById("edit-faculty-name").value = faculty_name;
         document.getElementById("edit-faculty-password").value = faculty_password;
-        document.getElementById("edit-email").value = email;
+        document.getElementById("edit-faculty-email").value = faculty_email;
         document.getElementById("edit-department").value = department_id;
         document.getElementById("viewModal").showModal();
     }
