@@ -1,6 +1,5 @@
 <?php
 include '../../config/config.php';
-include '../../components/rsoHeader.php';
 
 $conn = new mysqli('localhost', 'root', '', 'db_ba3101');
 
@@ -32,7 +31,7 @@ if ($result) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendees Table</title>
+    <title>Attendees List</title>
     <link rel="stylesheet" href="../../styles/rso.css">
     <style>
     h2 {
