@@ -11,3 +11,7 @@ try {
     echo "Connection failed: " . $e->getMessage();
     die();
 }
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
