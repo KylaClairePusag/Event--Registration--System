@@ -105,11 +105,17 @@ if (isset($_POST["edit_admin"])) {
 
 <head>
     <link rel="stylesheet" href="../../styles/rso.css">
-    <style>
+    <style>        
+    
+
+
+
         .passcont {
+            margin-left:120px;
+            margin-top:-20px;
             width: 200px;
-            border-radius: 0.5rem;
-            border: 1px solid #848484;
+
+            border: 2px solid #848484;
             display: flex;
             align-items: center;
             flex-wrap: nowrap;
@@ -134,9 +140,10 @@ if (isset($_POST["edit_admin"])) {
         <h2>ACCOUNT SETTINGS</h2>
 
         <form method="POST" action="" enctype="multipart/form-data">
+            <div class='name'>
             <label for="edit-admin-name">New Name:</label>
             <input type="text" id="edit-admin-name" name="edit_admin_name"><br>
-
+            </div>
             <label for="edit-admin-password">New Password:</label>
             <div class='passcont'>
                 <input type="password" id="edit-admin-password" name="edit_admin_password">
