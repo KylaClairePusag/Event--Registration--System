@@ -2,7 +2,7 @@
 
 
 if (isset($_SESSION['faculty_email'])) {
-    header("Location: ./dashboard.php");
+    header("Location: ./home");
     exit;
 }
 
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             if ($row && $row['faculty_password'] === $faculty_password) {
                 $_SESSION['faculty_email'] = $row['faculty_email'];
                 $_SESSION['faculty_name'] = $row['faculty_name'];
-                header("Location: ./dashboard.php");
+                header("Location: ./home");
                 exit;
             } else {
                 $error = "*** Invalid Login Credentials. ***";
