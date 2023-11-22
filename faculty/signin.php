@@ -79,6 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         </div>
 
                         <button type="submit" name="submit">Sign in</button>
+                         <h5>By using this service, you understood and agree to the Event Online Registration BSU Terms
+                            of Use and Privacy Statement</h5>
                     </form>
                 </div>
             </div>
