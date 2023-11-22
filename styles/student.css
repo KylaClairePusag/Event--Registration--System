@@ -123,3 +123,9 @@ h3 {
 #cancelbtn {
   background-color: #0c0c0dae;
 }
+
+dialog {
+  padding: 20px;
+  background-color: #fff;
+  z-index: 1000;
+}
