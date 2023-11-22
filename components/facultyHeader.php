@@ -1,7 +1,10 @@
 <?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 include '../../config/config.php';
 
-// Check if the faculty is logged in, otherwise redirect to the login page
+// Check if the student is logged in, otherwise redirect to the login page
 if (!isset($_SESSION['faculty_email'])) {
     header("Location: ../signin.php");
     exit();
@@ -19,12 +22,12 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Prepare and execute the query to get student profile
-    $sql = "SELECT faculty_name, faculty_email, faculty_profile FROM tb_faculty WHERE faculty_email = :faculty_email";
+    $sql = "SELECT faculty_name, faculty_profile,faculty_email FROM tb_faculty WHERE faculty_email = :faculty_email";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(":faculty_email", $_SESSION['faculty_email']);
     $stmt->execute();
     $facultyData = $stmt->fetch(PDO::FETCH_ASSOC);
-    $facultyEmail = $facultyData['faculty_email'];
+    $faculty_email = $facultyData['faculty_email'];
     $facultyName = $facultyData['faculty_name'];
     $facultyProfile = $facultyData['faculty_profile'];
 } catch (PDOException $e) {
@@ -59,7 +62,7 @@ try {
                 </ul>
             </div>
             <div class="profile">
-                <?php echo htmlspecialchars($facultyEmail); ?>
+                <?php echo htmlspecialchars($faculty_email); ?>
                 <?php echo '<img src="../../' . $facultyProfile . '" alt="Faculty Profile Image" class="profile"'; ?>
             </div>
             <a href="../logout.php">Logout</a>
