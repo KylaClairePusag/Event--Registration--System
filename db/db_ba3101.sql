@@ -110,7 +110,8 @@ CREATE TABLE `tb_faculty` (
   `faculty_password` varchar(20) NOT NULL,
   `department_id` int(11) DEFAULT NULL,
   `faculty_email` varchar(255) NOT NULL,
-  `faculty_profile` longblob DEFAULT NULL
+  `faculty_profile` longblob DEFAULT NULL,
+  `faculty_position` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

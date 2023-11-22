@@ -24,16 +24,18 @@ if ($facultyQuery->execute([':faculty_email' => $loggedInfacultyEmail])) {
 
 if (isset($_POST["edit_faculty"])) {
     $edit_faculty_name = htmlspecialchars($_POST["edit_faculty_name"], ENT_QUOTES, "UTF-8");
+    $edit_faculty_position = htmlspecialchars($_POST["edit_faculty_position"], ENT_QUOTES, "UTF-8");
     $edit_faculty_password = htmlspecialchars($_POST["edit_faculty_password"]);
 
     $newProfilePicture = !empty($_FILES["edit_faculty_profile"]["name"]);
 
 
     $edit_faculty_name = ($edit_faculty_name === '') ? $faculty['faculty_name'] : $edit_faculty_name;
+    $edit_faculty_position = ($edit_faculty_position === '') ? $faculty['faculty_position'] : $edit_faculty_position;
     $edit_faculty_password = ($edit_faculty_password === '') ? $facultyt['faculty_password'] : $edit_faculty_password;
 
     // Check if the data is different from the current data
-    if ($edit_faculty_name !== $faculty['name'] || $edit_faculty_password !== $faculty['faculty_password'] || $newProfilePicture) {
+    if ($edit_faculty_name !== $faculty['faculty_name'] || $edit_faculty_position !== $faculty['faculty_position '] || $edit_faculty_password !== $faculty['faculty_password'] || $newProfilePicture) {
         if ($newProfilePicture) {
             // Image upload code
             $target_dir = "../../images/profiles/";
@@ -41,7 +43,7 @@ if (isset($_POST["edit_faculty"])) {
             $uploadOk = 1;
             $imageFileType = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
 
-            $unique_filename = uniqid() . "_" . $edit_faculty_name . "_" . time() . "." . $imageFileType;
+            $unique_filename = uniqid() . "_" . $edit_faculty_name . "_" . $edit_faculty_position . "_" . time() . "." . $imageFileType;
             $target_file = $target_dir . $unique_filename;
 
             // Check if the file is a valid image
@@ -69,8 +71,8 @@ if (isset($_POST["edit_faculty"])) {
                 if (move_uploaded_file($_FILES["edit_faculty_profile"]["tmp_name"], $target_file)) {
                     // Update data in the database with the new profile picture filename
                     $filename = "images/profiles/" . basename($target_file);
-                    $query = $pdo->prepare("UPDATE tb_faculty SET faculty_name = :faculty_name, faculty_password = :faculty_password, faculty_profile = :faculty_profile WHERE faculty_email = :faculty_email");
-                    if ($query->execute([':faculty_name' => $edit_faculty_name, ':faculty_password' => $edit_faculty_password, ':faculty_profile' => $filename, ':faculty_email' => $loggedInfacultyEmail])) {
+                    $query = $pdo->prepare("UPDATE tb_faculty SET faculty_name = :faculty_name, faculty_position = :faculty_position, faculty_password = :faculty_password, faculty_profile = :faculty_profile WHERE faculty_email = :faculty_email");
+                    if ($query->execute([':faculty_name' => $edit_faculty_name, ':faculty_position' => $edit_faculty_position, ':faculty_password' => $edit_faculty_password, ':faculty_profile' => $filename, ':faculty_email' => $loggedInfacultyEmail])) {
                         header("Location: $requestUri");
                         exit();
                     } else {
@@ -81,8 +83,8 @@ if (isset($_POST["edit_faculty"])) {
                 }
             }
         } else {
-            $query = $pdo->prepare("UPDATE tb_faculty SET faculty_name = :faculty_name, faculty_password = :faculty_password WHERE faculty_email = :faculty_email");
-            if ($query->execute([':faculty_name' => $edit_faculty_name, ':faculty_password' => $edit_facultypassword, ':faculty_email' => $loggedInfacultyEmail])) {
+            $query = $pdo->prepare("UPDATE tb_faculty SET faculty_name = :faculty_name, faculty_position = :faculty_position, faculty_password = :faculty_password WHERE faculty_email = :faculty_email");
+            if ($query->execute([':faculty_name' => $edit_faculty_name, ':faculty_position' => $edit_faculty_position, ':faculty_password' => $edit_facultypassword, ':faculty_email' => $loggedInfacultyEmail])) {
                 header("Location: $requestUri");
                 exit();
             } else {
@@ -112,7 +114,7 @@ if (isset($_POST["edit_faculty"])) {
 
     }
 
-    #edit-student-password,
+    #edit-faculty-password,
     #edit-rso-password {
         width: 100%;
         /* Make the password input fill the available width */
@@ -132,6 +134,8 @@ if (isset($_POST["edit_faculty"])) {
         <form method="POST" action="" enctype="multipart/form-data">
             <label for="edit-faculty-name">Name:</label>
             <input type="text" id="edit-faculty-name" name="edit_faculty_name"><br>
+            <label for="edit-faculty-position">Position:</label>
+            <input type="text" id="edit-faculty-position" name="edit_faculty_position"><br>
 
             <label for="edit-faculty-password">New Password:</label>
             <div class='passcont'>
