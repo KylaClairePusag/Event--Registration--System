@@ -110,7 +110,7 @@ if (isset($_POST["edit_rso"])) {
             margin-left:120px;
             margin-top:-20px;
             width: 200px;
-            border: 2px solid #848484;
+            border: 1px solid #848484;
             display: flex;
             align-items: center;
             flex-wrap: nowrap;
