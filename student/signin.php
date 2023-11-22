@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         $error = "*** Please fill in all fields. ***";
     } else {
         try {
-            $query = "SELECT * FROM tbstudinfo WHERE student_email = :student_email";
+            $query = "SELECT * FROM tbstudentaccount WHERE student_email = :student_email";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(':student_email', $student_email, PDO::PARAM_STR);
             $stmt->execute();
