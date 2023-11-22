@@ -1,7 +1,5 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+
 include '../../config/config.php';
 
 // Check if the student is logged in, otherwise redirect to the login page
@@ -55,6 +53,9 @@ try {
                 <ul>
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'class="active"' : ''; ?>>
                         <a href="./">Overview</a>
+                    </li>
+                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'myevents.php' ? 'class="active"' : ''; ?>>
+                        <a href="myevents.php">My Events</a>
                     </li>
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'class="active"' : ''; ?>>
                         <a href="settings.php">Settings</a>
