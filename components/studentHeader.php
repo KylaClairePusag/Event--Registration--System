@@ -20,14 +20,12 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Prepare and execute the query to get student profile
-    $sql = "SELECT firstname, lastname, student_profile,student_email FROM tbstudinfo WHERE student_email = :student_email";
+    $sql = "SELECT   student_profile,student_email FROM tbstudentaccount WHERE student_email = :student_email";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(":student_email", $_SESSION['student_email']);
     $stmt->execute();
     $studentData = $stmt->fetch(PDO::FETCH_ASSOC);
     $student_email = $studentData['student_email'];
-    $studentFirstName = $studentData['firstname'];
-    $studentLastName = $studentData['lastname'];
     $studentProfile = $studentData['student_profile'];
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
