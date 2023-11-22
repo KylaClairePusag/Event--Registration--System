@@ -104,15 +104,16 @@ if (isset($_POST["edit_faculty"])) {
 <head>
     <link rel="stylesheet" href="../../styles/rso.css">
     <style>
-    .passcont {
-        width: 200px;
-        border-radius: 0.5rem;
-        border: 1px solid #848484;
-        display: flex;
-        align-items: center;
-        flex-wrap: nowrap;
+        .passcont {
+            margin-left:120px;
+            margin-top:-20px;
+            width: 200px;
+            border: 2px solid #848484;
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
 
-    }
+        }
 
     #edit-faculty-password,
     #edit-rso-password {
