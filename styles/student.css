@@ -22,6 +22,8 @@
 
 .event-content {
   padding: 10px;
+  height: 100%;
+  border-bottom: 1px solid #ccc;
 }
 
 .event-content p {
@@ -98,7 +100,6 @@ h3 {
   justify-content: flex-end;
   align-items: center;
   padding: 10px;
-  border-top: 1px solid #ccc;
 }
 
 .events_button button {
@@ -128,4 +129,142 @@ dialog {
   padding: 20px;
   background-color: #fff;
   z-index: 1000;
+}
+
+.ended-event-box {
+  opacity: 0.5;
+}
+
+.headerImg {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  object-position: center;
+  background: #676767;
+}
+
+.headerImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-details-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.event-details-container h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.event-details-container p {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.event-details-container h3 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.event-details-container img {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.status p {
+  margin-bottom: 0;
+  margin-right: 0.5rem;
+  font-weight: 800;
+}
+
+.status span {
+  text-transform: capitalize;
+}
+
+#details {
+  line-height: 1.6;
+}
+
+.department {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.department p {
+  margin-bottom: 0;
+  margin-right: 0.5rem;
+  font-weight: 800;
+}
+
+.details h3 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+footer {
+  margin-top: auto; /* Adjusted from margin-top: 2rem; */
+  padding: 1rem 0;
+  height: 5rem;
+  background: rgba(255, 255, 255, 0.861);
+  color: #000000;
+  text-align: center;
+  position: sticky;
+  bottom: 0;
+  box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.1);
+}
+.dat img {
+  width: 1.3rem;
+  height: 1.3rem;
+  object-fit: cover;
+  margin-right: 0.5rem;
+}
+
+.dat {
+  display: flex;
+  margin-bottom: 0.2rem;
+}
+
+.titl {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.footerCont {
+  max-width: 1500px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+}
+
+#dtl h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+#dtl h3 {
+  font-size: 1rem;
+  font-weight: 500;
 }
