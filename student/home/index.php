@@ -1,4 +1,5 @@
 <?php
+
 include '../../config/config.php';
 
 $conn = new mysqli('localhost', 'root', '', 'db_ba3101');
@@ -6,8 +7,6 @@ if ($conn->connect_error) {
     die('Connection Failed: ' . $conn->connect_error);
 }
 
-// Assuming $pdo is the PDO instance, but it's not defined in your code
-// Make sure to create a PDO instance before using it
 $pdo = new PDO('mysql:host=localhost;dbname=db_ba3101', 'root', '');
 
 $checkQuery = "SELECT * FROM tb_attendees WHERE event_id = :event_id AND student_id = :student_id";
@@ -76,14 +75,6 @@ try {
     <link rel="stylesheet" href="../../styles/student.css">
     <link rel="stylesheet" href="../../styles/rso.css">
 
-    <style>
-        /* Add some styles for the dialog */
-        dialog {
-            padding: 20px;
-            background-color: #fff;
-            z-index: 1000;
-        }
-    </style>
 </head>
 
 <body>
@@ -168,7 +159,7 @@ try {
                             $attendeeExists = $checkStmt->rowCount() > 0;
 
                             if ($attendeeExists) {
-                                echo '<button type="button" onclick="openCancelModal(' . $event_id . ')">Cancel</button>';
+                                echo '<button type="button" onclick="openCancelModal(' . $event_id . ')" id="cancelbtn">Cancel</button>';
                             } else {
                                 echo '<button type="button" onclick="openAttendModal(' . $event_id . ')">Interested</button>';
                             }
@@ -219,7 +210,6 @@ try {
         </dialog>
 
         <script>
-            // JavaScript functions to handle dialogs
             function openAttendModal(eventId) {
                 document.getElementById('attendDialogEventId').value = eventId;
                 document.getElementById('attendDialog').showModal();
@@ -238,7 +228,6 @@ try {
                 document.getElementById('cancelDialog').close();
             }
 
-            // Close dialog if user clicks outside
             document.addEventListener('click', function (event) {
                 var modal = document.querySelector('.modal');
                 if (event.target === modal) {
