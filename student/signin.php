@@ -8,6 +8,7 @@ if (isset($_SESSION['student_email'])) {
 
 include '../config/config.php';
 
+session_start();
 $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
