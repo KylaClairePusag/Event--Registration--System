@@ -35,9 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancel'])) {
     $deleteStmt->bindParam(':event_id', $_POST['event_id'], PDO::PARAM_INT);
     $deleteStmt->bindParam(':student_id', $_SESSION['student_id'], PDO::PARAM_INT);
     $deleteStmt->execute();
-
     $_SESSION['delete_action_completed'] = true;
-
     header("Location: index.php");
     exit;
 }
@@ -83,41 +81,41 @@ try {
     <main>
         <div class="box-container">
             <?php foreach ($rows as $row) { ?>
-                <div class="event-box">
-                    <?php
-                    // Extract event details
-                    $event_id = $row["event_id"];
-                    $event_title = $row["event_title"];
-                    $event_detail = $row["event_detail"];
-                    $event_date = date('F j, Y', strtotime($row["event_date"]));
-                    $status = $row["status"];
-                    $header_image = $row["header_image"];
-                    $department_name = $row["department_name"];
 
-                    // Count attendees for the event
-                    $attendees_query = $conn->prepare("SELECT COUNT(*) as attendee_count FROM tb_attendees WHERE event_id = ?");
-                    $attendees_query->bind_param('i', $event_id);
-                    $attendees_query->execute();
-                    $attendees_row = $attendees_query->get_result()->fetch_assoc();
-                    $attendee_count = $attendees_row['attendee_count'];
+                <?php
+                // Extract event details
+                $event_id = $row["event_id"];
+                $event_title = $row["event_title"];
+                $event_detail = $row["event_detail"];
+                $event_date = date('F j, Y', strtotime($row["event_date"]));
+                $status = $row["status"];
+                $header_image = $row["header_image"];
+                $department_name = $row["department_name"];
 
-                    // Define a CSS class based on the status
-                    $statusClass = '';
-                    switch ($status) {
-                        case 'upcoming':
-                            $statusClass = 'upcoming-event';
-                            break;
-                        case 'ongoing':
-                            $statusClass = 'ongoing-event';
-                            break;
-                        case 'ended':
-                            $statusClass = 'ended-event';
-                            break;
-                        default:
-                            $statusClass = 'default-event';
-                            break;
-                    }
-                    ?>
+                // Count attendees for the event
+                $attendees_query = $conn->prepare("SELECT COUNT(*) as attendee_count FROM tb_attendees WHERE event_id = ?");
+                $attendees_query->bind_param('i', $event_id);
+                $attendees_query->execute();
+                $attendees_row = $attendees_query->get_result()->fetch_assoc();
+                $attendee_count = $attendees_row['attendee_count'];
+
+                // Define a CSS class based on the status
+                $statusClass = '';
+                switch ($status) {
+                    case 'upcoming':
+                        $statusClass = 'upcoming-event';
+                        break;
+                    case 'ongoing':
+                        $statusClass = 'ongoing-event';
+                        break;
+                    case 'ended':
+                        $statusClass = 'ended-event';
+                        break;
+                    default:
+                        break;
+                }
+                ?>
+                <div class="event-box <?php echo $statusClass; ?>-box">
 
                     <div class="header">
                         <img src="../../<?php echo $header_image; ?>" alt="Event Image">
@@ -151,17 +149,18 @@ try {
                                 onclick="window.location.href='event.php?event_id=<?php echo $event_id; ?>'">View
                                 Event</button>
                             <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
-
                             <?php
-                            // Move the attendee check inside the loop
-                            $attendeeExists = false; // Default to false for each event
+                            $attendeeExists = false;
                             $checkStmt->execute();
                             $attendeeExists = $checkStmt->rowCount() > 0;
-
-                            if ($attendeeExists) {
-                                echo '<button type="button" onclick="openCancelModal(' . $event_id . ')" id="cancelbtn">Cancel</button>';
+                            if ($statusClass == 'upcoming-event' || $statusClass == 'ongoing-event') {
+                                if ($attendeeExists) {
+                                    echo '<button type="button" onclick="openCancelModal(' . $event_id . ')" id="cancelbtn">Cancel</button>';
+                                } else {
+                                    echo '<button type="button" onclick="openAttendModal(' . $event_id . ')">Interested</button>';
+                                }
                             } else {
-                                echo '<button type="button" onclick="openAttendModal(' . $event_id . ')">Interested</button>';
+                                echo '<button id="cancelbtn" disabled>Past Event</button>';
                             }
                             ?>
                         </form>
@@ -180,12 +179,8 @@ try {
                     <input type="hidden" name="event_id" id="attendDialogEventId" value="">
                     <div class="clearfix">
                         <button type="button" onclick="closeAttendDialog()" class="cancelbtn">No</button>
-
                         <button type="submit" name="attend">Yes</button>
-
-
                     </div>
-
                 </form>
             </div>
         </dialog>
@@ -199,10 +194,7 @@ try {
                     <input type="hidden" name="event_id" id="cancelDialogEventId" value="">
                     <div class="clearfix">
                         <button type="button" onclick="closeCancelDialog()" class="cancelbtn">No</button>
-
                         <button type="submit" name="cancel">Yes</button>
-
-
                     </div>
                 </form>
             </div>
