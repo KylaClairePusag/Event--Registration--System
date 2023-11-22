@@ -2,12 +2,12 @@
 include '../../config/config.php';
 
 // Check if the admin is logged in, otherwise redirect to login page
-if (!isset($_SESSION['faculty_email']) || !isset($_SESSION['faculty_email'])) {
+if (!isset($_SESSION['email']) || !isset($_SESSION['email'])) {
     header("Location: ./signin.php");
     exit();
 }
 
-$adminName = $_SESSION['faculty_email'];
+$adminName = $_SESSION['email'];
 
 
 ?>
