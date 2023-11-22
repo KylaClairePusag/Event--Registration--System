@@ -22,13 +22,14 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Prepare and execute the query to get student profile
-    $sql = "SELECT faculty_name, faculty_profile,faculty_email FROM tb_faculty WHERE faculty_email = :faculty_email";
+    $sql = "SELECT faculty_name, faculty_position, faculty_profile,faculty_email FROM tb_faculty WHERE faculty_email = :faculty_email";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(":faculty_email", $_SESSION['faculty_email']);
     $stmt->execute();
     $facultyData = $stmt->fetch(PDO::FETCH_ASSOC);
     $faculty_email = $facultyData['faculty_email'];
     $facultyName = $facultyData['faculty_name'];
+    $facultyPosition = $facultyData['faculty_position'];
     $facultyProfile = $facultyData['faculty_profile'];
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
