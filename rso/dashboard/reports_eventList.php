@@ -35,9 +35,9 @@ try {
 <body>
 
     <?php include '../../components/rsoHeader.php'; ?>
-
-    <section class="tableContainer">
-        <?php include '../../components/table.component.php';
+    <main>
+        <section class="tableContainer">
+            <?php include '../../components/table.component.php';
 
             $head = array('Events', 'Action');
             $body = array();
@@ -53,7 +53,8 @@ try {
 
             createTable($head, $body);
             ?>
-    </section>
+        </section>
+    </main>
 
     <?php
 
