@@ -41,11 +41,11 @@ function showModal(modalId) {
 }
 
 // Function to show details in the edit modal
-function editRso(rso_id, rso_name, rso_password, email, department_id) {
+function editemp(emp_id, emp_name, emp_password, email, department_id) {
     showModal("editModal");
-    document.getElementById("edit-rso-id").value = rso_id;
-    document.getElementById("edit-rso-name").value = rso_name;
-    document.getElementById("edit-rso-password").value = rso_password;
+    document.getElementById("edit-emp-id").value = emp_id;
+    document.getElementById("edit-emp-name").value = emp_name;
+    document.getElementById("edit-emp-password").value = emp_password;
     document.getElementById("edit-email").value = email;
     document.getElementById("original-email").value = email;
     document.getElementById("edit-department").value = department_id;
@@ -108,7 +108,7 @@ document.getElementById('searchForm').addEventListener('submit', function (event
 
 
 // Function to show delete modal and handle delete button click
-function showDeleteModal(rso_id) {
+function showDeleteModal(emp_id) {
     showModal("deleteModal");
     const deleteBtn = document.getElementById("deleteModal").querySelector(".deletebtn");
     deleteBtn.addEventListener("click", function () {
@@ -117,25 +117,25 @@ function showDeleteModal(rso_id) {
         form.setAttribute("action", base_url);
         const hiddenField = document.createElement("input");
         hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", "delete_rso");
-        hiddenField.setAttribute("value", rso_id);
+        hiddenField.setAttribute("name", "delete_emp");
+        hiddenField.setAttribute("value", emp_id);
         form.appendChild(hiddenField);
         document.body.appendChild(form);
         form.submit();
     });
 }
 
-// Function to delete an RSO
-function deleteRso() {
-    const rso_id = document.getElementById("edit-rso-id").value;
+// Function to delete an emp
+function deleteemp() {
+    const emp_id = document.getElementById("edit-emp-id").value;
     const form = document.createElement("form");
     form.setAttribute("method", "POST");
     form.setAttribute("action", base_url);
 
     const hiddenField = document.createElement("input");
     hiddenField.setAttribute("type", "hidden");
-    hiddenField.setAttribute("name", "delete_rso");
-    hiddenField.setAttribute("value", rso_id);
+    hiddenField.setAttribute("name", "delete_emp");
+    hiddenField.setAttribute("value", emp_id);
 
     form.appendChild(hiddenField);
     document.body.appendChild(form);
@@ -149,7 +149,7 @@ function isEmailTaken(email) {
 
 // Event listener for form submission in addModal
 document.getElementById('addModal').querySelector('form').addEventListener('submit', function (event) {
-    const emailInput = document.getElementById('rso-email');
+    const emailInput = document.getElementById('emp-email');
     const email = emailInput.value.trim();
     const errorContainer = document.querySelector('.error-container');
 
