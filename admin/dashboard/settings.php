@@ -105,30 +105,76 @@ if (isset($_POST["edit_admin"])) {
 
 <head>
     <link rel="stylesheet" href="../../styles/rso.css">
-    <style>        
-    
+    <style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
 
+    header {
+        flex-shrink: 0;
+    }
 
+    main {
+        flex-grow: 1;
+        padding: 20px;
+    }
 
-        .passcont {
-            margin-left:120px;
-            margin-top:-20px;
-            width: 200px;
-            border: 1px solid #848484;
-            display: flex;
-            align-items: center;
-            flex-wrap: nowrap;
+    main form {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+    }
 
-        }
+    label {
+        margin-bottom: 5px;
+        display: block;
+    }
 
-        #edit-admin-password,
-        #edit-rso-password {
-            width: 100%;
-            /* Make the password input fill the available width */
-            border: none;
-            margin: 0;
-            outline: none;
-        }
+    input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    .passcont {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    #edit-rso-password,
+    #edit-rso-password {
+        width: 100%;
+        border: none;
+        margin: 0;
+        outline: none;
+    }
+
+    .icon {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+    }
+
+    .hide {
+        display: none;
+    }
     </style>
 </head>
 
@@ -140,8 +186,8 @@ if (isset($_POST["edit_admin"])) {
 
         <form method="POST" action="" enctype="multipart/form-data">
             <div class='name'>
-            <label for="edit-admin-name">New Name:</label>
-            <input type="text" id="edit-admin-name" name="edit_admin_name"><br>
+                <label for="edit-admin-name">New Name:</label>
+                <input type="text" id="edit-admin-name" name="edit_admin_name"><br>
             </div>
             <label for="edit-admin-password">New Password:</label>
             <div class='passcont'>
@@ -162,11 +208,11 @@ if (isset($_POST["edit_admin"])) {
     </main>
 
     <script>
-        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
 
-        function resetEditForm() { }
+    function resetEditForm() {}
 
-        function togglePasswordVisibility(passwordFieldId) { }
+    function togglePasswordVisibility(passwordFieldId) {}
     </script>
     <script src="../../script/admin.js"></script>
 </body>

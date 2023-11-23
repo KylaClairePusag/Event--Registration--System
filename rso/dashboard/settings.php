@@ -106,26 +106,74 @@ if (isset($_POST["edit_rso"])) {
 <head>
     <link rel="stylesheet" href="../../styles/rso.css">
     <style>
-        .passcont {
-            margin-left:120px;
-            margin-top:-20px;
-            width: 200px;
-            border: 1px solid #848484;
-            display: flex;
-            align-items: center;
-            flex-wrap: nowrap;
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
 
-        }
+    header {
+        flex-shrink: 0;
+    }
 
+    main {
+        flex-grow: 1;
+        padding: 20px;
+    }
 
+    main form {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+    }
+
+    label {
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    .passcont {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
 
     #edit-rso-password,
     #edit-rso-password {
         width: 100%;
-        /* Make the password input fill the available width */
         border: none;
         margin: 0;
         outline: none;
+    }
+
+    .icon {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+    }
+
+    .hide {
+        display: none;
     }
     </style>
 </head>
