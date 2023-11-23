@@ -4,13 +4,12 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 // Resume the existing session
 include '../../config/config.php';
-// Check if the admin is logged in, otherwise redirect to the login page
-if (!isset($_SESSION['admin_email']) || !isset($_SESSION['admin_name'])) {
+// Check if the emp is logged in, otherwise redirect to the login page
+if (!isset($_SESSION['emp_email'])) {
     header("Location: ../signin.php");
     exit();
 }
 
-$adminName = $_SESSION['admin_name'];
 
 // Database connection details
 $servername = "localhost";
@@ -23,12 +22,12 @@ try {
     $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Prepare and execute the query to get admin profile
-    $sql = "SELECT admin_profile FROM tb_admin WHERE admin_email = :admin_email";
+    // Prepare and execute the query to get emp profile
+    $sql = "SELECT emp_profile FROM tbempaccount WHERE emp_email = :emp_email";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(":admin_email", $_SESSION['admin_email']);
+    $stmt->bindParam(":emp_email", $_SESSION['emp_email']);
     $stmt->execute();
-    $adminProfile = $stmt->fetchColumn();
+    $empProfile = $stmt->fetchColumn();
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
@@ -52,11 +51,9 @@ try {
                 <h3>Event</h3>
                 <ul>
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'class="active"' : ''; ?>>
-                        <a href="./">Overview</a>
+                        <a href="./">Rso</a>
                     </li>
-                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'rso.php' ? 'class="active"' : ''; ?>>
-                        <a href="rso.php">RSO</a>
-                    </li>
+
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'admin.php' ? 'class="active"' : ''; ?>>
                         <a href="admin.php">Admin</a>
                     </li>
@@ -68,9 +65,9 @@ try {
                     </li>
                 </ul>
             </div>
+            </div>
             <div class="profile">
-                <?php echo htmlspecialchars($_SESSION['admin_name']); ?>
-                <?php echo '<img src="../../' . $adminProfile . '" alt="Admin Profile Image" class="profile"'; ?>
+                <?php echo '<img src="../../' . $empProfile . '" alt="emp Profile Image" class="profile"'; ?>
             </div>
             <a href="../logout.php">Logout</a>
         </nav>
