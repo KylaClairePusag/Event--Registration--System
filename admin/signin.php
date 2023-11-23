@@ -1,31 +1,46 @@
 <?php
 include '../config/config.php';
-if (isset($_SESSION['admin_email'])) {
+if (isset($_SESSION['emp_email'])) {
     header("Location: ./dashboard");
     exit;
 }
 $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-    $admin_email = filter_input(INPUT_POST, 'admin_email', FILTER_SANITIZE_EMAIL);
-    $admin_password = filter_input(INPUT_POST, 'admin_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $emp_email = filter_input(INPUT_POST, 'emp_email', FILTER_SANITIZE_EMAIL);
+    $emp_password = filter_input(INPUT_POST, 'emp_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    if (empty($admin_email) || empty($admin_password)) {
+    if (empty($emp_email) || empty($emp_password)) {
         $error = "*** Please fill in all fields. ***";
     } else {
         try {
-            $query = "SELECT * FROM tb_admin WHERE admin_email = :admin_email";
+            $query = "SELECT * FROM tbempaccount WHERE emp_email = :emp_email";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':admin_email', $admin_email, PDO::PARAM_STR);
+            $stmt->bindParam(':emp_email', $emp_email, PDO::PARAM_STR);
             $stmt->execute();
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($row && $row['admin_password'] === $admin_password) {
-                $_SESSION['admin_email'] = $row['admin_email'];
-                $_SESSION['admin_name'] = $row['admin_name'];
-                header("Location: ./dashboard");
-                exit;
+            if ($row && $row['emp_password'] === $emp_password) {
+                // Fetch the user's role from the database
+                $roleQuery = "SELECT role_name FROM tb_roles WHERE role_id = :role_id";
+                $roleStmt = $pdo->prepare($roleQuery);
+                $roleStmt->bindParam(':role_id', $row['role_id'], PDO::PARAM_INT);
+                $roleStmt->execute();
+
+                $roleRow = $roleStmt->fetch(PDO::FETCH_ASSOC);
+
+                // Check if the user's role is "Admin"
+                if ($roleRow && $roleRow['role_name'] === 'Admin') {
+                    // Grant access for Admin
+                    $_SESSION['emp_email'] = $row['emp_email'];
+                    $_SESSION['emp_name'] = $row['emp_name'];
+                    header("Location: ./dashboard");
+                    exit;
+                } else {
+                    // Redirect or show an error for non-Admin users
+                    $error = "*** You do not have permission to access the dashboard. ***";
+                }
             } else {
                 $error = "*** Invalid Login Credentials. ***";
             }
@@ -42,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal</title>
+    <title>emp Portal</title>
     <link rel="stylesheet" href="../styles/auth.css">
 </head>
 
@@ -54,16 +69,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
             <div class="box">
                 <div class="login-container">
-                    <h1>Admin Portal</h1>
+                    <h1>emp Portal</h1>
                     <p>Please enter your contact details to connect.</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                         <div class="form-group">
                             <label>Email address</label>
-                            <input type="email" name="admin_email" placeholder="Enter your email" required>
+                            <input type="email" name="emp_email" placeholder="Enter your email" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" name="admin_password" placeholder="Password" required>
+                            <input type="password" name="emp_password" placeholder="Password" required>
                         </div>
                         <div class="error<?php if (!empty($error))
                             echo ' show'; ?>">
