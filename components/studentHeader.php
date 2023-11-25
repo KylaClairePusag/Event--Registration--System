@@ -55,9 +55,6 @@ try {
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'myevents.php' ? 'class="active"' : ''; ?>>
                         <a href="myevents.php">My Events</a>
                     </li>
-                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'class="active"' : ''; ?>>
-                        <a href="settings.php">Settings</a>
-                    </li>
                     <!-- Add other student-specific menu items as needed -->
                 </ul>
             </div>

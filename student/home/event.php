@@ -45,10 +45,13 @@ try {
     $event_id = $_GET['event_id'];
 
     // Prepare SQL query to get details of the specific event
-    $event_query = $conn->prepare("SELECT e.event_id, e.event_title, e.event_detail, e.event_date, e.status, e.header_image, d.department_name FROM tb_event e
-                                   INNER JOIN tb_department d ON e.department_id = d.department_id
-                                   WHERE e.event_id = ?");
-    $event_query->bind_param('i', $event_id);
+$event_query = $conn->prepare("SELECT e.event_id, e.event_title, e.event_detail, e.event_date, e.status, COALESCE(i.image_filename, 'default-image.jpg') AS header_image, d.department_name 
+                                FROM tb_event e
+                                INNER JOIN tb_department d ON e.department_id = d.department_id
+                                LEFT JOIN tb_event_images i ON e.event_id = i.event_id
+                                WHERE e.event_id = ?");
+$event_query->bind_param('i', $event_id);
+
 
     if (!$event_query->execute()) {
         throw new Exception("Query failed: " . $event_query->error);
@@ -109,7 +112,7 @@ try {
 <body>
     <?php include '../../components/studentHeader.php'; ?>
     <div class="headerImg">
-        <img src="../../<?php echo $header_image; ?>" alt="Event Image">
+        <img src="../images/<?php echo $header_image; ?>" alt="Event Image">
 
     </div>
     <main>
@@ -148,40 +151,78 @@ try {
                         </span>
                     </div>
             </div>
-        </div>
-        <dialog id="attendDialog" class="modal">
-            <div class="modal-content">
 
-                <button class="close" onclick="closeCancelDialog()">&times;</button>
-                <h2>Are you sure you want to attend this event?</h2>
-                <form action="" method="POST">
-                    <input type="hidden" name="event_id" id="attendDialogEventId" value="">
-                    <div class="clearfix">
-                        <button type="button" onclick="closeAttendDialog()" class="cancelbtn">No</button>
-                        <button type="submit" name="attend">Yes</button>
-                    </div>
-                </form>
+
+            <div class="event-details-container">
+
+                <section class="tableContainer">
+                    <h2>Attendees List</h2>
+
+                    <?php
+         
+            $attendeesQuery = $conn->prepare("SELECT tbstudinfo.firstname, tbstudinfo.lastname, tbstudinfo.course
+                                             FROM tb_attendees
+                                             INNER JOIN tbstudinfo ON tb_attendees.student_id = tbstudinfo.studid
+                                             WHERE tb_attendees.event_id = ?");
+            $attendeesQuery->bind_param('i', $event_id);
+            $attendeesQuery->execute();
+            $attendeesResult = $attendeesQuery->get_result();
+            $attendees = $attendeesResult->fetch_all(MYSQLI_ASSOC);
+
+            if (!empty($attendees)) {
+              
+                include '../../components/table.component.php';
+                $head = array('Name', 'Course');
+                $body = array();
+
+                foreach ($attendees as $attendee) {
+                    $name = $attendee['firstname'] . ' ' . $attendee['lastname'];
+                    $course = $attendee['course'];
+                    $body[] = array($name, $course);
+                }
+
+                createTable($head, $body);
+            } else {
+                echo "<p>No attendees for this event.</p>";
+            }
+            ?>
+                </section>
+
+
             </div>
-        </dialog>
+            <dialog id="attendDialog" class="modal">
+                <div class="modal-content">
 
-        <!-- The Cancel Dialog -->
-        <dialog id="cancelDialog" class="modal">
-            <div class="modal-content">
-                <button class="close" onclick="closeCancelDialog()">&times;</button>
-                <h2>Are you sure you want to cancel your attendance for this event?</h2>
-                <form action="" method="POST">
-                    <input type="hidden" name="event_id" id="cancelDialogEventId" value="">
-                    <div class="clearfix">
-                        <button type="button" onclick="closeCancelDialog()" class="cancelbtn">No</button>
+                    <button class="close" onclick="closeCancelDialog()">&times;</button>
+                    <h2>Are you sure you want to attend this event?</h2>
+                    <form action="" method="POST">
+                        <input type="hidden" name="event_id" id="attendDialogEventId" value="">
+                        <div class="clearfix">
+                            <button type="button" onclick="closeAttendDialog()" class="cancelbtn">No</button>
+                            <button type="submit" name="attend">Yes</button>
+                        </div>
+                    </form>
+                </div>
+            </dialog>
 
-                        <button type="submit" name="cancel">Yes</button>
+            <!-- The Cancel Dialog -->
+            <dialog id="cancelDialog" class="modal">
+                <div class="modal-content">
+                    <button class="close" onclick="closeCancelDialog()">&times;</button>
+                    <h2>Are you sure you want to cancel your attendance for this event?</h2>
+                    <form action="" method="POST">
+                        <input type="hidden" name="event_id" id="cancelDialogEventId" value="">
+                        <div class="clearfix">
+                            <button type="button" onclick="closeCancelDialog()" class="cancelbtn">No</button>
+
+                            <button type="submit" name="cancel">Yes</button>
 
 
-                    </div>
-                </form>
-            </div>
+                        </div>
+                    </form>
+                </div>
 
-        </dialog>
+            </dialog>
     </main>
     <footer>
 
@@ -225,36 +266,36 @@ try {
     </footer>
 
     <script>
-        function openAttendModal(eventId) {
-            document.getElementById('attendDialogEventId').value = eventId;
-            document.getElementById('attendDialog').showModal();
-        }
+    function openAttendModal(eventId) {
+        document.getElementById('attendDialogEventId').value = eventId;
+        document.getElementById('attendDialog').showModal();
+    }
 
-        function closeAttendDialog() {
-            document.getElementById('attendDialog').close();
-        }
+    function closeAttendDialog() {
+        document.getElementById('attendDialog').close();
+    }
 
-        function openCancelModal(eventId) {
-            document.getElementById('cancelDialogEventId').value = eventId;
-            document.getElementById('cancelDialog').showModal();
-        }
+    function openCancelModal(eventId) {
+        document.getElementById('cancelDialogEventId').value = eventId;
+        document.getElementById('cancelDialog').showModal();
+    }
 
-        function closeCancelDialog() {
-            document.getElementById('cancelDialog').close();
-        }
+    function closeCancelDialog() {
+        document.getElementById('cancelDialog').close();
+    }
 
-        document.addEventListener('click', function (event) {
-            var modal = document.querySelector('.modal');
-            if (event.target === modal) {
-                modal.close();
-            }
-        });
-        document.addEventListener('click', function (event) {
-            var cancelModal = document.getElementById('cancelDialog');
-            if (event.target === cancelModal) {
-                cancelModal.close();
-            }
-        });
+    document.addEventListener('click', function(event) {
+        var modal = document.querySelector('.modal');
+        if (event.target === modal) {
+            modal.close();
+        }
+    });
+    document.addEventListener('click', function(event) {
+        var cancelModal = document.getElementById('cancelDialog');
+        if (event.target === cancelModal) {
+            cancelModal.close();
+        }
+    });
     </script>
 </body>
 

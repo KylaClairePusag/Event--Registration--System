@@ -8,7 +8,7 @@ if (isset($_SESSION['student_email'])) {
 
 include '../config/config.php';
 
-session_start();
+
 $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
@@ -75,9 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         <div class="error<?php if (!empty($error))
                             echo ' show'; ?>">
                             <?php if (!empty($error)): ?>
-                                <p>
-                                    <?php echo $error; ?>
-                                </p>
+                            <p>
+                                <?php echo $error; ?>
+                            </p>
                             <?php endif; ?>
                         </div>
 
