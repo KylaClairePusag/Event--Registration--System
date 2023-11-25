@@ -9,19 +9,19 @@ if ($conn->connect_error) {
 
 $pdo = new PDO('mysql:host=localhost;dbname=db_ba3101', 'root', '');
 
-$checkQuery = "SELECT * FROM tb_attendees WHERE event_id = :event_id AND faculty_id = :faculty_id";
+$checkQuery = "SELECT * FROM tb_attendees WHERE event_id = :event_id AND empid = :empid";
 $checkStmt = $pdo->prepare($checkQuery);
 $checkStmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
-$checkStmt->bindParam(':faculty_id', $_SESSION['faculty_id'], PDO::PARAM_INT);
+$checkStmt->bindParam(':empid', $_SESSION['empid'], PDO::PARAM_INT);
 $checkStmt->execute();
 $attendeeExists = $checkStmt->rowCount() > 0;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['attend'])) {
     if (!$attendeeExists) {
-        $query = "INSERT INTO tb_attendees (event_id, faculty_id) VALUES (:event_id, :faculty_id)";
+        $query = "INSERT INTO tb_attendees (event_id, empid) VALUES (:event_id, :empid)";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':event_id', $_POST['event_id'], PDO::PARAM_INT);
-        $stmt->bindParam(':faculty_id', $_SESSION['faculty_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':empid', $_SESSION['empid'], PDO::PARAM_INT);
         $stmt->execute();
     }
 
@@ -30,10 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['attend'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancel'])) {
-    $deleteQuery = "DELETE FROM tb_attendees WHERE event_id = :event_id AND faculty_id = :faculty_id";
+    $deleteQuery = "DELETE FROM tb_attendees WHERE event_id = :event_id AND empid = :empid";
     $deleteStmt = $pdo->prepare($deleteQuery);
     $deleteStmt->bindParam(':event_id', $_POST['event_id'], PDO::PARAM_INT);
-    $deleteStmt->bindParam(':faculty_id', $_SESSION['faculty_id'], PDO::PARAM_INT);
+    $deleteStmt->bindParam(':empid', $_SESSION['empid'], PDO::PARAM_INT);
     $deleteStmt->execute();
 
     $_SESSION['delete_action_completed'] = true;
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancel'])) {
 // Fetch events data
 try {
     // Retrieve department_id from the session
-    $departmentId = $_SESSION['department_id'];
+    $departmentId = $_SESSION['empid'];
 
     // Prepare SQL query with department_id condition and join with tb_department
     $query = $conn->prepare("SELECT e.event_id, e.event_title, e.event_detail, e.event_date, e.status, e.header_image, d.department_name FROM tb_event e
@@ -72,7 +72,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Page</title>
-    <link rel="stylesheet" href="../../styles/faculty.css">
+    <link rel="stylesheet" href="../../styles/emp.css">
     <link rel="stylesheet" href="../../styles/rso.css">
 
 </head>
@@ -83,8 +83,8 @@ try {
     <main>
         <div class="box-container">
             <?php foreach ($rows as $row) { ?>
-                <div class="event-box">
-                    <?php
+            <div class="event-box">
+                <?php
                     // Extract event details
                     $event_id = $row["event_id"];
                     $event_title = $row["event_title"];
@@ -119,40 +119,40 @@ try {
                     }
                     ?>
 
-                    <div class="header">
-                        <img src="../../<?php echo $header_image; ?>" alt="Event Image">
+                <div class="header">
+                    <img src="../../<?php echo $header_image; ?>" alt="Event Image">
+                </div>
+                <div class="event-content">
+                    <h2>
+                        <?php echo ucwords($event_title); ?>
+                    </h2>
+                    <div id="date">
+                        <img src="../../images/calendar.png" alt="">
+                        <h3>
+                            <?php echo $event_date; ?>
+                        </h3>
                     </div>
-                    <div class="event-content">
-                        <h2>
-                            <?php echo ucwords($event_title); ?>
-                        </h2>
-                        <div id="date">
-                            <img src="../../images/calendar.png" alt="">
-                            <h3>
-                                <?php echo $event_date; ?>
-                            </h3>
-                        </div>
-                        <p id="details">
-                            <?php echo $event_detail; ?>
-                        </p>
-                        <p>Status: <span class="<?php echo $statusClass; ?>">
-                                <?php echo $status; ?>
-                            </span></p>
-                        <p>Department:
-                            <?php echo ucwords($department_name); ?>
-                        </p>
-                        <p>Attendees:
-                            <?php echo $attendee_count; ?>
-                        </p>
-                    </div>
-                    <div class="events_button">
-                        <form action="" method="POST">
-                            <button type="button" id="viewBtn"
-                                onclick="window.location.href='event.php?event_id=<?php echo $event_id; ?>'">View
-                                Event</button>
-                            <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
+                    <p id="details">
+                        <?php echo $event_detail; ?>
+                    </p>
+                    <p>Status: <span class="<?php echo $statusClass; ?>">
+                            <?php echo $status; ?>
+                        </span></p>
+                    <p>Department:
+                        <?php echo ucwords($department_name); ?>
+                    </p>
+                    <p>Attendees:
+                        <?php echo $attendee_count; ?>
+                    </p>
+                </div>
+                <div class="events_button">
+                    <form action="" method="POST">
+                        <button type="button" id="viewBtn"
+                            onclick="window.location.href='event.php?event_id=<?php echo $event_id; ?>'">View
+                            Event</button>
+                        <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
 
-                            <?php
+                        <?php
                             // Move the attendee check inside the loop
                             $attendeeExists = false; // Default to false for each event
                             $checkStmt->execute();
@@ -164,9 +164,9 @@ try {
                                 echo '<button type="button" onclick="openAttendModal(' . $event_id . ')">Interested</button>';
                             }
                             ?>
-                        </form>
-                    </div>
+                    </form>
                 </div>
+            </div>
             <?php } ?>
         </div>
 
@@ -210,36 +210,36 @@ try {
         </dialog>
 
         <script>
-            function openAttendModal(eventId) {
-                document.getElementById('attendDialogEventId').value = eventId;
-                document.getElementById('attendDialog').showModal();
-            }
+        function openAttendModal(eventId) {
+            document.getElementById('attendDialogEventId').value = eventId;
+            document.getElementById('attendDialog').showModal();
+        }
 
-            function closeAttendDialog() {
-                document.getElementById('attendDialog').close();
-            }
+        function closeAttendDialog() {
+            document.getElementById('attendDialog').close();
+        }
 
-            function openCancelModal(eventId) {
-                document.getElementById('cancelDialogEventId').value = eventId;
-                document.getElementById('cancelDialog').showModal();
-            }
+        function openCancelModal(eventId) {
+            document.getElementById('cancelDialogEventId').value = eventId;
+            document.getElementById('cancelDialog').showModal();
+        }
 
-            function closeCancelDialog() {
-                document.getElementById('cancelDialog').close();
-            }
+        function closeCancelDialog() {
+            document.getElementById('cancelDialog').close();
+        }
 
-            document.addEventListener('click', function (event) {
-                var modal = document.querySelector('.modal');
-                if (event.target === modal) {
-                    modal.close();
-                }
-            });
-            document.addEventListener('click', function (event) {
-                var cancelModal = document.getElementById('cancelDialog');
-                if (event.target === cancelModal) {
-                    cancelModal.close();
-                }
-            });
+        document.addEventListener('click', function(event) {
+            var modal = document.querySelector('.modal');
+            if (event.target === modal) {
+                modal.close();
+            }
+        });
+        document.addEventListener('click', function(event) {
+            var cancelModal = document.getElementById('cancelDialog');
+            if (event.target === cancelModal) {
+                cancelModal.close();
+            }
+        });
         </script>
 
     </main>

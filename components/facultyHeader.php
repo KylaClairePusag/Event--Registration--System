@@ -5,7 +5,7 @@ if (session_status() == PHP_SESSION_NONE) {
 include '../../config/config.php';
 
 // Check if the student is logged in, otherwise redirect to the login page
-if (!isset($_SESSION['faculty_email'])) {
+if (!isset($_SESSION['emp_email'])) {
     header("Location: ../signin.php");
     exit();
 }
@@ -22,15 +22,15 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Prepare and execute the query to get student profile
-    $sql = "SELECT faculty_name, faculty_position, faculty_profile,faculty_email FROM tb_faculty WHERE faculty_email = :faculty_email";
+    $sql = "SELECT emp_email, role_id, emp_profile,emp_email FROM tbempaccount WHERE emp_email = :emp_email";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(":faculty_email", $_SESSION['faculty_email']);
+    $stmt->bindParam(":emp_email", $_SESSION['emp_email']);
     $stmt->execute();
-    $facultyData = $stmt->fetch(PDO::FETCH_ASSOC);
-    $faculty_email = $facultyData['faculty_email'];
-    $facultyName = $facultyData['faculty_name'];
-    $facultyPosition = $facultyData['faculty_position'];
-    $facultyProfile = $facultyData['faculty_profile'];
+    $empData = $stmt->fetch(PDO::FETCH_ASSOC);
+    $emp_email = $empData['emp_email'];
+    $empName = $empData['emp_email'];
+    $empPosition = $empData['role_id'];
+    $empProfile = $empData['emp_profile'];
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
@@ -56,15 +56,12 @@ try {
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'class="active"' : ''; ?>>
                         <a href="./">Overview</a>
                     </li>
-                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'class="active"' : ''; ?>>
-                        <a href="settings.php">Settings</a>
-                    </li>
                     <!-- Add other student-specific menu items as needed -->
                 </ul>
             </div>
             <div class="profile">
-                <?php echo htmlspecialchars($faculty_email); ?>
-                <?php echo '<img src="../../' . $facultyProfile . '" alt="Faculty Profile Image" class="profile"'; ?>
+                <?php echo htmlspecialchars($emp_email); ?>
+                <?php echo '<img src="../../' . $empProfile . '" alt="emp Profile Image" class="profile"'; ?>
             </div>
             <a href="../logout.php">Logout</a>
         </nav>
