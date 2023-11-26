@@ -3,7 +3,7 @@
 include '../../config/config.php';
 
 // Check if the student is logged in, otherwise redirect to the login page
-if (!isset($_SESSION['student_email'])) {
+if(!isset($_SESSION['student_email'])) {
     header("Location: ../signin.php");
     exit();
 }
@@ -28,7 +28,7 @@ try {
     $student_email = $studentData['student_email'];
     $studentProfile = $studentData['student_profile'];
 } catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+    die("Connection failed: ".$e->getMessage());
 }
 
 ?>
@@ -55,12 +55,14 @@ try {
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'myevents.php' ? 'class="active"' : ''; ?>>
                         <a href="myevents.php">My Events</a>
                     </li>
-                    <!-- Add other student-specific menu items as needed -->
+                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'class="active"' : ''; ?>>
+                        <a href="settings.php">Settings</a>
+                    </li>
                 </ul>
             </div>
             <div class="profile">
                 <?php echo htmlspecialchars($student_email); ?>
-                <?php echo '<img src="../../' . $studentProfile . '" alt="Student Profile Image" class="profile"'; ?>
+                <?php echo '<img src="../../'.$studentProfile.'" alt="Student Profile Image" class="profile"'; ?>
             </div>
             <a href="../logout.php">Logout</a>
         </nav>
