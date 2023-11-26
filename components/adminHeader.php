@@ -51,11 +51,10 @@ try {
                 <h3>Event</h3>
                 <ul>
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'class="active"' : ''; ?>>
-                        <a href="./">Rso</a>
+                        <a href="./">Employee</a>
                     </li>
-
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'admin.php' ? 'class="active"' : ''; ?>>
-                        <a href="admin.php">Admin</a>
+                        <a href="student.php">Student</a>
                     </li>
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'class="active"' : ''; ?>>
                         <a href="reports.php">Reports</a>
