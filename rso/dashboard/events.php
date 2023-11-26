@@ -318,8 +318,9 @@ try {
         </dialog>
         </section>
         <section class="paginationCont">
-            <?php include '../../components/pagination.php'; ?>
-            <?php generatePaginationLinks($pdo, $searchTerm, $limit, $paginationQuery); ?>
+            <?php include '../../components/pagination.php';
+            generatePaginationLinks($pdo, $searchTerm, $limit, $paginationQuery);
+            ?>
         </section>
     </main>
 
