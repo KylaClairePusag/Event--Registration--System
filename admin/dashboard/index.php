@@ -131,7 +131,7 @@ if(isset($_POST["edit_emp"])) {
         $stmt_account = $pdo->prepare($sql_account);
         $stmt_account->execute([$edit_emp_password, $edit_emp_email, $edit_department_id, $edit_empaccountId]);
 
-        header("Location: $requestUri");
+        header("Location: index.php");
         exit();
     } catch (PDOException $e) {
         echo "Error: ".$e->getMessage();
@@ -202,7 +202,7 @@ try {
             <?php include '../../components/table.component.php';
             // Main file
             
-            $head = array('ID', 'Name', 'Password', 'Email', 'Department', 'Profile', 'Actions');
+            $head = array('ID', 'Profile', 'Name', 'Password', 'Email', 'Department', 'Actions');
             $body = array();
 
             foreach($rows as $row) {
@@ -228,7 +228,7 @@ try {
                 $name = $firstname.' '.$lastname;
 
                 // Add row to the $body array
-                $body[] = array($empaccountId, $name, $emp_password, $emp_email, $department_name, '<img src="../../images/profiles/'.$emp_profile.'" alt="Profile Image" class="profile-img">', $actions);
+                $body[] = array($empaccountId, '<img src="../../images/profiles/'.$emp_profile.'" alt="Profile Image" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $emp_password, $emp_email, $department_name, $actions);
             }
 
             createTable($head, $body);
