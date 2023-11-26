@@ -3,8 +3,8 @@
 include '../../config/config.php';
 
 $conn = new mysqli('localhost', 'root', '', 'db_ba3101');
-if ($conn->connect_error) {
-    die('Connection Failed: ' . $conn->connect_error);
+if($conn->connect_error) {
+    die('Connection Failed: '.$conn->connect_error);
 }
 
 $pdo = new PDO('mysql:host=localhost;dbname=db_ba3101', 'root', '');
@@ -16,8 +16,8 @@ $checkStmt->bindParam(':student_id', $_SESSION['student_id'], PDO::PARAM_INT);
 $checkStmt->execute();
 $attendeeExists = $checkStmt->rowCount() > 0;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['attend'])) {
-    if (!$attendeeExists) {
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['attend'])) {
+    if(!$attendeeExists) {
         $query = "INSERT INTO tb_attendees (event_id, student_id) VALUES (:event_id, :student_id)";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':event_id', $_POST['event_id'], PDO::PARAM_INT);
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['attend'])) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancel'])) {
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancel'])) {
     $deleteQuery = "DELETE FROM tb_attendees WHERE event_id = :event_id AND student_id = :student_id";
     $deleteStmt = $pdo->prepare($deleteQuery);
     $deleteStmt->bindParam(':event_id', $_POST['event_id'], PDO::PARAM_INT);
@@ -51,15 +51,15 @@ try {
                             WHERE e.department_id = ?");
     $query->bind_param('i', $departmentId);
 
-    if (!$query->execute()) {
-        throw new Exception("Query failed: " . $query->error);
+    if(!$query->execute()) {
+        throw new Exception("Query failed: ".$query->error);
     }
 
     // Fetch results
     $result = $query->get_result();
     $rows = $result->fetch_all(MYSQLI_ASSOC);
 } catch (Exception $ex) {
-    echo "Error: " . $ex->getMessage();
+    echo "Error: ".$ex->getMessage();
     die();
 }
 ?>
@@ -80,7 +80,7 @@ try {
 
     <main>
         <div class="box-container">
-            <?php foreach ($rows as $row) { ?>
+            <?php foreach($rows as $row) { ?>
 
                 <?php
                 // Extract event details
@@ -101,7 +101,7 @@ try {
 
                 // Define a CSS class based on the status
                 $statusClass = '';
-                switch ($status) {
+                switch($status) {
                     case 'upcoming':
                         $statusClass = 'upcoming-event';
                         break;
@@ -153,11 +153,11 @@ try {
                             $attendeeExists = false;
                             $checkStmt->execute();
                             $attendeeExists = $checkStmt->rowCount() > 0;
-                            if ($statusClass == 'upcoming-event' || $statusClass == 'ongoing-event') {
-                                if ($attendeeExists) {
-                                    echo '<button type="button" onclick="openCancelModal(' . $event_id . ')" id="cancelbtn">Cancel</button>';
+                            if($statusClass == 'upcoming-event' || $statusClass == 'ongoing-event') {
+                                if($attendeeExists) {
+                                    echo '<button type="button" onclick="openCancelModal('.$event_id.')" id="cancelbtn">Cancel</button>';
                                 } else {
-                                    echo '<button type="button" onclick="openAttendModal(' . $event_id . ')">Interested</button>';
+                                    echo '<button type="button" onclick="openAttendModal('.$event_id.')">Interested</button>';
                                 }
                             } else {
                                 echo '<button id="cancelbtn" disabled>Past Event</button>';

@@ -31,10 +31,8 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  /* Number of lines to show before adding ellipsis */
   -webkit-box-orient: vertical;
   word-wrap: break-word;
-  /* Allow word wrap within the specified number of lines */
 }
 
 .header {
@@ -140,7 +138,8 @@ dialog {
   height: 250px;
   object-fit: cover;
   object-position: center;
-  background: #676767;
+  background: #eceaea6c;
+  margin-bottom: 1rem;
 }
 
 .headerImg img {
@@ -212,6 +211,7 @@ dialog {
   margin-bottom: 0;
   margin-right: 0.5rem;
   font-weight: 800;
+  color: #000;
 }
 
 .details h3 {
@@ -267,4 +267,87 @@ footer {
 #dtl h3 {
   font-size: 1rem;
   font-weight: 500;
+}
+/* Add this to your existing styles or create a new CSS file */
+.imageContainer {
+  margin-top: 20px;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.image-item {
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.attendees-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.attendee-card {
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.attendee-card p {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.attendee-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-top: 10px;
+}
+
+h4 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #000;
+}
+.event-details-nav {
+  border-bottom: 1px solid #a8a8a8;
+  padding: 10px 0;
+}
+
+.event-details-nav a {
+  text-decoration: none;
+  color: #4f4f4f;
+  margin-right: 10px;
+  font-size: 1.1rem;
+}
+.event-details-nav .active-link {
+  font-weight: 700;
+  color: #000000;
+  /* Add any additional styling for the active link */
+}
+
+.toggle-section {
+  display: none;
+  /* Hide sections by default */
+}
+
+/* Additional styles for the active section */
+.toggle-section.active-section {
+  display: block;
 }
