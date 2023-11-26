@@ -8,10 +8,10 @@ include '../../config/config.php';
 $requestUri = $_SERVER['REQUEST_URI'];
 
 $conn = new mysqli('localhost', 'root', '', 'db_ba3101');
-if ($conn->connect_error) {
-    die('Connection Failed: ' . $conn->connect_error);
+if($conn->connect_error) {
+    die('Connection Failed: '.$conn->connect_error);
 }
-if (isset($_POST["add_event"])) {
+if(isset($_POST["add_event"])) {
     $event_title = htmlspecialchars($_POST["event_title"], ENT_QUOTES, "UTF-8");
     $event_detail = htmlspecialchars($_POST["event_detail"], ENT_QUOTES, "UTF-8");
     $event_date = htmlspecialchars($_POST["event_date"], ENT_QUOTES, "UTF-8");
@@ -23,85 +23,85 @@ if (isset($_POST["add_event"])) {
     $imageFileType = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
 
     // Generate a unique filename for header_image
-    $unique_filename = uniqid() . "_" . $event_title . "_" . time() . "." . $imageFileType;
-    $target_file = $target_dir . $unique_filename;
+    $unique_filename = uniqid()."_".$event_title."_".time().".".$imageFileType;
+    $target_file = $target_dir.$unique_filename;
 
     // Check if the file is a valid image
     $check = getimagesize($_FILES["header_image"]["tmp_name"]);
-    if ($check !== false) {
+    if($check !== false) {
         $uploadOk = 1;
     } else {
         $uploadOk = 0;
     }
 
     // Check file size (500 KB limit)
-    if ($_FILES["header_image"]["size"] > 500000) {
+    if($_FILES["header_image"]["size"] > 500000) {
         $uploadOk = 0;
     }
 
     // Allow only certain file formats
     $allowedFormats = ["jpg", "jpeg", "png", "gif"];
-    if (!in_array($imageFileType, $allowedFormats)) {
+    if(!in_array($imageFileType, $allowedFormats)) {
         $uploadOk = 0;
     }
 
     // Check if $uploadOk is set to 0 by an error
-    if ($uploadOk == 0) {
+    if($uploadOk == 0) {
         echo "Sorry, your file was not uploaded.";
     } else {
         // Try to upload the file
-        if (move_uploaded_file($_FILES["header_image"]["tmp_name"], $target_file)) {
+        if(move_uploaded_file($_FILES["header_image"]["tmp_name"], $target_file)) {
             // Insert data into the database for tb_event
             $department_id = $_SESSION['department_id'];
             $query = $conn->prepare("INSERT INTO tb_event (department_id, event_title, event_detail, event_date, header_image) VALUES (?, ?, ?, ?, ?)");
 
-            $filename = "images/events/" . $unique_filename;
+            $filename = "images/events/".$unique_filename;
             $query->bind_param('issss', $department_id, $event_title, $event_detail, $event_date, $filename);
 
-            if ($query->execute()) {
+            if($query->execute()) {
                 // Retrieve the event_id of the inserted event
                 $event_id = $conn->insert_id;
 
                 // Insert event images into tb_event_images
-                if (!empty($_FILES["event_image"]["name"])) {
+                if(!empty($_FILES["event_image"]["name"])) {
                     $event_images = $_FILES["event_image"];
                     $fileCount = count($event_images['name']);
 
-                    for ($i = 0; $i < $fileCount; $i++) {
+                    for($i = 0; $i < $fileCount; $i++) {
                         $original_filename_image = basename($event_images["name"][$i]);
-                        $unique_filename_image = uniqid() . "_" . $event_title . "_image_" . time() . "_" . $i . "." . pathinfo($original_filename_image, PATHINFO_EXTENSION);
+                        $unique_filename_image = uniqid()."_".$event_title."_image_".time()."_".$i.".".pathinfo($original_filename_image, PATHINFO_EXTENSION);
 
-                        $target_file_image = "../../images/events/" . $unique_filename_image;
-
+                        $target_file_image = "../../images/events/".$unique_filename_image;
+                        $target_file_images = "images/events/".$unique_filename_image;
                         // Check if the file is a valid image
                         $check_image = getimagesize($event_images["tmp_name"][$i]);
-                        if ($check_image !== false) {
+                        if($check_image !== false) {
                             $uploadOk = 1;
                         } else {
                             $uploadOk = 0;
                         }
 
                         // Check file size (500 KB limit)
-                        if ($event_images["size"][$i] > 500000) {
+                        if($event_images["size"][$i] > 500000) {
                             $uploadOk = 0;
                         }
 
                         // Allow only certain file formats
-                        if (!in_array(strtolower(pathinfo($original_filename_image, PATHINFO_EXTENSION)), $allowedFormats)) {
+                        if(!in_array(strtolower(pathinfo($original_filename_image, PATHINFO_EXTENSION)), $allowedFormats)) {
                             $uploadOk = 0;
                         }
 
                         // Check if $uploadOk is set to 0 by an error
-                        if ($uploadOk == 0) {
+                        if($uploadOk == 0) {
                             echo "Sorry, your file was not uploaded.";
                         } else {
                             // Try to upload the file
-                            if (move_uploaded_file($event_images["tmp_name"][$i], $target_file_image)) {
+                            if(move_uploaded_file($event_images["tmp_name"][$i], $target_file_image)) {
                                 // Insert image information into tb_event_images
                                 $insertImageQuery = $conn->prepare("INSERT INTO tb_event_images (event_id, image_filename) VALUES (?, ?)");
-                                $insertImageQuery->bind_param('is', $event_id, $target_file_image);
+                                $insertImageQuery->bind_param('is', $event_id, $target_file_images);
 
-                                if ($insertImageQuery->execute()) {
+                                if($insertImageQuery->execute()) {
                                     // Image information inserted successfully
                                 } else {
                                     echo "Error inserting event image information.";
@@ -125,7 +125,7 @@ if (isset($_POST["add_event"])) {
 }
 
 // Delete event
-if (isset($_POST["delete_event"])) {
+if(isset($_POST["delete_event"])) {
     $event_id = filter_input(INPUT_POST, "delete_event", FILTER_VALIDATE_INT);
 
     // Retrieve event images filenames
@@ -136,9 +136,9 @@ if (isset($_POST["delete_event"])) {
     $imageFilenames = $resultImages->fetch_all(MYSQLI_ASSOC);
 
     // Delete event images from the folder
-    foreach ($imageFilenames as $image) {
-        $imageFilePath = "../../" . $image["image_filename"];
-        if (file_exists($imageFilePath)) {
+    foreach($imageFilenames as $image) {
+        $imageFilePath = "../../".$image["image_filename"];
+        if(file_exists($imageFilePath)) {
             unlink($imageFilePath);
         }
     }
@@ -147,9 +147,9 @@ if (isset($_POST["delete_event"])) {
     $deleteEventQuery = $conn->prepare("DELETE FROM tb_event WHERE event_id = ?");
     $deleteEventQuery->bind_param('i', $event_id);
 
-    if ($deleteEventQuery->execute()) {
+    if($deleteEventQuery->execute()) {
         // Check if the deletion from the database was successful
-        if ($deleteEventQuery->affected_rows > 0) {
+        if($deleteEventQuery->affected_rows > 0) {
             // Delete event images from the database
             $deleteImagesQuery = $conn->prepare("DELETE FROM tb_event_images WHERE event_id = ?");
             $deleteImagesQuery->bind_param('i', $event_id);
@@ -165,7 +165,7 @@ if (isset($_POST["delete_event"])) {
 }
 
 // Edit event
-if (isset($_POST["edit_event"])) {
+if(isset($_POST["edit_event"])) {
     $edit_event_id = filter_input(INPUT_POST, "edit_event_id", FILTER_VALIDATE_INT);
     $edit_event_title = htmlspecialchars($_POST["edit_event_title"], ENT_QUOTES, "UTF-8");
     $edit_event_detail = htmlspecialchars($_POST["edit_event_detail"], ENT_QUOTES, "UTF-8");
@@ -175,7 +175,7 @@ if (isset($_POST["edit_event"])) {
     $query = $conn->prepare("UPDATE tb_event SET event_title = ?, event_detail = ?, event_date = ? WHERE event_id = ?");
     $query->bind_param('sssi', $edit_event_title, $edit_event_detail, $edit_event_date, $edit_event_id);
 
-    if ($query->execute()) {
+    if($query->execute()) {
         header("Location: $requestUri");
         exit();
     } else {
@@ -196,10 +196,10 @@ try {
     $query->bind_param('issssi', $departmentId, $searchTerm, $searchTerm, $searchTerm, $limit, $offset);
 
     $departmentId = $departmentId = $_SESSION['department_id']; // Replace with your desired department_id
-    $searchTerm = '%' . $searchTerm . '%';
+    $searchTerm = '%'.$searchTerm.'%';
 
-    if (!$query->execute()) {
-        throw new Exception("Query failed: " . $query->error);
+    if(!$query->execute()) {
+        throw new Exception("Query failed: ".$query->error);
     }
 
     // Fetch results
@@ -210,14 +210,14 @@ try {
     $paginationQuery = $conn->prepare("SELECT COUNT(*) AS total FROM tb_event WHERE department_id = ? AND (event_title LIKE ? OR event_date LIKE ?)");
     $paginationQuery->bind_param('iss', $departmentId, $searchTerm, $searchTerm);
 
-    if (!$paginationQuery->execute()) {
-        throw new Exception("Pagination query failed: " . $paginationQuery->error);
+    if(!$paginationQuery->execute()) {
+        throw new Exception("Pagination query failed: ".$paginationQuery->error);
     }
 
     $totalResult = $paginationQuery->get_result();
     $totalRows = $totalResult->fetch_assoc()['total'];
 } catch (Exception $ex) {
-    echo "Error: " . $ex->getMessage();
+    echo "Error: ".$ex->getMessage();
     die();
 }
 ?>
@@ -235,8 +235,8 @@ try {
         <section class="head">
             <div class="searchCont">
                 <?php include '../../components/search.php'; ?>
-                <?php if (!empty($searchTerm)): ?>
-                <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
+                <?php if(!empty($searchTerm)): ?>
+                    <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
                 <?php endif; ?>
             </div>
             <div class="headbtn">
@@ -253,13 +253,13 @@ try {
 
         $body = array();
 
-        foreach ($rows as $row) {
+        foreach($rows as $row) {
             $event_id = $row["event_id"];
             $event_title = $row["event_title"];
             $event_detail = $row["event_detail"];
             $event_date = $row["event_date"];
             $status = $row["status"];
-            $actions = '<button type="button" onclick="editevent(' . $event_id . ', \'' . $event_title . '\', \'' . $event_detail . '\', \'' . $event_date . '\')">Edit</button> <button type="button" onclick="showDeleteModal(' . $event_id . ')">Delete</button>';
+            $actions = '<button type="button" onclick="editevent('.$event_id.', \''.$event_title.'\', \''.$event_detail.'\', \''.$event_date.'\')">Edit</button> <button type="button" onclick="showDeleteModal('.$event_id.')">Delete</button>';
 
             $body[] = array($event_id, $event_title, $event_detail, $event_date, $status, $actions);
         }
@@ -328,8 +328,8 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
-    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
-    const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'event_date')); ?>;
+        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+        const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'event_date')); ?>;
     </script>
     <script src="../../script/event.js"></script>
 </body>
