@@ -10,7 +10,7 @@
 
 body {
   line-height: 1.5;
-  min-height: 100vh;
+  height: 100vh; /* Set height to 100% of viewport height */
 }
 
 main {
