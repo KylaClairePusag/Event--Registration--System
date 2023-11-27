@@ -171,6 +171,7 @@ try {
 <html lang="en">
 
 <head>
+
     <link rel="stylesheet" href="../../styles/rso.css">
     <title>emp</title>
 </head>
