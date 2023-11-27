@@ -41,93 +41,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../styles/header.css" type="text/css">
     <title>Student Dashboard</title>
-    <style>
-        h3 a {
-
-            text-decoration: none;
-            color: black;
-            font-weight: 700;
-        }
-
-        /* Add your dropdown styles here */
-        h5 {
-            padding: 12px 16px;
-
-            font-weight: 300;
-            border-bottom: 1px solid #f1f1f1;
-
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-            border-radius: 20px;
-
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            border-radius: 20px;
-        }
-
-        .dropdown-content a {
-            color: black;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        /* Style for the profile image */
-        .profile-img {
-            max-width: 50px;
-            /* Adjust the size as needed */
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        /* Style for the profile dropdown */
-        .profile-dropdown {
-            border-radius: 10px;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            display: none;
-            background-color: white;
-            box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
-            z-index: 1;
-            width: 200px;
-            text-align: left;
-
-        }
-
-        .profile-dropdown a {
-            color: black;
-            text-decoration: none;
-            display: block;
-            font-weight: 300;
-            font-size: .9rem;
-            padding: 12px 16px;
-
-
-
-        }
-
-        .profile-dropdown a:hover {
-            background-color: #f1f1f1;
-        }
-    </style>
+    <link rel="stylesheet" href="../../styles/style.css">
 </head>
 
 <body>
@@ -155,25 +69,10 @@ try {
             </div>
 
         </nav>
-        <script>
-            function toggleProfileDropdown() {
-                var dropdown = document.getElementById("profileDropdown");
-                dropdown.style.display = (dropdown.style.display === 'block' || dropdown.style.display === '') ? 'none' : 'block';
-            }
 
-            // Add event listener to close dropdown when clicking outside
-            document.addEventListener('click', function (event) {
-                var dropdown = document.getElementById("profileDropdown");
-                var profileImg = document.querySelector('.profile-img');
-
-                // Check if the clicked element is inside the profile dropdown or the profile image
-                if (!dropdown.contains(event.target) && !profileImg.contains(event.target)) {
-                    // If outside, close the dropdown
-                    dropdown.style.display = 'none';
-                }
-            });
-        </script>
     </header>
+    <script src="../../script/script.js"></script>
+
 </body>
 
 </html>

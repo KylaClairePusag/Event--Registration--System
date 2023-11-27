@@ -36,7 +36,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sql_account = "INSERT INTO tbstudentaccount (studid, student_email, student_password, department_id, student_profile) VALUES (?, ?, ?, ?, ?)";
                 $stmt_account = $pdo->prepare($sql_account);
                 $stmt_account->execute([$studid, $student_email, $student_password, $department_id, $unique_filename]);
-                header("Location: index.php");
+                header("Location: student.php");
             } catch (PDOException $e) {
                 echo "Error: ".$e->getMessage();
                 exit();
@@ -88,7 +88,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt_account = $pdo->prepare($sql_account);
                 $stmt_account->execute([$studid, $student_email, $student_password, $department_id, $unique_filename]);
 
-                header("Location: index.php");
+                header("Location: student.php");
             } catch (PDOException $e) {
                 echo "Error: ".$e->getMessage();
                 exit();
@@ -131,7 +131,7 @@ if(isset($_POST["edit_student"])) {
         $stmt_account = $pdo->prepare($sql_account);
         $stmt_account->execute([$edit_student_password, $edit_student_email, $edit_department_id, $edit_studid]);
 
-        header("Location: index.php");
+        header("Location: student.php");
         exit();
     } catch (PDOException $e) {
         echo "Error: ".$e->getMessage();
@@ -184,7 +184,7 @@ try {
             <div class="searchCont">
                 <?php include '../../components/search.php'; ?>
                 <?php if(!empty($searchTerm)): ?>
-                <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
+                    <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
                 <?php endif; ?>
             </div>
             <div class="headbtn">
@@ -223,14 +223,14 @@ try {
                     $department_name = $deptRow['department_name'];
                 }
 
-               $actions = '<button type="button" onclick="editstudent(\''.$studid.'\', \''.$student_password.'\', \''.$student_email.'\', \''.$department_id.'\', \''.$firstname.'\', \''.$course.'\', \''.$lastname.'\')">Edit</button> <button type="button" onclick="showDeleteModal('.$studid.')">Delete</button>';
+                $actions = '<button type="button" onclick="editstudent(\''.$studid.'\', \''.$student_password.'\', \''.$student_email.'\', \''.$department_id.'\', \''.$firstname.'\', \''.$course.'\', \''.$lastname.'\')">Edit</button> <button type="button" onclick="showDeleteModal('.$studid.')">Delete</button>';
 
 
                 // Concatenate first and last names
                 $name = $firstname.' '.$lastname;
 
                 // Add row to the $body array
-                $body[] = array($studid, '<img src="../../images/profiles/'.$student_profile.'" alt="Profile Image" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $student_password, $course,$student_email, $department_name, $actions);
+                $body[] = array($studid, '<img src="../../images/profiles/'.$student_profile.'" alt="Profile Image" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $student_password, $course, $student_email, $department_name, $actions);
             }
 
             createTable($head, $body);
@@ -404,8 +404,8 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
-    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
-    const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'student_email')); ?>;
+        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+        const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'student_email')); ?>;
     </script>
     <script src="../../script/student.js"></script>
 </body>

@@ -1,16 +1,16 @@
 <?php
 include '../config/config.php';
-if (isset($_SESSION['emp_email'])) {
+if(isset($_SESSION['emp_email'])) {
     header("Location: ./dashboard");
     exit;
 }
 $error = null;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $emp_email = filter_input(INPUT_POST, 'emp_email', FILTER_SANITIZE_EMAIL);
     $emp_password = filter_input(INPUT_POST, 'emp_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    if (empty($emp_email) || empty($emp_password)) {
+    if(empty($emp_email) || empty($emp_password)) {
         $error = "*** Please fill in all fields. ***";
     } else {
         try {
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($row && $row['emp_password'] === $emp_password) {
+            if($row && $row['emp_password'] === $emp_password) {
                 // Fetch the user's role from the database
                 $roleQuery = "SELECT role_name FROM tb_roles WHERE role_id = :role_id";
                 $roleStmt = $pdo->prepare($roleQuery);
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                 $roleRow = $roleStmt->fetch(PDO::FETCH_ASSOC);
 
                 // Check if the user's role is "Admin"
-                if ($roleRow && $roleRow['role_name'] === 'Admin') {
+                if($roleRow && $roleRow['role_name'] === 'Admin') {
                     // Grant access for Admin
                     $_SESSION['emp_email'] = $row['emp_email'];
                     $_SESSION['emp_name'] = $row['emp_name'];
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                 $error = "*** Invalid Login Credentials. ***";
             }
         } catch (PDOException $e) {
-            $error = "Failed to prepare the statement: " . $e->getMessage();
+            $error = "Failed to prepare the statement: ".$e->getMessage();
         }
     }
 }
@@ -80,9 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                             <label for="password">Password</label>
                             <input type="password" name="emp_password" placeholder="Password" required>
                         </div>
-                        <div class="error<?php if (!empty($error))
+                        <div class="error<?php if(!empty($error))
                             echo ' show'; ?>">
-                            <?php if (!empty($error)): ?>
+                            <?php if(!empty($error)): ?>
                                 <p>
                                     <?php echo $error; ?>
                                 </p>
