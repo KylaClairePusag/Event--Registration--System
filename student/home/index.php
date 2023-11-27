@@ -79,94 +79,103 @@ try {
     <?php include '../../components/studentHeader.php'; ?>
 
     <main>
+        <h1>Events List</h1>
         <div class="box-container">
-            <?php foreach($rows as $row) { ?>
 
-                <?php
-                // Extract event details
-                $event_id = $row["event_id"];
-                $event_title = $row["event_title"];
-                $event_detail = $row["event_detail"];
-                $event_date = date('F j, Y', strtotime($row["event_date"]));
-                $status = $row["status"];
-                $header_image = $row["header_image"];
-                $department_name = $row["department_name"];
+            <?php if(empty($rows)) { ?>
+                <p>No events available</p>
+            <?php } else { ?>
 
-                // Count attendees for the event
-                $attendees_query = $conn->prepare("SELECT COUNT(*) as attendee_count FROM tb_attendees WHERE event_id = ?");
-                $attendees_query->bind_param('i', $event_id);
-                $attendees_query->execute();
-                $attendees_row = $attendees_query->get_result()->fetch_assoc();
-                $attendee_count = $attendees_row['attendee_count'];
+                <?php foreach($rows as $row) { ?>
 
-                // Define a CSS class based on the status
-                $statusClass = '';
-                switch($status) {
-                    case 'upcoming':
-                        $statusClass = 'upcoming-event';
-                        break;
-                    case 'ongoing':
-                        $statusClass = 'ongoing-event';
-                        break;
-                    case 'ended':
-                        $statusClass = 'ended-event';
-                        break;
-                    default:
-                        break;
-                }
-                ?>
-                <div class="event-box <?php echo $statusClass; ?>-box">
+                    <?php
+                    // Extract event details
+                    $event_id = $row["event_id"];
+                    $event_title = $row["event_title"];
+                    $event_detail = $row["event_detail"];
+                    $event_date = date('F j, Y', strtotime($row["event_date"]));
+                    $status = $row["status"];
+                    $header_image = $row["header_image"];
+                    $department_name = $row["department_name"];
 
-                    <div class="header">
-                        <img src="../../<?php echo $header_image; ?>" alt="Event Image">
-                    </div>
-                    <div class="event-content">
-                        <h2>
-                            <?php echo ucwords($event_title); ?>
-                        </h2>
-                        <div id="date">
-                            <img src="../../images/calendar.png" alt="">
-                            <h3>
-                                <?php echo $event_date; ?>
-                            </h3>
+                    // Count attendees for the event
+                    $attendees_query = $conn->prepare("SELECT COUNT(*) as attendee_count FROM tb_attendees WHERE event_id = ?");
+                    $attendees_query->bind_param('i', $event_id);
+                    $attendees_query->execute();
+                    $attendees_row = $attendees_query->get_result()->fetch_assoc();
+                    $attendee_count = $attendees_row['attendee_count'];
+
+                    // Define a CSS class based on the status
+                    $statusClass = '';
+                    switch($status) {
+                        case 'upcoming':
+                            $statusClass = 'upcoming-event';
+                            break;
+                        case 'ongoing':
+                            $statusClass = 'ongoing-event';
+                            break;
+                        case 'ended':
+                            $statusClass = 'ended-event';
+                            break;
+                        default:
+                            break;
+                    }
+                    ?>
+                    <div class="event-box <?php echo $statusClass; ?>-box">
+
+                        <div class="header">
+                            <img src="../../<?php echo $header_image; ?>" alt="Event Image">
                         </div>
-                        <p id="details">
-                            <?php echo $event_detail; ?>
-                        </p>
-                        <p>Status: <span class="<?php echo $statusClass; ?>">
-                                <?php echo $status; ?>
-                            </span></p>
-                        <p>Department:
-                            <?php echo ucwords($department_name); ?>
-                        </p>
-                        <p>Attendees:
-                            <?php echo $attendee_count; ?>
-                        </p>
-                    </div>
-                    <div class="events_button">
-                        <form action="" method="POST">
-                            <button type="button" id="viewBtn"
-                                onclick="window.location.href='event.php?event_id=<?php echo $event_id; ?>'">View
-                                Event</button>
-                            <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
-                            <?php
-                            $attendeeExists = false;
-                            $checkStmt->execute();
-                            $attendeeExists = $checkStmt->rowCount() > 0;
-                            if($statusClass == 'upcoming-event' || $statusClass == 'ongoing-event') {
-                                if($attendeeExists) {
-                                    echo '<button type="button" onclick="openCancelModal('.$event_id.')" id="cancelbtn">Cancel</button>';
+                        <div class="event-content">
+                            <h2>
+                                <?php echo ucwords($event_title); ?>
+                            </h2>
+                            <div id="date">
+                                <img src="../../images/calendar.png" alt="">
+                                <h3>
+                                    <?php echo $event_date; ?>
+                                </h3>
+                            </div>
+                            <p id="details">
+                                <?php echo $event_detail; ?>
+                            </p>
+                            <p>Status: <span class="<?php echo $statusClass; ?>">
+                                    <?php echo $status; ?>
+                                </span></p>
+                            <p>Department:
+                                <?php echo ucwords($department_name); ?>
+                            </p>
+                            <p>Attendees:
+                                <?php echo $attendee_count; ?>
+                            </p>
+                        </div>
+                        <div class="events_button">
+                            <form action="" method="POST">
+                                <button type="button" id="viewBtn"
+                                    onclick="window.location.href='event.php?event_id=<?php echo $event_id; ?>'">View
+                                    Event</button>
+                                <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
+                                <?php
+                                $attendeeExists = false;
+                                $checkStmt->execute();
+                                $attendeeExists = $checkStmt->rowCount() > 0;
+                                if($statusClass == 'upcoming-event' || $statusClass == 'ongoing-event') {
+                                    if($attendeeExists) {
+                                        echo '<button type="button" onclick="openCancelModal('.$event_id.')" id="cancelbtn">Cancel</button>';
+                                    } else {
+                                        echo '<button type="button" onclick="openAttendModal('.$event_id.')">Interested</button>';
+                                    }
                                 } else {
-                                    echo '<button type="button" onclick="openAttendModal('.$event_id.')">Interested</button>';
+                                    echo '<button id="cancelbtn" disabled>Past Event</button>';
                                 }
-                            } else {
-                                echo '<button id="cancelbtn" disabled>Past Event</button>';
-                            }
-                            ?>
-                        </form>
+                                ?>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
+
             <?php } ?>
+
         </div>
 
         <!-- The Attend Dialog -->
@@ -200,39 +209,7 @@ try {
             </div>
 
         </dialog>
-
-        <script>
-            function openAttendModal(eventId) {
-                document.getElementById('attendDialogEventId').value = eventId;
-                document.getElementById('attendDialog').showModal();
-            }
-
-            function closeAttendDialog() {
-                document.getElementById('attendDialog').close();
-            }
-
-            function openCancelModal(eventId) {
-                document.getElementById('cancelDialogEventId').value = eventId;
-                document.getElementById('cancelDialog').showModal();
-            }
-
-            function closeCancelDialog() {
-                document.getElementById('cancelDialog').close();
-            }
-
-            document.addEventListener('click', function (event) {
-                var modal = document.querySelector('.modal');
-                if (event.target === modal) {
-                    modal.close();
-                }
-            });
-            document.addEventListener('click', function (event) {
-                var cancelModal = document.getElementById('cancelDialog');
-                if (event.target === cancelModal) {
-                    cancelModal.close();
-                }
-            });
-        </script>
+        <script src="../../script/events.js"></script>
 
     </main>
 
