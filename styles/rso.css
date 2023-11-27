@@ -338,7 +338,7 @@ dialog .close {
   cursor: pointer;
   opacity: 0.7;
 }
-
+#edit-student-password,
 #edit-emp-password,
 #edit-rso-password {
   border: none;
