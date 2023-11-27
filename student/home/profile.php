@@ -2,8 +2,16 @@
 session_start();
 include '../../config/config.php';
 
+if(!isset($_SESSION['student_email'])) {
+    header("Location: ../signin.php");
+    exit();
+}
 
-$conn = new mysqli('localhost', 'root', '', 'db_ba3101');
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "db_ba3101";
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 if($conn->connect_error) {
     die("Connection failed: ".$conn->connect_error);

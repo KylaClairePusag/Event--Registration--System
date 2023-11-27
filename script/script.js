@@ -39,3 +39,19 @@ element.addEventListener('event', () => {
 
 searchInput.addEventListener('input');
 
+function toggleProfileDropdown() {
+    var dropdown = document.getElementById("profileDropdown");
+    dropdown.style.display = (dropdown.style.display === 'block' || dropdown.style.display === '') ? 'none' : 'block';
+}
+
+// Add event listener to close dropdown when clicking outside
+document.addEventListener('click', function (event) {
+    var dropdown = document.getElementById("profileDropdown");
+    var profileImg = document.querySelector('.profile-img');
+
+    // Check if the clicked element is inside the profile dropdown or the profile image
+    if (!dropdown.contains(event.target) && !profileImg.contains(event.target)) {
+        // If outside, close the dropdown
+        dropdown.style.display = 'none';
+    }
+});
