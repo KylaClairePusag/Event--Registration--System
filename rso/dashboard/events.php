@@ -1,16 +1,7 @@
 <?php
-session_start();
-// Database connection setup
 include '../../config/config.php';
 
-
-// Get the current request URI
-$requestUri = $_SERVER['REQUEST_URI'];
-
 $conn = new mysqli('localhost', 'root', '', 'db_ba3101');
-if($conn->connect_error) {
-    die('Connection Failed: '.$conn->connect_error);
-}
 if(isset($_POST["add_event"])) {
     $event_title = htmlspecialchars($_POST["event_title"], ENT_QUOTES, "UTF-8");
     $event_detail = htmlspecialchars($_POST["event_detail"], ENT_QUOTES, "UTF-8");

@@ -8,8 +8,8 @@ function generatePaginationLinks($conn, $searchTerm, $limit, $paginationQuery) {
         }
 
         $result = $paginationQuery->fetch();
-        $totalRecords = $result['total'];
-        $totalPages = ceil($totalRecords / $limit);
+        $totalRecords = isset($result['total']) ? $result['total'] : 0;
+        $totalPages = ($totalRecords > 0) ? ceil($totalRecords / $limit) : 0;
 
         echo "<div class='pagination-container'>";
 
