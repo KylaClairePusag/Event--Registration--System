@@ -65,7 +65,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     <main>
         <section class="first-section">
             <div class="header">
-                <h1>Event CHUCHU Registration</h1>
+                <h1>Event Registration</h1>
             </div>
             <div class="box">
                 <div class="login-container">
