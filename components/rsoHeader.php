@@ -1,26 +1,27 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
+if(session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 include '../../config/config.php';
 
 // Check if the RSO is logged in, otherwise redirect to login page
-if (!isset($_SESSION['rso_email']) || !isset($_SESSION['rso_name'])) {
+if(!isset($_SESSION['rso_email']) || !isset($_SESSION['rso_name'])) {
     header("Location: ../signin.php");
     exit();
 }
 
-$rsoName = $_SESSION['rso_name'];
-
-// Prepare and execute the query to get admin profile
 try {
-    $sql = "SELECT rso_profile FROM tb_rso WHERE rso_email = :rso_email";
+    $sql = "SELECT rso_name, rso_email, rso_profile FROM tb_rso WHERE rso_email = :rso_email";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(":rso_email", $_SESSION['rso_email']);
     $stmt->execute();
-    $rsoProfile = $stmt->fetchColumn();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $rsoName = $result['rso_name'];
+    $rsoEmail = $result['rso_email'];
+    $rsoProfile = $result['rso_profile'];
 } catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+    die("Connection failed: ".$e->getMessage());
 }
 ?>
 
@@ -31,6 +32,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../styles/header.css">
+    <link rel="stylesheet" href="../../styles/style.css">
     <title>Dashboard</title>
 </head>
 
@@ -41,27 +43,40 @@ try {
                 <h3>Event</h3>
                 <ul>
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'class="active"' : ''; ?>>
-                        <a href="./">Overview</a>
+                        <a href="./">Events</a>
                     </li>
-                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'events.php' ? 'class="active"' : ''; ?>>
-                        <a href="events.php">Events</a>
-                    </li>
-                    <li <?php echo basename($_SERVER['PHP_SELF']) == 'attendees.php' ? 'class="active"' : ''; ?>>
-                        <a href="attendees.php">Attendees</a>
-                    </li>
+
                     <li <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'class="active"' : ''; ?>>
                         <a href="reports.php">Reports</a>
                     </li>
                 </ul>
             </div>
-            <div class="profile">
-                <?php echo htmlspecialchars($rsoName); ?>
-                <?php echo '<img src="../../' . $rsoProfile . '" alt="RSO Profile Image" class="profile"'; ?>
+
+            <div class="profile dropdown">
+                <span class="profile-email">
+                    <?= htmlspecialchars($rsoName); ?>
+
                 </span>
-                <a href="../logout.php">Logout</a>
+                <div class="profile">
+                    <?php
+                    if(!empty($rsoProfile)) {
+                        echo '<img src="../../images/profiles/'.$rsoProfile.'" alt="RSO Profile Image" onclick="toggleProfileDropdown()" class="profile-img" >';
+                    } else {
+                        echo '<img src="../../images/alt.png" alt="RSO Profile Image" onclick="toggleProfileDropdown()" class="profile-img" >';
+                    }
+                    ?>
+                </div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <h5>
+                        <?= htmlspecialchars($rsoEmail); ?>
+                    </h5>
+
+                    <a href="../logout.php">Logout</a>
+                </div>
             </div>
         </nav>
     </header>
+    <script src="../../script/script.js"></script>
 </body>
 
 </html>
