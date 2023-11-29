@@ -251,7 +251,7 @@ try {
                 $name = $firstname.' '.$lastname;
 
                 // Add row to the $body array
-                $body[] = array($studid, '<img src="../../images/profiles/'.$student_profile.'" alt="Profile Image" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $student_password, $course, $student_email, $department_name, $actions);
+                $body[] = array($studid, '<img src="../../images/profiles/'.$student_profile.'" alt="Profile" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $student_password, $course, $student_email, $department_name, $actions);
             }
 
             createTable($head, $body);
@@ -416,7 +416,7 @@ try {
         </section>
         <section class="paginationCont">
             <?php include '../../components/pagination.php';
-            generatePaginationLinks($searchTerm, $limit, $paginationQuery, $selectedDepartment);
+            generatePaginationLinks($searchTerm, $limit, $paginationQuery, $selectedDepartment, null);
             ?>
         </section>
     </main>

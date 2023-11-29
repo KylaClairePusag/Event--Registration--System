@@ -73,6 +73,9 @@ try {
                     <li <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'class="active"' : ''; ?>>
                         <a href="./">Employee</a>
                     </li>
+                    <li <?= basename($_SERVER['PHP_SELF']) == 'rso.php' ? 'class="active"' : ''; ?>>
+                        <a href="rso.php">Rso</a>
+                    </li>
                     <li <?= basename($_SERVER['PHP_SELF']) == 'student.php' ? 'class="active"' : ''; ?>>
                         <a href="student.php">Student</a>
                     </li>
@@ -107,6 +110,8 @@ try {
             </div>
         </nav>
     </header>
+
+    <script src="../../script/emp.js"></script>
     <script src="../../script/script.js"></script>
 </body>
 

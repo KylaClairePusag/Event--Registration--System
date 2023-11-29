@@ -202,12 +202,10 @@ try {
 
     <main>
         <section class="head">
-            <div class="searchCont">
-                <?php include '../../components/search.php'; ?>
-                <?php if(!empty($searchTerm)): ?>
-                    <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
-                <?php endif; ?>
-            </div>
+            <?php include '../../components/search.php'; ?>
+            <?php if(!empty($searchTerm)): ?>
+                <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
+            <?php endif; ?>
             <div class="headbtn">
                 <select id="filterRole" onchange='applyRoleFilter()'>
                     <option value=''>All Roles</option>
@@ -284,7 +282,7 @@ try {
                     $name = $firstname.' '.$lastname;
 
                     // Add row to the $body array
-                    $body[] = array($empaccountId, '<img src="../../images/profiles/'.$emp_profile.'" alt="Profile Image" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $emp_password, $emp_email, $department_name, $role, $actions);
+                    $body[] = array($empaccountId, '<img src="../../images/profiles/'.$emp_profile.'" alt="Profile" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $emp_password, $emp_email, $department_name, $role, $actions);
                 }
 
                 createTable($head, $body);
@@ -501,7 +499,7 @@ try {
         const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
         const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'emp_email')); ?>;
     </script>
-    <script src="../../script/rso.js"></script>
+    <script src="../../script/emp.js"></script>
 </body>
 
 </html>

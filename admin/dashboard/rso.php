@@ -4,7 +4,7 @@ include '../../config/config.php';
 $requestUri = $_SERVER['REQUEST_URI'];
 
 // Add new RSO
-if (isset($_POST["add_rso"])) {
+if(isset($_POST["add_rso"])) {
     $rso_name = htmlspecialchars($_POST["rso_name"], ENT_QUOTES, "UTF-8");
     $rso_password = htmlspecialchars($_POST["rso_password"], ENT_QUOTES, "UTF-8");
     $rso_email = htmlspecialchars($_POST["email"], ENT_QUOTES, "UTF-8");
@@ -12,7 +12,7 @@ if (isset($_POST["add_rso"])) {
 
     // Insert data into the database
     $query = $pdo->prepare("INSERT INTO tb_rso (rso_name, rso_password, rso_email, department_id) VALUES (:rso_name, :rso_password, :rso_email, :department_id)");
-    if ($query->execute([':rso_name' => $rso_name, ':rso_password' => $rso_password, ':rso_email' => $rso_email, ':department_id' => $department_id])) {
+    if($query->execute([':rso_name' => $rso_name, ':rso_password' => $rso_password, ':rso_email' => $rso_email, ':department_id' => $department_id])) {
         header("Location: $requestUri");
         exit();
     } else {
@@ -21,12 +21,12 @@ if (isset($_POST["add_rso"])) {
 }
 
 // Delete RSO
-if (isset($_POST["delete_rso"])) {
+if(isset($_POST["delete_rso"])) {
     $rso_id = filter_input(INPUT_POST, "delete_rso", FILTER_VALIDATE_INT);
 
     // Delete data from the database
     $query = $pdo->prepare("DELETE FROM tb_rso WHERE rso_id = :rso_id");
-    if ($query->execute([':rso_id' => $rso_id])) {
+    if($query->execute([':rso_id' => $rso_id])) {
         header("Location: $requestUri");
     } else {
         echo "Error deleting rso.";
@@ -34,7 +34,7 @@ if (isset($_POST["delete_rso"])) {
 }
 
 // Edit RSO
-if (isset($_POST["edit_rso"])) {
+if(isset($_POST["edit_rso"])) {
     $edit_rso_id = filter_input(INPUT_POST, "edit_rso_id", FILTER_VALIDATE_INT);
     $edit_rso_name = htmlspecialchars($_POST["edit_rso_name"], ENT_QUOTES, "UTF-8");
     $edit_rso_password = htmlspecialchars($_POST["edit_rso_password"], ENT_QUOTES, "UTF-8");
@@ -43,7 +43,7 @@ if (isset($_POST["edit_rso"])) {
 
     // Update data in the database
     $query = $pdo->prepare("UPDATE tb_rso SET rso_name = :rso_name, rso_password = :rso_password, rso_email = :rso_email, department_id = :department_id WHERE rso_id = :rso_id");
-    if ($query->execute([':rso_name' => $edit_rso_name, ':rso_password' => $edit_rso_password, ':rso_email' => $edit_rso_email, ':department_id' => $edit_department_id, ':rso_id' => $edit_rso_id])) {
+    if($query->execute([':rso_name' => $edit_rso_name, ':rso_password' => $edit_rso_password, ':rso_email' => $edit_rso_email, ':department_id' => $edit_department_id, ':rso_id' => $edit_rso_id])) {
         header("Location: $requestUri");
         exit();
     } else {
@@ -58,24 +58,30 @@ $offset = ($page - 1) * $limit;
 
 // Search functionality
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+$selectedDepartment = isset($_GET['departmentFilter']) ? $_GET['departmentFilter'] : '';
 
 try {
     // Query to get a subset of records based on search and pagination
-    $query = $pdo->prepare("SELECT * FROM tb_rso WHERE rso_name LIKE :searchTerm OR rso_email LIKE :searchTerm LIMIT :limit OFFSET :offset");
-    $query->bindValue(':searchTerm', '%' . $searchTerm . '%', PDO::PARAM_STR);
+    $query = $pdo->prepare("SELECT * FROM tb_rso WHERE (rso_name LIKE :searchTerm OR rso_email LIKE :searchTerm) ".
+        ($selectedDepartment ? "AND department_id = :department_id" : "").
+        " LIMIT :limit OFFSET :offset");
+    $query->bindValue(':searchTerm', '%'.$searchTerm.'%', PDO::PARAM_STR);
     $query->bindValue(':limit', $limit, PDO::PARAM_INT);
     $query->bindValue(':offset', $offset, PDO::PARAM_INT);
+    if($selectedDepartment) {
+        $query->bindValue(':department_id', $selectedDepartment, PDO::PARAM_INT);
+    }
 
-    if (!$query->execute()) {
-        throw new Exception("Query failed: " . implode(" ", $query->errorInfo()));
+    if(!$query->execute()) {
+        throw new Exception("Query failed: ".implode(" ", $query->errorInfo()));
     }
 
     // Fetch results
     $rows = $query->fetchAll(PDO::FETCH_ASSOC);
     $paginationQuery = $pdo->prepare("SELECT COUNT(*) AS total FROM tb_rso WHERE rso_name LIKE :searchTerm OR rso_email LIKE :searchTerm");
-    $paginationQuery->bindValue(':searchTerm', '%' . $searchTerm . '%', PDO::PARAM_STR);
+    $paginationQuery->bindValue(':searchTerm', '%'.$searchTerm.'%', PDO::PARAM_STR);
 } catch (Exception $ex) {
-    echo "Error: " . $ex->getMessage();
+    echo "Error: ".$ex->getMessage();
     die();
 }
 ?>
@@ -97,11 +103,24 @@ try {
                 <?php
                 include '../../components/search.php';
                 ?>
-                <?php if (!empty($searchTerm)): ?>
+                <?php if(!empty($searchTerm)): ?>
                     <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
                 <?php endif; ?>
             </div>
             <div class="headbtn">
+                <select id="departmentFilter" name="departmentFilter" onchange="applyDepartmentFilter()">
+                    <option value="">All Departments</option>
+                    <?php
+                    $departmentQuery = $pdo->prepare("SELECT department_id, department_name FROM tb_department");
+                    $departmentQuery->execute();
+
+                    while($deptRow = $departmentQuery->fetch()) {
+                        $selected = ($deptRow['department_id'] == $selectedDepartment) ? "selected" : "";
+                        echo "<option value='".$deptRow['department_id']."' $selected>".$deptRow['department_name']."</option>";
+                    }
+                    ?>
+                </select>
+
                 <?php
                 include '../../components/limit.php';
                 ?>
@@ -117,7 +136,7 @@ try {
             $head = array('ID', 'Name', 'Password', 'Email', 'Department', 'Actions');
             $body = array();
 
-            foreach ($rows as $row) {
+            foreach($rows as $row) {
                 $rso_id = $row["rso_id"];
                 $rso_name = $row["rso_name"];
                 $rso_password = $row["rso_password"];
@@ -127,11 +146,11 @@ try {
 
                 $departmentQuery = $pdo->prepare("SELECT department_name FROM tb_department WHERE department_id = :department_id");
                 $departmentQuery->execute([':department_id' => $department_id]);
-                if ($deptRow = $departmentQuery->fetch()) {
+                if($deptRow = $departmentQuery->fetch()) {
                     $department_name = $deptRow['department_name'];
                 }
 
-                $actions = '<button type="button" onclick="editRso(' . $rso_id . ', \'' . $rso_name . '\', \'' . $rso_password . '\', \'' . $rso_email . '\', \'' . $department_id . '\')">Edit</button> <button type="button" onclick="showDeleteModal(' . $rso_id . ')">Delete</button>';
+                $actions = '<button type="button" onclick="editRso('.$rso_id.', \''.$rso_name.'\', \''.$rso_password.'\', \''.$rso_email.'\', \''.$department_id.'\')">Edit</button> <button type="button" onclick="showDeleteModal('.$rso_id.')">Delete</button>';
                 $body[] = array($rso_id, $rso_name, $rso_password, $rso_email, $department_name, $actions);
 
             }
@@ -160,8 +179,8 @@ try {
                             $departmentQuery = $pdo->prepare("SELECT department_id, department_name FROM tb_department");
                             $departmentQuery->execute();
 
-                            while ($deptRow = $departmentQuery->fetch()) {
-                                echo "<option value='" . $deptRow['department_id'] . "'>" . $deptRow['department_name'] . "</option>";
+                            while($deptRow = $departmentQuery->fetch()) {
+                                echo "<option value='".$deptRow['department_id']."'>".$deptRow['department_name']."</option>";
                             }
                             ?>
                         </select>
@@ -200,9 +219,9 @@ try {
                             $departmentQuery = $pdo->prepare("SELECT department_id, department_name FROM tb_department");
                             $departmentQuery->execute();
 
-                            while ($deptRow = $departmentQuery->fetch()) {
+                            while($deptRow = $departmentQuery->fetch()) {
                                 $selected = ($deptRow['department_id'] == $row['department_id']) ? "selected" : "";
-                                echo "<option value='" . $deptRow['department_id'] . "' $selected>" . $deptRow['department_name'] . "</option>";
+                                echo "<option value='".$deptRow['department_id']."' $selected>".$deptRow['department_name']."</option>";
                             }
                             ?>
                         </select>
@@ -227,7 +246,7 @@ try {
 
             <?php
             include '../../components/pagination.php';
-            generatePaginationLinks($pdo, $searchTerm, $limit, $paginationQuery);
+            generatePaginationLinks($searchTerm, $limit, $paginationQuery, null, null);
             ?>
         </section>
     </main>
@@ -236,6 +255,12 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
+        function applyDepartmentFilter() {
+            const selectedDepartment = document.getElementById('departmentFilter').value;
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('departmentFilter', selectedDepartment);
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        }
         const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
         const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'rso_email')); ?>;
     </script>
