@@ -119,6 +119,7 @@ if(isset($_POST["edit_emp"])) {
     $edit_department_id = $_POST["edit_department_id"];
     $edit_firstname = $_POST["edit_firstname"];
     $edit_lastname = $_POST["edit_lastname"];
+    $edit_role = $_POST["edit_role"]; // Get the role from the form submission
 
     try {
         // Update employee information
@@ -126,10 +127,9 @@ if(isset($_POST["edit_emp"])) {
         $stmt_info = $pdo->prepare($sql_info);
         $stmt_info->execute([$edit_firstname, $edit_lastname, $edit_department_id, $edit_empaccountId]);
 
-        // Update employee account
-        $sql_account = "UPDATE tbempaccount SET emp_password = ?, emp_email = ?, department_id = ? WHERE empaccountId = ?";
+        $sql_account = "UPDATE tbempaccount SET emp_password = ?, emp_email = ?, department_id = ?, role_id = ? WHERE empaccountId = ?";
         $stmt_account = $pdo->prepare($sql_account);
-        $stmt_account->execute([$edit_emp_password, $edit_emp_email, $edit_department_id, $edit_empaccountId]);
+        $stmt_account->execute([$edit_emp_password, $edit_emp_email, $edit_department_id, $edit_role, $edit_empaccountId]);
 
         header("Location: index.php");
         exit();
@@ -145,23 +145,44 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+$selectedDepartment = isset($_GET['department']) ? $_GET['department'] : '';
+$selectedRole = isset($_GET['role']) ? $_GET['role'] : '';
 
 try {
-    $query = $pdo->prepare("SELECT e.empaccountId, e.emp_password, e.emp_email, e.department_id, e.emp_profile, i.firstname, i.lastname
-                           FROM tbempaccount e
-                           JOIN tbempinfo i ON e.empid = i.empid
-                           WHERE e.emp_email LIKE :searchTerm LIMIT :limit OFFSET :offset");
+    $query = $pdo->prepare("
+    SELECT e.empaccountId, e.emp_password, e.emp_email, e.department_id, e.emp_profile, e.role_id, i.firstname, i.lastname
+    FROM tbempaccount e
+    JOIN tbempinfo i ON e.empid = i.empid
+    WHERE e.emp_email LIKE :searchTerm
+    ".($selectedDepartment ? "AND e.department_id = :department" : "")."
+    ".($selectedRole ? "AND e.role_id = :role" : "")."
+    LIMIT :limit OFFSET :offset
+");
+
     $query->bindValue(':searchTerm', '%'.$searchTerm.'%', PDO::PARAM_STR);
     $query->bindValue(':limit', $limit, PDO::PARAM_INT);
     $query->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+    if($selectedDepartment) {
+        $query->bindValue(':department', $selectedDepartment, PDO::PARAM_INT);
+    }
+    if($selectedRole) {
+        $query->bindValue(':role', $selectedRole, PDO::PARAM_INT);
+    }
 
     if(!$query->execute()) {
         throw new Exception("Query failed: ".implode(" ", $query->errorInfo()));
     }
 
+
     $rows = $query->fetchAll(PDO::FETCH_ASSOC);
-    $paginationQuery = $pdo->prepare("SELECT COUNT(*) AS total FROM tbempaccount WHERE emp_email LIKE :searchTerm");
+
+    $paginationQuery = $pdo->prepare("SELECT COUNT(*) AS total FROM tbempaccount WHERE emp_email LIKE :searchTerm".($selectedDepartment ? " AND department_id = :department" : ""));
     $paginationQuery->bindValue(':searchTerm', '%'.$searchTerm.'%', PDO::PARAM_STR);
+
+    if($selectedDepartment) {
+        $paginationQuery->bindValue(':department', $selectedDepartment, PDO::PARAM_INT);
+    }
 } catch (Exception $ex) {
     echo "Error: ".$ex->getMessage();
     die();
@@ -171,7 +192,6 @@ try {
 <html lang="en">
 
 <head>
-
     <link rel="stylesheet" href="../../styles/rso.css">
     <title>emp</title>
 </head>
@@ -189,6 +209,34 @@ try {
                 <?php endif; ?>
             </div>
             <div class="headbtn">
+                <select id="filterRole" onchange='applyRoleFilter()'>
+                    <option value=''>All Roles</option>
+                    <?php
+                    $roleQuery = $pdo->prepare("SELECT role_id, role_name FROM tb_roles");
+                    $roleQuery->execute();
+
+                    while($roleRow = $roleQuery->fetch()) {
+                        $selected = ($roleRow['role_id'] == $selectedRole) ? "selected" : "";
+                        echo "<option value='".$roleRow['role_id']."' $selected>".$roleRow['role_name']."</option>";
+                    }
+                    ?>
+                </select>
+                <?php
+                // Add a filter for departments in the dropdown
+                echo "<select id='filterDepartment' onchange='applyDepartmentFilter()'>";
+                echo "<option value=''>All Departments</option>";
+
+                $departmentQuery = $pdo->prepare("SELECT department_id, department_name FROM tb_department");
+                $departmentQuery->execute();
+
+                while($deptRow = $departmentQuery->fetch()) {
+                    $selected = ($deptRow['department_id'] == $selectedDepartment) ? "selected" : "";
+                    echo "<option value='".$deptRow['department_id']."' $selected>".$deptRow['department_name']."</option>";
+                }
+
+                echo "</select>";
+                ?>
+
                 <?php include '../../components/limit.php'; ?>
                 <button type="button" onclick="document.getElementById('addModal').showModal()">Add existing emp <img
                         src='../../images/plus.png' alt='Image' class="icon" /> </button>
@@ -196,44 +244,52 @@ try {
                         src='../../images/plus.png' alt='Image' class="icon" /> </button>
 
             </div>
+            </div>
 
         </section>
 
-        <section class="tableContainer">
-            <?php include '../../components/table.component.php';
-            // Main file
-            
-            $head = array('ID', 'Profile', 'Name', 'Password', 'Email', 'Department', 'Actions');
-            $body = array();
+        <section class="container">
+            <section class="tableContainer">
+                <?php include '../../components/table.component.php';
+                // Main file
+                
+                $head = array('ID', 'Profile', 'Name', 'Password', 'Email', 'Department', 'Role', 'Actions');
+                $body = array();
 
-            foreach($rows as $row) {
-                $empaccountId = $row["empaccountId"];
-                $emp_password = $row["emp_password"];
-                $emp_email = $row["emp_email"];
-                $department_id = $row["department_id"];
-                $emp_profile = $row["emp_profile"];
-                $firstname = ucwords($row["firstname"]);
-                $lastname = ucwords($row["lastname"]);
+                foreach($rows as $row) {
+                    $empaccountId = $row["empaccountId"];
+                    $emp_password = $row["emp_password"];
+                    $emp_email = $row["emp_email"];
+                    $department_id = $row["department_id"];
+                    $role_id = $row["role_id"];
+                    $emp_profile = $row["emp_profile"];
+                    $firstname = ucwords($row["firstname"]);
+                    $lastname = ucwords($row["lastname"]);
 
-                $department_name = '';
+                    $department_name = '';
 
-                $departmentQuery = $pdo->prepare("SELECT department_name FROM tb_department WHERE department_id = :department_id");
-                $departmentQuery->execute([':department_id' => $department_id]);
-                if($deptRow = $departmentQuery->fetch()) {
-                    $department_name = $deptRow['department_name'];
+                    $departmentQuery = $pdo->prepare("SELECT department_name FROM tb_department WHERE department_id = :department_id");
+                    $departmentQuery->execute([':department_id' => $department_id]);
+                    if($deptRow = $departmentQuery->fetch()) {
+                        $department_name = $deptRow['department_name'];
+                    }
+                    $roleQuery = $pdo->prepare("SELECT role_name FROM tb_roles WHERE role_id = :role_id");
+                    $roleQuery->execute([':role_id' => $role_id]);
+                    $role = $roleQuery->fetchColumn();
+
+
+                    $actions = '<button type="button" onclick="editemp('.$empaccountId.', \''.$emp_password.'\', \''.$emp_email.'\', \''.$department_id.'\', \''.$firstname.'\', \''.$lastname.'\', \''.$role_id.'\')">Edit</button> <button type="button" onclick="showDeleteModal('.$empaccountId.')">Delete</button>';
+
+                    // Concatenate first and last names
+                    $name = $firstname.' '.$lastname;
+
+                    // Add row to the $body array
+                    $body[] = array($empaccountId, '<img src="../../images/profiles/'.$emp_profile.'" alt="Profile Image" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $emp_password, $emp_email, $department_name, $role, $actions);
                 }
 
-                $actions = '<button type="button" onclick="editemp('.$empaccountId.', \''.$emp_password.'\', \''.$emp_email.'\', \''.$department_id.'\', \''.$firstname.'\', \''.$lastname.'\')">Edit</button> <button type="button" onclick="showDeleteModal('.$empaccountId.')">Delete</button>';
-
-                // Concatenate first and last names
-                $name = $firstname.' '.$lastname;
-
-                // Add row to the $body array
-                $body[] = array($empaccountId, '<img src="../../images/profiles/'.$emp_profile.'" alt="Profile Image" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $emp_password, $emp_email, $department_name, $actions);
-            }
-
-            createTable($head, $body);
-            ?>
+                createTable($head, $body);
+                ?>
+            </section>
 
 
             <dialog id="addModal" class="modal">
@@ -375,7 +431,18 @@ try {
                         <label for="edit-email">Email:</label>
                         <input type="email" id="edit-email" name="edit_emp_email">
                         <input type="hidden" id="original-email" value="<?php echo $originalEmail; ?>">
+                        <label for="edit-role">Role:</label>
+                        <select id="edit-role" name="edit_role">
+                            <?php
+                            $roleQuery = $pdo->prepare("SELECT role_id, role_name FROM tb_roles");
+                            $roleQuery->execute();
 
+                            while($roleRow = $roleQuery->fetch()) {
+                                $selected = ($roleRow['role_id'] == $edit_role) ? "selected" : "";
+                                echo "<option value='".$roleRow['role_id']."' $selected>".$roleRow['role_name']."</option>";
+                            }
+                            ?>
+                        </select>
                         <label for="edit-department">Department:</label>
                         <select id="edit-department" name="edit_department_id">
                             <?php
@@ -409,7 +476,7 @@ try {
         </section>
         <section class="paginationCont">
             <?php include '../../components/pagination.php';
-            generatePaginationLinks($pdo, $searchTerm, $limit, $paginationQuery);
+            generatePaginationLinks($searchTerm, $limit, $paginationQuery, $selectedDepartment, null);
             ?>
         </section>
     </main>
@@ -418,6 +485,19 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
+        function applyRoleFilter() {
+            const selectedRole = document.getElementById('filterRole').value;
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('role', selectedRole);
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        }
+
+        function applyDepartmentFilter() {
+            const selectedDepartment = document.getElementById('filterDepartment').value;
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('department', selectedDepartment);
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        }
         const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
         const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'emp_email')); ?>;
     </script>

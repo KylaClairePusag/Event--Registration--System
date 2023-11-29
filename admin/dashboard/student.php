@@ -139,33 +139,40 @@ if(isset($_POST["edit_student"])) {
     }
 }
 
+// Handle search and filter
+$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+$selectedDepartment = isset($_GET['departmentFilter']) ? $_GET['departmentFilter'] : '';
 
-$limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
+// Define $limit and $offset
+$limit = 10; // You can adjust this value based on your requirements
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
-
-$searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
 try {
     $query = $pdo->prepare("SELECT e.studid, e.student_password, e.student_email, e.department_id, e.student_profile, i.firstname, i.lastname, i.course
                            FROM tbstudentaccount e
                            JOIN tbstudinfo i ON e.studid = i.studid
-                           WHERE e.student_email LIKE :searchTerm LIMIT :limit OFFSET :offset");
+                           WHERE (e.student_email LIKE :searchTerm) AND (:selectedDepartment = '' OR e.department_id = :selectedDepartment)
+                           LIMIT :limit OFFSET :offset");
+
     $query->bindValue(':searchTerm', '%'.$searchTerm.'%', PDO::PARAM_STR);
     $query->bindValue(':limit', $limit, PDO::PARAM_INT);
     $query->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $query->bindValue(':selectedDepartment', $selectedDepartment, PDO::PARAM_STR);
 
     if(!$query->execute()) {
-        throw new Exception("Query failed: ".implode(" ", $query->errorInfo()));
+        throw new Exception('Query failed: '.implode(' ', $query->errorInfo()));
     }
 
     $rows = $query->fetchAll(PDO::FETCH_ASSOC);
-    $paginationQuery = $pdo->prepare("SELECT COUNT(*) AS total FROM tbstudentaccount WHERE student_email LIKE :searchTerm");
+    $paginationQuery = $pdo->prepare("SELECT COUNT(*) AS total FROM tbstudentaccount WHERE (student_email LIKE :searchTerm) AND (:selectedDepartment = '' OR department_id = :selectedDepartment)");
     $paginationQuery->bindValue(':searchTerm', '%'.$searchTerm.'%', PDO::PARAM_STR);
+    $paginationQuery->bindValue(':selectedDepartment', $selectedDepartment, PDO::PARAM_STR);
 } catch (Exception $ex) {
-    echo "Error: ".$ex->getMessage();
+    echo 'Error: '.$ex->getMessage();
     die();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -188,6 +195,18 @@ try {
                 <?php endif; ?>
             </div>
             <div class="headbtn">
+                <select id="departmentFilter" name="departmentFilter" onchange="applyDepartmentFilter()">
+                    <option value="">All Departments</option>
+                    <?php
+                    $departmentQuery = $pdo->prepare("SELECT department_id, department_name FROM tb_department");
+                    $departmentQuery->execute();
+
+                    while($deptRow = $departmentQuery->fetch()) {
+                        $selected = ($deptRow['department_id'] == $selectedDepartment) ? "selected" : "";
+                        echo "<option value='".$deptRow['department_id']."' $selected>".$deptRow['department_name']."</option>";
+                    }
+                    ?>
+                </select>
                 <?php include '../../components/limit.php'; ?>
                 <button type="button" onclick="document.getElementById('addModal').showModal()">Add existing student
                     <img src='../../images/plus.png' alt='Image' class="icon" /> </button>
@@ -195,6 +214,8 @@ try {
                     <img src='../../images/plus.png' alt='Image' class="icon" /> </button>
 
             </div>
+            <!-- Add this above the search bar -->
+
 
         </section>
 
@@ -395,7 +416,7 @@ try {
         </section>
         <section class="paginationCont">
             <?php include '../../components/pagination.php';
-            generatePaginationLinks($pdo, $searchTerm, $limit, $paginationQuery);
+            generatePaginationLinks($searchTerm, $limit, $paginationQuery, $selectedDepartment);
             ?>
         </section>
     </main>
@@ -404,6 +425,13 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
+        function applyDepartmentFilter() {
+            const selectedDepartment = document.getElementById('departmentFilter').value;
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('departmentFilter', selectedDepartment);
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        }
+
         const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
         const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'student_email')); ?>;
     </script>
