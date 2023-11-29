@@ -31,7 +31,6 @@ try {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html>
 
@@ -52,9 +51,11 @@ try {
                 $event_id = $row["event_id"];
                 $event_title = $row["event_title"];
 
-                $viewAttendeesButton = '<a href="attendeesList.php?event_id=' . $event_id . '"><button>Print Report</button></a>';
+          
+                $actionCell = '<a href="attendeesList.php?event_id=' . $event_id . '"><button>Student Attendees</button></a>';
+                $actionCell .= '<a href="attendeesList_faculty.php?event_id=' . $event_id . '"><button>Faculty Attendees</button></a>';
 
-                $body[] = array($event_title, $viewAttendeesButton);
+                $body[] = array($event_title, $actionCell);
             }
 
             createTable($head, $body);
