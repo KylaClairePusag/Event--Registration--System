@@ -11,8 +11,14 @@ if ($conn->connect_error) {
 }
 
 try {
-    
-    $query = $pdo->prepare("SELECT * FROM tb_event");
+  
+    $userDepartmentId = $_SESSION['department_id'];
+
+    $query = $pdo->prepare("SELECT * FROM tb_event
+                            JOIN tb_rso ON tb_event.department_id = tb_rso.department_id
+                            WHERE tb_rso.department_id = :userDepartmentId");
+    $query->bindParam(':userDepartmentId', $userDepartmentId, PDO::PARAM_INT);
+
     if (!$query->execute()) {
         throw new Exception("Query failed: " . implode(" ", $query->errorInfo()));
     }
@@ -25,6 +31,7 @@ try {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html>
 
@@ -33,7 +40,6 @@ try {
 </head>
 
 <body>
-
     <?php include '../../components/rsoHeader.php'; ?>
     <main>
         <section class="tableContainer">
