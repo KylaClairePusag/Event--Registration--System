@@ -57,6 +57,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
         $unique_filename = uniqid()."_".$student_email."_".time().".".$imageFileType;
+        $path = "images/profiles/".$unique_filename;
+
         $target_file = $target_dir.$unique_filename;
 
         $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
@@ -86,7 +88,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $sql_account = "INSERT INTO tbstudentaccount (studid, student_email, student_password, department_id, student_profile) VALUES (?, ?, ?, ?, ?)";
                 $stmt_account = $pdo->prepare($sql_account);
-                $stmt_account->execute([$studid, $student_email, $student_password, $department_id, $unique_filename]);
+                $stmt_account->execute([$studid, $student_email, $student_password, $department_id, $path]);
 
                 header("Location: student.php");
             } catch (PDOException $e) {
