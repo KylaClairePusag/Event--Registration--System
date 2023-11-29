@@ -135,13 +135,24 @@ tbody tr:hover {
   flex-grow: 1;
 }
 
-table button:nth-child(1) {
+table button:nth-child(2) {
   background: #eeeeef;
   color: #040404;
   padding: 0.3rem 1rem;
   margin-right: 0.4rem;
 }
 
+table a {
+  background: #eeeeef;
+  color: #040404;
+  padding: 0.3rem 1rem;
+  margin-right: 0.4rem;
+  text-decoration: none;
+  font-size: 0.8rem;
+  border-radius: 0.3rem;
+  border: none;
+  padding: 0.3rem 0.6rem;
+}
 table button {
   border-radius: 0.3rem;
   border: none;
@@ -366,4 +377,17 @@ input:focus {
 
 .container {
   display: flex;
+}
+
+#edit-event-detail {
+  resize: none;
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 0.5rem;
+}
+
+#editModal {
+  width: 900px;
 }

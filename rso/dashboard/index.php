@@ -252,10 +252,11 @@ try {
             $event_detail = $row["event_detail"];
             $event_date = $row["event_date"];
             $status = $row["status"];
-            $actions = '<button type="button" onclick="editevent('.$event_id.', \''.$event_title.'\', \''.$event_detail.'\', \''.$event_date.'\')">Edit</button> 
-            <button type="button" onclick="showDeleteModal('.$event_id.')">Delete</button> 
-            <a href="editevent.php?event_id='.$event_id.'" type="button">View</a>'; // Modified this line
-        
+            $actions = '
+            <a href="editevent.php?event_id='.$event_id.'" type="button" target="_blank">View</a>
+            <button type="button" onclick="editevent('.$event_id.', \''.$event_title.'\', \''.$event_detail.'\', \''.$event_date.'\')">Edit</button> 
+            <button type="button" onclick="showDeleteModal('.$event_id.')">Delete</button>';
+
             $body[] = array($event_id, $event_title, $event_detail, $event_date, $status, $actions);
         }
         createTable($head, $body);
@@ -291,10 +292,14 @@ try {
                     <input type="hidden" id="edit-event-id" name="edit_event_id">
                     <label for="edit-event-title">Name:</label>
                     <input type="text" id="edit-event-title" name="edit_event_title">
-                    <label for="edit-event-detail">Detail:</label>
-                    <input type="text" id="edit-event-detail" name="edit_event_detail">
                     <label for="edit-event-date">Date:</label>
                     <input type="date" id="edit-event-date" name="edit_event_date">
+                    <label for="edit-event-detail">Detail:</label>
+
+
+                    <textarea name="edit_event_detail" id="edit-event-detail" cols="30" rows="10"></textarea>
+
+
                     <button type="submit" name="edit_event">Save</button>
                 </form>
             </div>
