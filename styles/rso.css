@@ -363,3 +363,7 @@ dialog:-internal-dialog-in-top-layer::backdrop {
 input:focus {
   outline: none;
 }
+
+.container {
+  display: flex;
+}
