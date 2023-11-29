@@ -57,7 +57,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>emp Portal</title>
+    <title>Employee Portal</title>
     <link rel="stylesheet" href="../styles/auth.css">
 </head>
 
@@ -69,7 +69,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
             <div class="box">
                 <div class="login-container">
-                    <h1>emp Portal</h1>
+                    <h1>Admin Portal</h1>
                     <p>Please enter your contact details to connect.</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                         <div class="form-group">
