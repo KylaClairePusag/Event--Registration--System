@@ -11,14 +11,22 @@ function resetAddModal() {
     const addModal = document.getElementById('addModal');
     const editModal = document.getElementById('editModal');
     const form = addModal.querySelector('form');
+
     const errorContainer = document.querySelector('.error-container');
     const errorContainer2 = document.querySelector('.error-container2');
+    const addNewEmpModal = document.getElementById('addNewEmpModal');
+    const form2 = addNewEmpModal.querySelector('form');
+
+    const errorContainer3 = document.querySelector('.error-container3');
+    form2.reset();
     form.reset();
+    errorContainer3.style.display = 'none';
     errorContainer.style.display = 'none';
     errorContainer2.style.display = 'none';
     setTimeout(function () {
         addModal.close();
         editModal.close();
+        addNewEmpModal.close();
     }, 0);
 }
 
@@ -40,22 +48,52 @@ function showModal(modalId) {
     addOverlayClickListener(modalId);
 }
 
-// Function to show details in the edit modal
-function editRso(rso_id, rso_name, rso_password, email, department_id) {
+function editemp(emp_id, emp_password, emp_email, department_id, firstname, lastname, role_id) {
+    console.log("emp_id:", emp_id);
+    console.log("emp_password:", emp_password);
+    console.log("emp_email:", emp_email);
+    console.log("department_id:", department_id);
+    console.log("firstname:", firstname);
+    console.log("lastname:", lastname);
+    console.log("role_id:", role_id);
+
     showModal("editModal");
-    document.getElementById("edit-rso-id").value = rso_id;
-    document.getElementById("edit-rso-name").value = rso_name;
-    document.getElementById("edit-rso-password").value = rso_password;
-    document.getElementById("edit-email").value = email;
-    document.getElementById("original-email").value = email;
-    document.getElementById("edit-department").value = department_id;
+
+    // Set values in the edit modal
+    document.getElementById("edit-emp-id").value = emp_id;
+    document.getElementById("edit-emp-password").value = emp_password;
+    document.getElementById("edit-email").value = emp_email;
+    document.getElementById("original-email").value = emp_email;
+
+    // Set the selected option in the department dropdown
+    const departmentDropdown = document.getElementById("edit-department");
+    for (let i = 0; i < departmentDropdown.options.length; i++) {
+        if (departmentDropdown.options[i].value == department_id) {
+            departmentDropdown.selectedIndex = i;
+            break;
+        }
+    }
+
+    // Set the first and last names
+    document.getElementById("edit-firstname").value = firstname;
+    document.getElementById("edit-lastname").value = lastname;
+
+    // Set the selected option in the role dropdown
+    const roleDropdown = document.getElementById("edit-role");
+    for (let i = 0; i < roleDropdown.options.length; i++) {
+        if (roleDropdown.options[i].value == role_id) {
+            roleDropdown.selectedIndex = i;
+            break;
+        }
+    }
 }
+
 
 // Add overlay click listeners for modals
 addOverlayClickListener("deleteModal");
 addOverlayClickListener("editModal");
 addOverlayClickListener("addModal");
-
+addOverlayClickListener("addNewEmpModal");
 // Function to change the limit and reload the page
 function changeLimit(newLimit) {
     const currentUrl = new URL(window.location.href);
@@ -108,7 +146,7 @@ document.getElementById('searchForm').addEventListener('submit', function (event
 
 
 // Function to show delete modal and handle delete button click
-function showDeleteModal(rso_id) {
+function showDeleteModal(emp_id) {
     showModal("deleteModal");
     const deleteBtn = document.getElementById("deleteModal").querySelector(".deletebtn");
     deleteBtn.addEventListener("click", function () {
@@ -117,25 +155,25 @@ function showDeleteModal(rso_id) {
         form.setAttribute("action", base_url);
         const hiddenField = document.createElement("input");
         hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", "delete_rso");
-        hiddenField.setAttribute("value", rso_id);
+        hiddenField.setAttribute("name", "delete_emp");
+        hiddenField.setAttribute("value", emp_id);
         form.appendChild(hiddenField);
         document.body.appendChild(form);
         form.submit();
     });
 }
 
-// Function to delete an RSO
-function deleteRso() {
-    const rso_id = document.getElementById("edit-rso-id").value;
+// Function to delete an emp
+function deleteemp() {
+    const emp_id = document.getElementById("edit-emp-id").value;
     const form = document.createElement("form");
     form.setAttribute("method", "POST");
     form.setAttribute("action", base_url);
 
     const hiddenField = document.createElement("input");
     hiddenField.setAttribute("type", "hidden");
-    hiddenField.setAttribute("name", "delete_rso");
-    hiddenField.setAttribute("value", rso_id);
+    hiddenField.setAttribute("name", "delete_emp");
+    hiddenField.setAttribute("value", emp_id);
 
     form.appendChild(hiddenField);
     document.body.appendChild(form);
@@ -149,7 +187,7 @@ function isEmailTaken(email) {
 
 // Event listener for form submission in addModal
 document.getElementById('addModal').querySelector('form').addEventListener('submit', function (event) {
-    const emailInput = document.getElementById('rso-email');
+    const emailInput = document.getElementById('emp-email');
     const email = emailInput.value.trim();
     const errorContainer = document.querySelector('.error-container');
 
@@ -158,6 +196,19 @@ document.getElementById('addModal').querySelector('form').addEventListener('subm
         errorContainer.style.display = 'block';
     } else {
         errorContainer.style.display = 'none';
+    }
+});
+
+document.getElementById('addNewEmpModal').querySelector('form').addEventListener('submit', function (event) {
+    const emailInput = document.getElementById('emp-emails');
+    const email = emailInput.value.trim();
+    const errorContainer3 = document.querySelector('.error-container3');
+
+    if (isEmailTaken(email)) {
+        event.preventDefault();
+        errorContainer3.style.display = 'block';
+    } else {
+        errorContainer3.style.display = 'none';
     }
 });
 
