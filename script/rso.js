@@ -48,13 +48,14 @@ function showModal(modalId) {
     addOverlayClickListener(modalId);
 }
 
-function editemp(emp_id, emp_password, emp_email, department_id, firstname, lastname) {
+function editemp(emp_id, emp_password, emp_email, department_id, firstname, lastname, role_id) {
     console.log("emp_id:", emp_id);
     console.log("emp_password:", emp_password);
     console.log("emp_email:", emp_email);
     console.log("department_id:", department_id);
     console.log("firstname:", firstname);
     console.log("lastname:", lastname);
+    console.log("role_id:", role_id);
 
     showModal("editModal");
 
@@ -76,6 +77,15 @@ function editemp(emp_id, emp_password, emp_email, department_id, firstname, last
     // Set the first and last names
     document.getElementById("edit-firstname").value = firstname;
     document.getElementById("edit-lastname").value = lastname;
+
+    // Set the selected option in the role dropdown
+    const roleDropdown = document.getElementById("edit-role");
+    for (let i = 0; i < roleDropdown.options.length; i++) {
+        if (roleDropdown.options[i].value == role_id) {
+            roleDropdown.selectedIndex = i;
+            break;
+        }
+    }
 }
 
 
