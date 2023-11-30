@@ -5,14 +5,13 @@ include '../../config/config.php';
 
 $conn = new mysqli('localhost', 'root', '', 'db_ba3101');
 
-
 $profileQuery = "SELECT tbempinfo.lastname, tbempinfo.firstname, tb_department.department_name, tbempaccount.emp_email, tbempaccount.emp_profile
         FROM tbempinfo
         JOIN tbempaccount ON tbempinfo.empid = tbempaccount.empid
         LEFT JOIN tb_department ON tbempaccount.department_id = tb_department.department_id
         WHERE tbempinfo.empid = ?";
 $profileStmt = $pdo->prepare($profileQuery);
-$profileStmt->bindParam(1, $_SESSION['student_id'], PDO::PARAM_INT);
+$profileStmt->bindParam(1, $_SESSION['empid'], PDO::PARAM_INT);
 $profileStmt->execute();
 $profileData = $profileStmt->fetch(PDO::FETCH_ASSOC);
 
@@ -20,9 +19,9 @@ $checkQuery = "SELECT e.event_id, e.event_title, e.event_detail, e.event_date, e
                 FROM tb_event e
                 INNER JOIN tb_department d ON e.department_id = d.department_id
                 INNER JOIN tb_attendees a ON e.event_id = a.event_id
-                WHERE a.student_id = :student_id";
+                WHERE a.empid = :empid";
 $checkStmt = $pdo->prepare($checkQuery);
-$checkStmt->bindParam(':student_id', $_SESSION['student_id'], PDO::PARAM_INT);
+$checkStmt->bindParam(':empid', $_SESSION['empid'], PDO::PARAM_INT);
 $checkStmt->execute();
 $attendedEvents = $checkStmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -44,8 +43,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo "Sorry, your file was not uploaded.";
             } elseif(move_uploaded_file($_FILES['edit_emp_profile']['tmp_name'], $target_file)) {
                 $filename = "images/profiles/".basename($target_file);
-                $query = $pdo->prepare("UPDATE tbempaccount SET emp_profile = :emp_profile WHERE empid = :student_id");
-                if($query->execute([':emp_profile' => $filename, ':student_id' => $_SESSION['student_id']])) {
+                $query = $pdo->prepare("UPDATE tbempaccount SET emp_profile = :emp_profile WHERE empid = :empid");
+                if($query->execute([':emp_profile' => $filename, ':empid' => $_SESSION['empid']])) {
                     header("Location: myprofile.php");
                     exit();
                 } else {
@@ -56,10 +55,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     } elseif(isset($_POST['cancel'])) {
-        $deleteQuery = "DELETE FROM tb_attendees WHERE event_id = :event_id AND student_id = :student_id";
+        $deleteQuery = "DELETE FROM tb_attendees WHERE event_id = :event_id AND empid = :empid";
         $deleteStmt = $pdo->prepare($deleteQuery);
         $deleteStmt->bindParam(':event_id', $_POST['event_id'], PDO::PARAM_INT);
-        $deleteStmt->bindParam(':student_id', $_SESSION['student_id'], PDO::PARAM_INT);
+        $deleteStmt->bindParam(':empid', $_SESSION['empid'], PDO::PARAM_INT);
         $deleteStmt->execute();
 
         $_SESSION['delete_action_completed'] = true;
@@ -101,7 +100,7 @@ try {
 </head>
 
 <body>
-    <?php include '../../components/studentHeader.php'; ?>
+    <?php include '../../components/facultyHeader.php'; ?>
 
     <main>
         <div class="profile-sec">
@@ -119,8 +118,7 @@ try {
                             <div class="profile-overlay" id="profileOverlay">
                                 <p>Change Profile</p>
                             </div>
-                            <img src="../../<?php echo $profileData['emp_profile']; ?>" alt="Profile Image"
-                                id="profileImage">
+                            <img src="../../<?php echo $profileData['emp_profile']; ?>" alt="Profile Image" id="profileImage">
                         </div>
                         <?php
                     } else {
@@ -141,7 +139,7 @@ try {
                             <p id="username">
                                 <?php echo $profileData['firstname'].' '.$profileData['lastname']; ?>
                             </p>
-                            <p class="stud">Employee at Batangas State University</p>
+                            <p class="stud">Teacher at Batangas State University</p>
                             <p id="dept">
                                 Department
                                 <?php echo $profileData['department_name']; ?>

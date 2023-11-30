@@ -1,5 +1,4 @@
 <?php
-
 include '../../config/config.php';
 
 $conn = new mysqli('localhost', 'root', '', 'db_ba3101');
@@ -72,11 +71,10 @@ try {
     <title>Event Page</title>
     <link rel="stylesheet" href="../../styles/student.css">
     <link rel="stylesheet" href="../../styles/rso.css">
-
 </head>
 
 <body>
-    <?php include '../../components/studentHeader.php'; ?>
+    <?php include '../../components/facultyHeader.php'; ?>
 
     <main>
         <h1>Events List</h1>
@@ -207,7 +205,6 @@ try {
                     </div>
                 </form>
             </div>
-
         </dialog>
         <script src="../../script/events.js"></script>
 

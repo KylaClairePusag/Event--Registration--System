@@ -1,52 +1,45 @@
 <?php
-
-
-if (isset($_SESSION['emp_email'])) {
+if(isset($_SESSION['emp_email'])) {
     header("Location: ./home");
     exit;
 }
-
 include '../config/config.php';
-
 $error = null;
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $emp_email = filter_input(INPUT_POST, 'emp_email', FILTER_SANITIZE_EMAIL);
     $emp_password = filter_input(INPUT_POST, 'emp_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-
-    if (empty($emp_email) || empty($emp_password)) {
+    if(empty($emp_email) || empty($emp_password)) {
         $error = "*** Please fill in all fields. ***";
     } else {
         try {
-            $query = "SELECT * FROM tbempaccount WHERE emp_email = :emp_email";
+            $query = "SELECT * FROM tbempaccount WHERE emp_email = :emp_email AND role_id = 2";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(':emp_email', $emp_email, PDO::PARAM_STR);
             $stmt->execute();
-
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($row && $row['emp_password'] === $emp_password) {
+            if($row && $row['emp_password'] === $emp_password) {
                 $_SESSION['emp_email'] = $row['emp_email'];
-                $_SESSION['emp_name'] = $row['emp_name'];
+                $_SESSION['emp_name'] = $row['firstname'].' '.$row['lastname'];
+                $_SESSION['department_id'] = $row['department_id'];
+                $_SESSION['empid'] = $row['empid'];
                 header("Location: ./home");
                 exit;
             } else {
                 $error = "*** Invalid Login Credentials. ***";
             }
         } catch (PDOException $e) {
-            $error = "Failed to prepare the statement: " . $e->getMessage();
+            $error = "Failed to prepare the statement: ".$e->getMessage();
         }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>emp Portal</title>
+    <title>Teacher Portal</title>
     <link rel="stylesheet" href="../styles/auth.css">
 </head>
 
@@ -58,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
             <div class="box">
                 <div class="login-container">
-                    <h1>emp Login</h1>
+                    <h1>Teacher Login</h1>
                     <p>Please enter your credentials to log in.</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                         <div class="form-group">
@@ -69,18 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                             <label for="password">Password</label>
                             <input type="password" name="emp_password" placeholder="Password" required>
                         </div>
-                        <div class="error<?php if (!empty($error))
+                        <div class="error<?php if(!empty($error))
                             echo ' show'; ?>">
-                            <?php if (!empty($error)): ?>
-                            <p>
-                                <?php echo $error; ?>
-                            </p>
+                            <?php if(!empty($error)): ?>
+                                <p>
+                                    <?php echo $error; ?>
+                                </p>
                             <?php endif; ?>
                         </div>
-
                         <button type="submit" name="submit">Sign in</button>
-                        <h5>By using this service, you understood and agree to the Event Online Registration BSU Terms
-                            of Use and Privacy Statement</h5>
                     </form>
                 </div>
             </div>

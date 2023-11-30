@@ -95,7 +95,7 @@ try {
 </head>
 
 <body>
-    <?php include '../../components/studentHeader.php'; ?>
+    <?php include '../../components/facultyHeader.php'; ?>
     <main>
         <section id="head" class="event-details-container">
             <div class="event-details-header">
@@ -135,25 +135,28 @@ try {
         </section>
         <section class="tableContainer toggle-section" id="attendees">
             <?php
-            $attendeesQuery = $conn->prepare("SELECT tbempinfo.firstname AS emp_firstname, 
-                                             tbempinfo.lastname AS emp_lastname, 
-                                             tbempinfo.empid AS emp_empid, 
-                                             tbempinfo.course, 
-                                             tbempaccount.emp_profile AS emp_profile,
-                                             tbempinfo.firstname AS emp_firstname, 
-                                             tbempinfo.lastname AS emp_lastname, 
-                                             tbempinfo.department,
-                                             tbempaccount.emp_profile AS emp_profile
-                                FROM tb_attendees
-                                LEFT JOIN tbempinfo ON tb_attendees.empid = tbempinfo.empid
-                                LEFT JOIN tbempaccount ON tb_attendees.empid = tbempaccount.empid
-                                LEFT JOIN tbempinfo ON tb_attendees.empid = tbempinfo.empid
-                                LEFT JOIN tbempaccount ON tb_attendees.empid = tbempaccount.empid
-                                WHERE tb_attendees.event_id = ?");
+            $attendeesQuery = $conn->prepare("SELECT tbstudinfo.firstname AS student_firstname, 
+              tbstudinfo.lastname AS student_lastname, 
+              tbstudinfo.studid AS student_studid, 
+              tbstudinfo.course, 
+              tbstudentaccount.student_profile AS student_profile,
+              tbempinfo.firstname AS emp_firstname, 
+              tbempinfo.lastname AS emp_lastname, 
+              tbempinfo.department,
+              tbempaccount.emp_profile AS emp_profile,
+              tb_attendees.empid
+    FROM tb_attendees
+    LEFT JOIN tbstudinfo ON tb_attendees.student_id = tbstudinfo.studid
+    LEFT JOIN tbstudentaccount ON tb_attendees.student_id = tbstudentaccount.studid
+    LEFT JOIN tbempinfo ON tb_attendees.empid = tbempinfo.empid
+    LEFT JOIN tbempaccount ON tb_attendees.empid = tbempaccount.empid
+    WHERE tb_attendees.event_id = ?");
+
             $attendeesQuery->bind_param('i', $event_id);
             $attendeesQuery->execute();
             $attendeesResult = $attendeesQuery->get_result();
             $attendees = $attendeesResult->fetch_all(MYSQLI_ASSOC);
+
 
             usort($attendees, function ($a, $b) {
                 if(!empty($a['emp_firstname']) && empty($b['emp_firstname'])) {
@@ -167,30 +170,37 @@ try {
 
             if(!empty($attendees)) {
                 echo '<div class="attendees-grid">';
+
                 foreach($attendees as $attendee) {
-                    echo '<div class="attendee-card" onclick="redirectToProfile('.$attendee['emp_empid'].')" >';
-                    if(!empty($attendee['emp_firstname'])) {
-                        $name = $attendee['emp_firstname'].' '.$attendee['emp_lastname'];
+                    if(!empty($attendee['student_firstname'])) {
+                        // Student card
+                        echo '<div class="attendee-card" onclick="redirectToProfilestud(\''.$attendee['student_studid'].'\')">';
+                        $name = $attendee['student_firstname'].' '.$attendee['student_lastname'];
                         $course = $attendee['course'];
-                        $profile = $attendee['emp_profile'];
-                        $studid = isset($attendee['emp_empid']) ? $attendee['emp_empid'] : '';
+                        $profile = $attendee['student_profile'];
                         $imgSrc = !empty($profile) ? "../../$profile" : "../../images/alt.png";
                         echo '<img src="'.$imgSrc.'" alt="'.$name.' - '.$course.'">';
-                        echo '<p>'.$name.' (Employee)</p>';
+                        echo '<p>'.$name.' (Student)</p>';
+                        echo '</div>';
                     } elseif(!empty($attendee['emp_firstname'])) {
+                        // Teacher card
+                        echo '<div class="attendee-card" onclick="redirectToProfileemp(\''.$attendee['empid'].'\')">';
                         $name = $attendee['emp_firstname'].' '.$attendee['emp_lastname'];
                         $course = $attendee['department'];
                         $imgSrc = !empty($attendee['emp_profile']) ? "../../".$attendee['emp_profile'] : "../../images/alt.png";
                         echo '<img src="'.$imgSrc.'" alt="'.$name.' - '.$course.'">';
                         echo '<p>'.$name.' (Teacher)</p>';
+                        echo '</div>';
                     }
-                    echo '</div>';
                 }
+
+
                 echo '</div>';
             } else {
                 echo "<p>No attendees for this event.</p>";
             }
             ?>
+
         </section>
         <section class="imageContainer toggle-section" id="images">
             <div class="image-grid">
@@ -275,13 +285,19 @@ try {
         </div>
     </footer>
     <script>
-        function redirectToProfile(studid) {
-            if (studid == <?php echo $_SESSION['empid']; ?>) {
+        function redirectToProfilestud(studid) {
+            window.location.href = 'studentProfile.php?studid=' + studid;
+        }
+
+        function redirectToProfileemp(empid) {
+            if (empid == <?php echo $_SESSION['empid']; ?>) {
                 window.location.href = 'myprofile.php';
             } else {
-                window.location.href = 'profile.php?empid=' + empid;
+                window.location.href = 'teacherProfile.php?empid=' + empid;
             }
         }
+
+
     </script>
     <script src="../../script/events.js"></script>
 </body>
