@@ -11,7 +11,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $original_filename = basename($_FILES["fileToUpload"]["name"]);
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
+
         $unique_filename = uniqid()."_".$student_email."_".time().".".$imageFileType;
+        $path = "images/profiles/".$unique_filename;
+
         $target_file = $target_dir.$unique_filename;
 
         $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
@@ -35,7 +38,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $sql_account = "INSERT INTO tbstudentaccount (studid, student_email, student_password, department_id, student_profile) VALUES (?, ?, ?, ?, ?)";
                 $stmt_account = $pdo->prepare($sql_account);
-                $stmt_account->execute([$studid, $student_email, $student_password, $department_id, $unique_filename]);
+                $stmt_account->execute([$studid, $student_email, $student_password, $department_id, $path]);
                 header("Location: student.php");
             } catch (PDOException $e) {
                 echo "Error: ".$e->getMessage();
@@ -142,7 +145,7 @@ if(isset($_POST["edit_student"])) {
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 $selectedDepartment = isset($_GET['departmentFilter']) ? $_GET['departmentFilter'] : '';
 
-$limit = 10; 
+$limit = 10;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 

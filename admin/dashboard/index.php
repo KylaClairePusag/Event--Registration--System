@@ -13,6 +13,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
         $unique_filename = uniqid()."_".$emp_email."_".time().".".$imageFileType;
+        $path = "images/profiles/".$unique_filename;
+
         $target_file = $target_dir.$unique_filename;
 
         $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
@@ -36,7 +38,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $sql_account = "INSERT INTO tbempaccount (empid, emp_email, emp_password, role_id, department_id, emp_profile) VALUES (?, ?, ?, ?, ?, ?)";
                 $stmt_account = $pdo->prepare($sql_account);
-                $stmt_account->execute([$empid, $emp_email, $emp_password, $role_id, $department_id, $unique_filename]);
+                $stmt_account->execute([$empid, $emp_email, $emp_password, $role_id, $department_id, $path]);
                 header("Location: index.php");
             } catch (PDOException $e) {
                 echo "Error: ".$e->getMessage();
