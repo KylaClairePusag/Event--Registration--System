@@ -1,7 +1,7 @@
 <?php
 
 
-if (isset($_SESSION['student_email'])) {
+if(isset($_SESSION['student_email'])) {
     header("Location: ./home");
     exit;
 }
@@ -11,11 +11,11 @@ include '../config/config.php';
 
 $error = null;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $student_email = filter_input(INPUT_POST, 'student_email', FILTER_SANITIZE_EMAIL);
     $student_password = filter_input(INPUT_POST, 'student_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    if (empty($student_email) || empty($student_password)) {
+    if(empty($student_email) || empty($student_password)) {
         $error = "*** Please fill in all fields. ***";
     } else {
         try {
@@ -26,9 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($row && $row['student_password'] === $student_password) {
+            if($row && $row['student_password'] === $student_password) {
                 $_SESSION['student_email'] = $row['student_email'];
-                $_SESSION['student_name'] = $row['firstname'] . ' ' . $row['lastname'];
+                $_SESSION['student_name'] = $row['firstname'].' '.$row['lastname'];
                 $_SESSION['department_id'] = $row['department_id'];
                 $_SESSION['student_id'] = $row['studid'];
                 header("Location: ./home");
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                 $error = "*** Invalid Login Credentials. ***";
             }
         } catch (PDOException $e) {
-            $error = "Failed to prepare the statement: " . $e->getMessage();
+            $error = "Failed to prepare the statement: ".$e->getMessage();
         }
     }
 }
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     <main>
         <section class="first-section">
             <div class="header">
-                <h1>Event Management</h1>
+                <h1 id="redirectLink">Event Registration</h1>
             </div>
             <div class="box">
                 <div class="login-container">
@@ -72,12 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                             <label for="password">Password</label>
                             <input type="password" name="student_password" placeholder="Password" required>
                         </div>
-                        <div class="error<?php if (!empty($error))
+                        <div class="error<?php if(!empty($error))
                             echo ' show'; ?>">
-                            <?php if (!empty($error)): ?>
-                            <p>
-                                <?php echo $error; ?>
-                            </p>
+                            <?php if(!empty($error)): ?>
+                                <p>
+                                    <?php echo $error; ?>
+                                </p>
                             <?php endif; ?>
                         </div>
 
@@ -101,6 +101,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
         </section>
     </main>
+    <script>
+        document.getElementById("redirectLink").addEventListener("click", function () {
+            // Redirect to the ./index page
+            window.location.href = "../";
+        });
+    </script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 <?php
-if (isset($_SESSION['rso_email'])) {
+if(isset($_SESSION['rso_email'])) {
     header("Location: ./dashboard");
     exit;
 }
@@ -7,11 +7,11 @@ if (isset($_SESSION['rso_email'])) {
 include '../config/config.php';
 $error = null;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $rso_email = filter_input(INPUT_POST, 'rso_email', FILTER_SANITIZE_EMAIL);
     $rso_password = filter_input(INPUT_POST, 'rso_password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    if (empty($rso_email) || empty($rso_password)) {
+    if(empty($rso_email) || empty($rso_password)) {
         $error = "*** Please fill in all fields. ***";
     } else {
         try {
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($row && $row['rso_password'] === $rso_password) {
+            if($row && $row['rso_password'] === $rso_password) {
                 $_SESSION['rso_email'] = $row['rso_email'];
                 $_SESSION['rso_name'] = $row['rso_name'];
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                 $error = "*** Invalid Login Credentials. ***";
             }
         } catch (PDOException $e) {
-            $error = "Failed to prepare the statement: " . $e->getMessage();
+            $error = "Failed to prepare the statement: ".$e->getMessage();
         }
     }
 }
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     <main>
         <section class="first-section">
             <div class="header">
-                <h1>Event Registration</h1>
+                <h1 id="redirectLink">Event Registration</h1>
             </div>
             <div class="box">
                 <div class="login-container">
@@ -70,12 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                             <label for="password">Password</label>
                             <input type="password" name="rso_password" placeholder="Password" required>
                         </div>
-                        <div class="error<?php if (!empty($error))
+                        <div class="error<?php if(!empty($error))
                             echo ' show'; ?>">
-                            <?php if (!empty($error)): ?>
-                            <p>
-                                <?php echo $error; ?>
-                            </p>
+                            <?php if(!empty($error)): ?>
+                                <p>
+                                    <?php echo $error; ?>
+                                </p>
                             <?php endif; ?>
                         </div>
 
@@ -101,6 +101,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
         </section>
     </main>
+    <script>
+        document.getElementById("redirectLink").addEventListener("click", function () {
+            // Redirect to the ./index page
+            window.location.href = "../";
+        });
+    </script>
 </body>
 
 </html>

@@ -224,3 +224,7 @@ form {
     flex-direction: column;
   }
 }
+
+.header h1 {
+  cursor: pointer;
+}

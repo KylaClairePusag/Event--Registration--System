@@ -61,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     <main>
         <section class="first-section">
             <div class="header">
-                <h1>Event Registration</h1>
+                <h1 id="redirectLink">Event Registration</h1>
             </div>
             <div class="box">
                 <div class="login-container">
@@ -79,9 +79,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         <div class="error<?php if(!empty($error))
                             echo ' show'; ?>">
                             <?php if(!empty($error)): ?>
-                            <p>
-                                <?php echo $error; ?>
-                            </p>
+                                <p>
+                                    <?php echo $error; ?>
+                                </p>
                             <?php endif; ?>
                         </div>
 
@@ -107,6 +107,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             </div>
         </section>
     </main>
+    <script>
+        document.getElementById("redirectLink").addEventListener("click", function () {
+            // Redirect to the ./index page
+            window.location.href = "../";
+        });
+    </script>
 </body>
 
 </html>
