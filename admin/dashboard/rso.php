@@ -10,6 +10,45 @@ if(isset($_POST["add_rso"])) {
     $rso_email = htmlspecialchars($_POST["email"], ENT_QUOTES, "UTF-8");
     $department_id = $_POST["department_id"];
 
+$target_dir = "../../images/profiles/";
+$original_filename = basename($_FILES["fileToUpload"]["name"]);
+$uploadOk = 1;
+$imageFileType = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
+$unique_filename = uniqid()."_".$rso_email."_".time().".".$imageFileType;
+$target_file = $target_dir.$unique_filename;
+
+$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+if($check === false) {
+    echo "File is not an image.";
+    exit();
+}
+
+if($_FILES["fileToUpload"]["size"] > 5000000) {
+    echo "Sorry, your file is too large.";
+    exit();
+}
+
+$allowed_formats = ["jpg", "jpeg", "png"];
+if(!in_array($imageFileType, $allowed_formats)) {
+    echo "Sorry, only JPG, JPEG, and PNG files are allowed.";
+    exit();
+}
+
+if(move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+    try {
+        $sql_account = "INSERT INTO tb_rso (rso_name, rso_password, rso_email, department_id, rso_profile) VALUES (?, ?, ?, ?, ?)";
+        $stmt_account = $pdo->prepare($sql_account);
+        $stmt_account->execute([$rso_name, $rso_password, $rso_email, $department_id, $unique_filename]);
+        header("Location: rso.php");
+    } catch (PDOException $e) {
+        echo "Error: ".$e->getMessage();
+        exit();
+    }
+} else {
+    echo "Sorry, there was an error uploading your file.";
+    exit();
+}
+
     // Insert data into the database
     $query = $pdo->prepare("INSERT INTO tb_rso (rso_name, rso_password, rso_email, department_id) VALUES (:rso_name, :rso_password, :rso_email, :department_id)");
     if($query->execute([':rso_name' => $rso_name, ':rso_password' => $rso_password, ':rso_email' => $rso_email, ':department_id' => $department_id])) {
@@ -104,7 +143,7 @@ try {
                 include '../../components/search.php';
                 ?>
                 <?php if(!empty($searchTerm)): ?>
-                    <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
+                <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
                 <?php endif; ?>
             </div>
             <div class="headbtn">
@@ -158,14 +197,11 @@ try {
             ?>
 
             <dialog id="addModal" class="modal">
-
                 <div class="modal-content">
                     <button class="close" onclick="resetAddModal(true)">&times;</button>
-
                     <h2>CREATE RSO ACCOUNT</h2>
-                    <form method="POST" action="">
+                    <form method="POST" action="" enctype="multipart/form-data">
                         <div class="error-container">Email Already Taken</div>
-
                         <label for="rso-name">Name:</label>
                         <input type="text" id="rso-name" name="rso_name" required>
                         <label for="rso-password">Password:</label>
@@ -176,18 +212,21 @@ try {
                         <select id="department" name="department_id" required>
                             <option value="">Select a department</option>
                             <?php
-                            $departmentQuery = $pdo->prepare("SELECT department_id, department_name FROM tb_department");
-                            $departmentQuery->execute();
+                $departmentQuery = $pdo->prepare("SELECT department_id, department_name FROM tb_department");
+                $departmentQuery->execute();
 
-                            while($deptRow = $departmentQuery->fetch()) {
-                                echo "<option value='".$deptRow['department_id']."'>".$deptRow['department_name']."</option>";
-                            }
-                            ?>
+                while ($deptRow = $departmentQuery->fetch()) {
+                    echo "<option value='" . $deptRow['department_id'] . "'>" . $deptRow['department_name'] . "</option>";
+                }
+                ?>
                         </select>
+                        <label for="fileToUpload">Upload Image:</label>
+                        <input type="file" id="fileToUpload" name="fileToUpload" accept="image/*" required>
                         <button type="submit" name="add_rso">Create Rso Account</button>
                     </form>
                 </div>
             </dialog>
+
             <dialog id="editModal" class="modal">
 
                 <div class="modal-content">
@@ -255,14 +294,14 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
-        function applyDepartmentFilter() {
-            const selectedDepartment = document.getElementById('departmentFilter').value;
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('departmentFilter', selectedDepartment);
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
-        }
-        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
-        const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'rso_email')); ?>;
+    function applyDepartmentFilter() {
+        const selectedDepartment = document.getElementById('departmentFilter').value;
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('departmentFilter', selectedDepartment);
+        window.location.href = window.location.pathname + '?' + urlParams.toString();
+    }
+    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+    const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'rso_email')); ?>;
     </script>
     <script src="../../script/rso.js"></script>
 
