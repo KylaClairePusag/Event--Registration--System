@@ -106,7 +106,7 @@ if(isset($_POST["delete_student"])) {
 
     $query = $pdo->prepare("DELETE FROM tbstudentaccount WHERE studid = :studid");
     if($query->execute([':studid' => $studid])) {
-        header("Location: $requestUri");
+        header("Location: student.php");
     } else {
         echo "Error deleting student.";
     }
@@ -221,7 +221,7 @@ try {
             <?php include '../../components/table.component.php';
 
             
-            $head = array('ID', 'Profile', 'Name', 'Password', 'Email', 'Department', 'Course', 'Actions');
+            $head = array('ID', 'Profile', 'Name', 'Password', 'Department', 'Email', 'Course', 'Actions');
             $body = array();
 
             foreach($rows as $row) {

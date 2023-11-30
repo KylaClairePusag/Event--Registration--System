@@ -42,13 +42,13 @@ if ($result) {
 
 <body onload="window.print()">
 
-    <h2><?php echo $event_title ?> Attendees List</h2> <br>
+    <h2><?php echo $event_title ?> Faculty Attendees List</h2> <br>
 
     <section class="tableContainer">
         <?php
         include '../../components/table.component.php';
 
-        $head = array('', 'Faculty Members', 'Department');
+        $head = array('', 'Name', 'Department');
         $body = array();
 
         $count = 1;
