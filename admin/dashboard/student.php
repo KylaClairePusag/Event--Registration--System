@@ -253,7 +253,7 @@ try {
                 $name = $firstname.' '.$lastname;
 
                 // Add row to the $body array
-                $body[] = array($studid, '<img src="../../images/profiles/'.$student_profile.'" alt="Profile" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $student_password, $course, $student_email, $department_name, $actions);
+                $body[] = array($studid, '<img src="../../'.$student_profile.'" alt="Profile" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $student_password, $course, $student_email, $department_name, $actions);
             }
 
             createTable($head, $body);
