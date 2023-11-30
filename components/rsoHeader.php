@@ -75,7 +75,26 @@ try {
             </div>
         </nav>
     </header>
-    <script src="../../script/script.js"></script>
+    <script>
+        // Profile Dropdown
+        function toggleProfileDropdown() {
+            var dropdown = document.getElementById("profileDropdown");
+            dropdown.style.display =
+                dropdown.style.display === "block" || dropdown.style.display === ""
+                    ? "none"
+                    : "block";
+        }
+
+        document.addEventListener("click", function (event) {
+            var dropdown = document.getElementById("profileDropdown");
+            var profileImg = document.querySelector(".profile-img");
+
+            if (!dropdown.contains(event.target) && !profileImg.contains(event.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+
+    </script>
 </body>
 
 </html>

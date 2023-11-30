@@ -3,7 +3,6 @@ if(session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-
 include '../../config/config.php';
 
 if(!isset($_SESSION['emp_email'])) {
@@ -20,24 +19,44 @@ try {
     $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Fetch employee account information
     $sqlEmpAccount = "SELECT empid, emp_profile, emp_email FROM tbempaccount WHERE emp_email = :emp_email";
     $stmtEmpAccount = $pdo->prepare($sqlEmpAccount);
     $stmtEmpAccount->bindParam(":emp_email", $_SESSION['emp_email']);
     $stmtEmpAccount->execute();
     $empData = $stmtEmpAccount->fetch(PDO::FETCH_ASSOC);
+
+    if(!$empData) {
+        // Handle the case where no employee data is found
+        session_destroy(); // Destroy the session
+        header("Location: ../signin.php");
+        exit();
+    }
+
     $emp_id = $empData['empid'];
     $emp_email = $empData['emp_email'];
     $empProfile = $empData['emp_profile'];
 
+    // Fetch employee information
     $sqlEmpInfo = "SELECT * FROM tbempinfo WHERE empid = :empid";
     $stmtEmpInfo = $pdo->prepare($sqlEmpInfo);
     $stmtEmpInfo->bindParam(":empid", $emp_id);
     $stmtEmpInfo->execute();
     $empInfo = $stmtEmpInfo->fetch(PDO::FETCH_ASSOC);
-    $lastname = $empInfo['lastname'];
-    $firstname = $empInfo['firstname'];
-    $department = $empInfo['department'];
 
+    if(!$empInfo) {
+        // Handle the case where no employee info is found
+        session_destroy(); // Destroy the session
+        $lastname = "";
+        $firstname = "";
+        $department = "";
+    } else {
+        $lastname = $empInfo['lastname'];
+        $firstname = $empInfo['firstname'];
+        $department = $empInfo['department'];
+    }
+
+    // Fetch student information
     $sqlStudInfo = "SELECT * FROM tbstudinfo";
     $stmtStudInfo = $pdo->prepare($sqlStudInfo);
     $stmtStudInfo->execute();
@@ -80,9 +99,7 @@ try {
             </div>
             <div class="profile dropdown">
                 <span class="profile-email">
-                    <?= htmlspecialchars($firstname); ?>
-                    <?= htmlspecialchars($lastname); ?>
-
+                    <?= htmlspecialchars($firstname.' '.$lastname); ?>
                 </span>
                 <div class="profile">
                     <?php
@@ -97,15 +114,32 @@ try {
                     <h5>
                         <?= htmlspecialchars($emp_email); ?>
                     </h5>
-
                     <a href="../logout.php">Logout</a>
                 </div>
             </div>
         </nav>
     </header>
 
-    <script src="../../script/emp.js"></script>
-    <script src="../../script/script.js"></script>
+    <script>
+        // Profile Dropdown
+        function toggleProfileDropdown() {
+            var dropdown = document.getElementById("profileDropdown");
+            dropdown.style.display =
+                dropdown.style.display === "block" || dropdown.style.display === ""
+                    ? "none"
+                    : "block";
+        }
+
+        document.addEventListener("click", function (event) {
+            var dropdown = document.getElementById("profileDropdown");
+            var profileImg = document.querySelector(".profile-img");
+
+            if (!dropdown.contains(event.target) && !profileImg.contains(event.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+
+    </script>
 </body>
 
 </html>
