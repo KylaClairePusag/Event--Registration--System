@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;0,6..12,1000;1,6..12,200;1,6..12,300;1,6..12,400;1,6..12,500;1,6..12,600;1,6..12,700;1,6..12,800;1,6..12,900;1,6..12,1000&display=swap");
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: "Nunito Sans", sans-serif;
+            line-height: 1.5;
+            font-size: 16px;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            justify-content: center;
+            display: flex;
+            place-items: center;
+            font-family: 'Arial', sans-serif;
+            /* Radial Background */
+            background-color: hsla(0, 0%, 100%, 1);
+            background-image:
+                radial-gradient(at 99% 62%, hsla(350, 100%, 50%, 0.12) 0px, transparent 50%),
+                radial-gradient(at 42% 23%, hsla(352, 0%, 100%, 1) 0px, transparent 50%),
+                radial-gradient(at 2% 3%, hsla(0, 93%, 59%, 0.26) 0px, transparent 50%),
+                radial-gradient(at 98% 97%, hsla(280, 74%, 53%, 0.16) 0px, transparent 50%);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .roles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 20px;
+            width: 80%;
+            margin-top: 20px;
+        }
+
+        .box {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            width: 100%;
+            margin: 0 10px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            padding: 20px;
+        }
+
+        .box a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: background-color 0.3s;
+            color: #090909;
+            text-decoration: none;
+        }
+
+        .box:hover {
+            background-color: rgba(150, 147, 148, 0.208);
+        }
+
+        .box .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .box img {
+            max-width: 70%;
+            max-height: 80%;
+            z-index: 2;
+            opacity: .9;
+            margin-bottom: 1rem;
+        }
+
+        section {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav {
+            width: 100%;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('./images/bg.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #fff;
+        }
+
+        nav {
+            position: relative;
+            width: 100%;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('./images/bg.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(253, 0, 0, 0.507);
+
+        }
+
+
+
+        @media screen and (max-width: 600px) {
+
+            /* Adjust styles for smaller screens */
+            .roles {
+                grid-template-columns: 1fr;
+                width: 40%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h4>Event Management System</h4>
+
+        <div class="overlay"></div>
+    </nav>
+    <section>
+
+        <h1>Please select your role</h1>
+
+        <div class="roles">
+            <div class="box">
+                <a href="./admin/dashboard/">
+                    <img src="./images/adminIcons.png" alt="">
+                    <span>Admin</span>
+                </a>
+            </div>
+            <div class="box">
+                <a href="./rso/dashboard/">
+                    <img src="./images/rsoIcon.png" alt="">
+                    <span>RSO</span>
+                </a>
+            </div>
+            <div class="box">
+                <a href="./faculty/home/">
+                    <img src="./images/teacherIcon.png" alt="">
+                    <span>Teacher</span>
+                </a>
+            </div>
+            <div class="box">
+                <a href="./student/home/">
+                    <img src="./images/studIcon.png" alt="">
+                    <span>Student</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

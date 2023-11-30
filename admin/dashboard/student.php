@@ -11,7 +11,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $original_filename = basename($_FILES["fileToUpload"]["name"]);
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
+
         $unique_filename = uniqid()."_".$student_email."_".time().".".$imageFileType;
+        $path = "images/profiles/".$unique_filename;
+
         $target_file = $target_dir.$unique_filename;
 
         $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
@@ -35,7 +38,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $sql_account = "INSERT INTO tbstudentaccount (studid, student_email, student_password, department_id, student_profile) VALUES (?, ?, ?, ?, ?)";
                 $stmt_account = $pdo->prepare($sql_account);
-                $stmt_account->execute([$studid, $student_email, $student_password, $department_id, $unique_filename]);
+                $stmt_account->execute([$studid, $student_email, $student_password, $department_id, $path]);
                 header("Location: student.php");
             } catch (PDOException $e) {
                 echo "Error: ".$e->getMessage();
@@ -142,7 +145,7 @@ if(isset($_POST["edit_student"])) {
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 $selectedDepartment = isset($_GET['departmentFilter']) ? $_GET['departmentFilter'] : '';
 
-$limit = 10; 
+$limit = 10;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
@@ -189,7 +192,7 @@ try {
             <div class="searchCont">
                 <?php include '../../components/search.php'; ?>
                 <?php if(!empty($searchTerm)): ?>
-                <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
+                    <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
                 <?php endif; ?>
             </div>
             <div class="headbtn">
@@ -220,7 +223,7 @@ try {
         <section class="tableContainer">
             <?php include '../../components/table.component.php';
 
-            
+
             $head = array('ID', 'Profile', 'Name', 'Password', 'Email', 'Department', 'Course', 'Actions');
             $body = array();
 
@@ -421,15 +424,15 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
-    function applyDepartmentFilter() {
-        const selectedDepartment = document.getElementById('departmentFilter').value;
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('departmentFilter', selectedDepartment);
-        window.location.href = window.location.pathname + '?' + urlParams.toString();
-    }
+        function applyDepartmentFilter() {
+            const selectedDepartment = document.getElementById('departmentFilter').value;
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('departmentFilter', selectedDepartment);
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        }
 
-    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
-    const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'student_email')); ?>;
+        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+        const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'student_email')); ?>;
     </script>
     <script src="../../script/student.js"></script>
 </body>
