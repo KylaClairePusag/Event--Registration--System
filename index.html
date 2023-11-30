@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
+    <title>Employee Portal</title>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;0,6..12,1000;1,6..12,200;1,6..12,300;1,6..12,400;1,6..12,500;1,6..12,600;1,6..12,700;1,6..12,800;1,6..12,900;1,6..12,1000&display=swap");
 
@@ -16,48 +15,153 @@
         }
 
 
-        body {
-            font-family: "Nunito Sans", sans-serif;
-            line-height: 1.5;
-            font-size: 16px;
+
+        body,
+        html {
             height: 100vh;
-            margin: 0;
-            flex-direction: column;
-            justify-content: center;
-            display: flex;
-            place-items: center;
-            font-family: 'Arial', sans-serif;
-            /* Radial Background */
-            background-color: hsla(0, 0%, 100%, 1);
-            background-image:
-                radial-gradient(at 99% 62%, hsla(350, 100%, 50%, 0.12) 0px, transparent 50%),
-                radial-gradient(at 42% 23%, hsla(352, 0%, 100%, 1) 0px, transparent 50%),
-                radial-gradient(at 2% 3%, hsla(0, 93%, 59%, 0.26) 0px, transparent 50%),
-                radial-gradient(at 98% 97%, hsla(280, 74%, 53%, 0.16) 0px, transparent 50%);
+            font-size: 16px;
+            font-family: "Nunito Sans", sans-serif;
+            line-height: 1.3;
         }
 
-        h1 {
+        main {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            flex-direction: column-reverse;
+        }
+
+        section {
+            display: flex;
+            height: 100vh;
+            overflow: auto;
+            width: 100%;
+        }
+
+        .first-section {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+        }
+
+        .first-section h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: 0.2rem;
+            margin: 2rem 0;
+
+        }
+
+        .second-section {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .second-section .container {
+            width: 100%;
+            height: 400px;
+        }
+
+        .title {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .second-section .container img {
+            margin-right: 2rem;
+
+        }
+
+
+        .title h3 {
+            font-weight: lighter;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-image: linear-gradient(#ed1b227a, #ed1b22f8),
+                url("./images/BSU.jpeg");
+            /* Add the background image path */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: white;
             text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+            width: 90%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        section h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: 0.2rem;
+        }
+
+        .second-section img {
+            width: 200px;
+            margin: 2rem 0;
+        }
+
+        h3 {
+            font-size: 1.36rem;
+            font-weight: 400;
+            letter-spacing: 0.16rem;
+        }
+
+        .welcome-context {
+            max-width: 100%;
+            text-align: start;
+            margin: 6rem 2rem;
+        }
+
+        .welcome-context h3 {
+            font-size: 2.2rem;
+        }
+
+        .welcome-context span {
+            opacity: 0.7;
         }
 
         .roles {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 20px;
-            width: 80%;
+            width: 100%;
             margin-top: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .box {
-            position: relative;
+            display: flex;
+            flex-direction: column;
+
             overflow: hidden;
             border-radius: 20px;
             width: 100%;
             margin: 0 10px;
             box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-            padding: 20px;
+        }
+
+        .box img {
+            max-width: 150px;
+            max-height: 80%;
+            z-index: 2;
+            opacity: .9;
+            margin-bottom: 1rem;
+
+        }
+
+        img {
+            width: 100%;
         }
 
         .box a {
@@ -71,6 +175,7 @@
             transition: background-color 0.3s;
             color: #090909;
             text-decoration: none;
+            padding: 20px;
         }
 
         .box:hover {
@@ -88,111 +193,144 @@
         }
 
         .box img {
-            max-width: 70%;
-            max-height: 80%;
             z-index: 2;
             opacity: .9;
             margin-bottom: 1rem;
         }
 
-        section {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        nav {
-            width: 100%;
-            height: 40vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: url('./images/bg.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: #fff;
-        }
-
-        nav {
-            position: relative;
-            width: 100%;
-            height: 40vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: url('./images/bg.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: #fff;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .header {
+            display: flex;
+            text-align: center;
+            align-items: center;
+            justify-content: start;
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+            margin: 0;
+            background: linear-gradient(258deg,
+                    #000 41.18%,
+                    rgba(226, 53, 53, 0.85) 89.21%,
+                    rgba(255, 25, 25, 0) 137.25%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .yellow {
+            width: 100%;
+            height: 1rem;
+            background: #faae36;
+        }
+
+        .error {
+            display: none;
+            color: red;
+        }
+
+        .error p {
+            font-weight: 400;
+            color: red;
+            margin: 1rem 0;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .title {
             width: 100%;
             height: 100%;
-            background-color: rgba(253, 0, 0, 0.507);
-
+            display: flex;
+            flex-direction: row-reverse;
+            align-content: flex-start;
+            justify-content: center;
+            align-items: center;
         }
 
-
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
 
         @media screen and (max-width: 600px) {
-
-            /* Adjust styles for smaller screens */
             .roles {
                 grid-template-columns: 1fr;
                 width: 40%;
             }
         }
+
+        h4 {
+            font-size: 3rem;
+            margin: 0;
+            background: linear-gradient(258deg, #391118 41.18%, rgb(255 255 255) 100%, rgba(255, 25, 25, 0) 137.25%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 
 <body>
-    <nav>
-        <h4>Event Management System</h4>
+    <main>
+        <section class="first-section">
+            <div class="header">
+            </div>
+            <h1>Please select your role</h1>
+            <div class="roles">
+                <div class="box">
+                    <a href="./admin/dashboard/">
+                        <img src="./images/adminIcons.png" alt="">
+                        <span>Admin</span>
+                    </a>
+                </div>
+                <div class="box">
+                    <a href="./rso/dashboard/">
+                        <img src="./images/rsoIcon.png" alt="">
+                        <span>RSO</span>
+                    </a>
+                </div>
+                <div class="box">
+                    <a href="./faculty/home/">
+                        <img src="./images/teacherIcon.png" alt="">
+                        <span>Teacher</span>
+                    </a>
+                </div>
+                <div class="box">
+                    <a href="./student/home/">
+                        <img src="./images/studIcon.png" alt="">
+                        <span>Student</span>
+                    </a>
+                </div>
+            </div>
+        </section>
 
-        <div class="overlay"></div>
-    </nav>
-    <section>
+        <section class="second-section">
+            <div class="container">
+                <div class="title">
+                    <div class="text">
+                        <h4>Event Management System</h4>
 
-        <h1>Please select your role</h1>
+                        <h1>BATANGAS STATE UNIVERSITY</h1>
+                        <h3>The National Engineering University</h3>
+                    </div>
 
-        <div class="roles">
-            <div class="box">
-                <a href="./admin/dashboard/">
-                    <img src="./images/adminIcons.png" alt="">
-                    <span>Admin</span>
-                </a>
-            </div>
-            <div class="box">
-                <a href="./rso/dashboard/">
-                    <img src="./images/rsoIcon.png" alt="">
-                    <span>RSO</span>
-                </a>
-            </div>
-            <div class="box">
-                <a href="./faculty/home/">
-                    <img src="./images/teacherIcon.png" alt="">
-                    <span>Teacher</span>
-                </a>
-            </div>
-            <div class="box">
-                <a href="./student/home/">
-                    <img src="./images/studIcon.png" alt="">
-                    <span>Student</span>
-                </a>
-            </div>
-        </div>
-    </section>
+                    <img src="./images/Batangas_State_Logo.png" alt="Batangas State University Logo">
+                </div>
+                <div class="yellow"></div>
+
+        </section>
+
+    </main>
 </body>
 
 </html>
