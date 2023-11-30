@@ -102,8 +102,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                 </div>
                 <div class="welcome-context">
                     <h3>Welcome to the university portal</h3>
-                    <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque enim repudiandae dolorum
-                        magnam? Sequi repellendus alias sed nisi tempore.</span>
+                    <span>Explore Batangas State University, your gateway to education and innovation.</span>
                 </div>
             </div>
         </section>

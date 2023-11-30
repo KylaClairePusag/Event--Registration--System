@@ -65,9 +65,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         <div class="error<?php if(!empty($error))
                             echo ' show'; ?>">
                             <?php if(!empty($error)): ?>
-                                <p>
-                                    <?php echo $error; ?>
-                                </p>
+                            <p>
+                                <?php echo $error; ?>
+                            </p>
                             <?php endif; ?>
                         </div>
                         <button type="submit" name="submit">Sign in</button>
@@ -85,8 +85,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                 </div>
                 <div class="welcome-context">
                     <h3>Welcome to the university portal</h3>
-                    <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque enim repudiandae dolorum
-                        magnam? Sequi repellendus alias sed nisi tempore.</span>
+                    <span>Explore Batangas State University, your gateway to education and innovation.</span>
                 </div>
             </div>
         </section>
