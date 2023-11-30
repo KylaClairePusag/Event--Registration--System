@@ -96,6 +96,5 @@ function getPaginationCount($conn, $searchQuery)
     return $result['count'];
 }
 
-// You can continue to add more functions as needed.
 
 ?>

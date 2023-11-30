@@ -5,12 +5,11 @@
   margin: 0;
   box-sizing: border-box;
   font-family: "Nunito Sans", sans-serif;
-  /* border: 1px dashed rgba(255, 0, 0, 0.245); */
 }
 
 body {
   line-height: 1.5;
-  height: 100vh; /* Set height to 100% of viewport height */
+  height: 100vh;
 }
 
 main {
@@ -297,7 +296,6 @@ dialog .close {
   margin-top: 5px;
 }
 
-/* Optional: Add some additional styling for better appearance */
 .modal-content h2 {
   text-align: center;
 }
@@ -391,7 +389,6 @@ input:focus {
 }
 
 @media (max-width: 1200px) {
-  /* Add your styles for a viewport width of 730px or less here */
   .head {
     flex-direction: column;
     align-items: flex-start;
@@ -409,20 +406,16 @@ input:focus {
     width: 100%;
   }
   #searchForm {
-    width: 100%; /* Adjust the width of the search form */
-    margin-right: 0; /* Remove right margin */
+    width: 100%;
+    margin-right: 0;
   }
 
   #search {
-    width: 100%; /* Adjust the width of the search input */
+    width: 100%;
   }
-
-  /* Add more styles for other elements as needed */
 }
 
 @media (max-width: 600px) {
-  /* Add your styles for a viewport width of 600px or less here */
-
   .headbtn {
     flex-direction: column;
   }
@@ -436,7 +429,6 @@ input:focus {
     justify-content: space-between;
   }
 
-  /* Add more styles for other elements as needed */
   table button {
     width: 100%;
     margin-top: 0.4rem;

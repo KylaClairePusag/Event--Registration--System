@@ -54,7 +54,6 @@ if ($result) {
         $count = 1;
 
         foreach ($rows as $row) {
-            // Retrieve faculty member information
             $employeeNameQuery = $conn->prepare("SELECT CONCAT(firstname, ' ', lastname) AS employee_name, department FROM tbempinfo WHERE empid = ?");
             $employeeNameQuery->bind_param("i", $empid);
             $empid = $row["empid"];

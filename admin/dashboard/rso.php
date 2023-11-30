@@ -1,9 +1,7 @@
 <?php
 include '../../config/config.php';
-// Get the current request URI
 $requestUri = $_SERVER['REQUEST_URI'];
 
-// Add new RSO
 if(isset($_POST["add_rso"])) {
     $rso_name = htmlspecialchars($_POST["rso_name"], ENT_QUOTES, "UTF-8");
     $rso_password = htmlspecialchars($_POST["rso_password"], ENT_QUOTES, "UTF-8");
@@ -49,7 +47,6 @@ if(move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
     exit();
 }
 
-    // Insert data into the database
     $query = $pdo->prepare("INSERT INTO tb_rso (rso_name, rso_password, rso_email, department_id) VALUES (:rso_name, :rso_password, :rso_email, :department_id)");
     if($query->execute([':rso_name' => $rso_name, ':rso_password' => $rso_password, ':rso_email' => $rso_email, ':department_id' => $department_id])) {
         header("Location: $requestUri");
@@ -59,11 +56,9 @@ if(move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
     }
 }
 
-// Delete RSO
 if(isset($_POST["delete_rso"])) {
     $rso_id = filter_input(INPUT_POST, "delete_rso", FILTER_VALIDATE_INT);
 
-    // Delete data from the database
     $query = $pdo->prepare("DELETE FROM tb_rso WHERE rso_id = :rso_id");
     if($query->execute([':rso_id' => $rso_id])) {
         header("Location: $requestUri");
@@ -72,7 +67,6 @@ if(isset($_POST["delete_rso"])) {
     }
 }
 
-// Edit RSO
 if(isset($_POST["edit_rso"])) {
     $edit_rso_id = filter_input(INPUT_POST, "edit_rso_id", FILTER_VALIDATE_INT);
     $edit_rso_name = htmlspecialchars($_POST["edit_rso_name"], ENT_QUOTES, "UTF-8");
@@ -80,7 +74,6 @@ if(isset($_POST["edit_rso"])) {
     $edit_rso_email = htmlspecialchars($_POST["edit_rso_email"], ENT_QUOTES, "UTF-8");
     $edit_department_id = $_POST["edit_department_id"];
 
-    // Update data in the database
     $query = $pdo->prepare("UPDATE tb_rso SET rso_name = :rso_name, rso_password = :rso_password, rso_email = :rso_email, department_id = :department_id WHERE rso_id = :rso_id");
     if($query->execute([':rso_name' => $edit_rso_name, ':rso_password' => $edit_rso_password, ':rso_email' => $edit_rso_email, ':department_id' => $edit_department_id, ':rso_id' => $edit_rso_id])) {
         header("Location: $requestUri");
@@ -90,17 +83,14 @@ if(isset($_POST["edit_rso"])) {
     }
 }
 
-// Pagination setup
 $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-// Search functionality
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 $selectedDepartment = isset($_GET['departmentFilter']) ? $_GET['departmentFilter'] : '';
 
 try {
-    // Query to get a subset of records based on search and pagination
     $query = $pdo->prepare("SELECT * FROM tb_rso WHERE (rso_name LIKE :searchTerm OR rso_email LIKE :searchTerm) ".
         ($selectedDepartment ? "AND department_id = :department_id" : "").
         " LIMIT :limit OFFSET :offset");
@@ -115,7 +105,6 @@ try {
         throw new Exception("Query failed: ".implode(" ", $query->errorInfo()));
     }
 
-    // Fetch results
     $rows = $query->fetchAll(PDO::FETCH_ASSOC);
     $paginationQuery = $pdo->prepare("SELECT COUNT(*) AS total FROM tb_rso WHERE rso_name LIKE :searchTerm OR rso_email LIKE :searchTerm");
     $paginationQuery->bindValue(':searchTerm', '%'.$searchTerm.'%', PDO::PARAM_STR);
@@ -290,7 +279,6 @@ try {
         </section>
     </main>
     <?php
-    // Include your PHP code here to set $requestUri
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>

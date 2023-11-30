@@ -1,8 +1,6 @@
 <?php
-// Database connection setup
 include '../../config/config.php';
 
-// Get the current request URI
 $requestUri = $_SERVER['REQUEST_URI'];
 
 $conn = new mysqli('localhost', 'root', '', 'db_ba3101');
@@ -17,7 +15,6 @@ try {
         throw new Exception("Query failed: " . implode(" ", $query->errorInfo()));
     }
 
-    // Fetch results
     $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $ex) {
     echo "Error: " . $ex->getMessage();

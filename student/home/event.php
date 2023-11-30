@@ -172,7 +172,6 @@ WHERE tb_attendees.event_id = ?");
 
                 foreach($attendees as $attendee) {
                     if(!empty($attendee['student_firstname'])) {
-                        // Student card
                         echo '<div class="attendee-card" onclick="redirectToProfilestud(\''.$attendee['student_studid'].'\')">';
                         $name = $attendee['student_firstname'].' '.$attendee['student_lastname'];
                         $course = $attendee['course'];
@@ -182,7 +181,6 @@ WHERE tb_attendees.event_id = ?");
                         echo '<p>'.$name.' (Student)</p>';
                         echo '</div>';
                     } elseif(!empty($attendee['emp_firstname'])) {
-                        // Teacher card
                         echo '<div class="attendee-card" onclick="redirectToProfileemp(\''.$attendee['empid'].'\')">';
                         $name = $attendee['emp_firstname'].' '.$attendee['emp_lastname'];
                         $course = $attendee['department'];
@@ -283,19 +281,19 @@ WHERE tb_attendees.event_id = ?");
         </div>
     </footer>
     <script>
-        function redirectToProfilestud(studid) {
-            if (studid == <?php echo $_SESSION['student_id']; ?>) {
-                window.location.href = 'myprofile.php';
-            } else {
-                window.location.href = 'studentProfile.php?studid=' + studid;
-
-            }
-        }
-
-        function redirectToProfileemp(empid) {
-            window.location.href = 'teacherProfile.php?empid=' + empid;
+    function redirectToProfilestud(studid) {
+        if (studid == <?php echo $_SESSION['student_id']; ?>) {
+            window.location.href = 'myprofile.php';
+        } else {
+            window.location.href = 'studentProfile.php?studid=' + studid;
 
         }
+    }
+
+    function redirectToProfileemp(empid) {
+        window.location.href = 'teacherProfile.php?empid=' + empid;
+
+    }
     </script>
     <script src="../../script/events.js"></script>
 </body>

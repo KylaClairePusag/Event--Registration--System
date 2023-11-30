@@ -173,7 +173,6 @@ try {
 
                 foreach($attendees as $attendee) {
                     if(!empty($attendee['student_firstname'])) {
-                        // Student card
                         echo '<div class="attendee-card" onclick="redirectToProfilestud(\''.$attendee['student_studid'].'\')">';
                         $name = $attendee['student_firstname'].' '.$attendee['student_lastname'];
                         $course = $attendee['course'];
@@ -183,7 +182,6 @@ try {
                         echo '<p>'.$name.' (Student)</p>';
                         echo '</div>';
                     } elseif(!empty($attendee['emp_firstname'])) {
-                        // Teacher card
                         echo '<div class="attendee-card" onclick="redirectToProfileemp(\''.$attendee['empid'].'\')">';
                         $name = $attendee['emp_firstname'].' '.$attendee['emp_lastname'];
                         $course = $attendee['department'];
@@ -285,19 +283,17 @@ try {
         </div>
     </footer>
     <script>
-        function redirectToProfilestud(studid) {
-            window.location.href = 'studentProfile.php?studid=' + studid;
+    function redirectToProfilestud(studid) {
+        window.location.href = 'studentProfile.php?studid=' + studid;
+    }
+
+    function redirectToProfileemp(empid) {
+        if (empid == <?php echo $_SESSION['empid']; ?>) {
+            window.location.href = 'myprofile.php';
+        } else {
+            window.location.href = 'teacherProfile.php?empid=' + empid;
         }
-
-        function redirectToProfileemp(empid) {
-            if (empid == <?php echo $_SESSION['empid']; ?>) {
-                window.location.href = 'myprofile.php';
-            } else {
-                window.location.href = 'teacherProfile.php?empid=' + empid;
-            }
-        }
-
-
+    }
     </script>
     <script src="../../script/events.js"></script>
 </body>

@@ -1,8 +1,4 @@
 <?php
-// pagination.php
-// pagination.php
-// pagination.php
-
 function generatePaginationLinks($searchTerm, $limit, $paginationQuery, $selectedDepartment, $statusFilter) {
     try {
         if(!$paginationQuery->execute()) {
@@ -15,10 +11,8 @@ function generatePaginationLinks($searchTerm, $limit, $paginationQuery, $selecte
 
         echo "<div class='pagination-container'>";
 
-        // Check if $_GET['page'] is set, otherwise default to 1
         $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
 
-        // Add the department and status filter to the pagination links
         $departmentParam = $selectedDepartment ? "&department=".urlencode($selectedDepartment) : "";
         $statusParam = $statusFilter ? "&status=".urlencode($statusFilter) : "";
 

@@ -123,12 +123,10 @@ if(isset($_POST["edit_student"])) {
     $edit_course = $_POST["edit_course"];
 
     try {
-        // Update student information
         $sql_info = "UPDATE tbstudinfo SET firstname = ?, lastname = ?, course = ? WHERE studid IN (SELECT studid FROM tbstudentaccount WHERE studid = ?)";
         $stmt_info = $pdo->prepare($sql_info);
         $stmt_info->execute([$edit_firstname, $edit_lastname, $edit_course, $edit_studid]);
 
-        // Update student account
         $sql_account = "UPDATE tbstudentaccount SET student_password = ?, student_email = ?, department_id = ? WHERE studid = ?";
         $stmt_account = $pdo->prepare($sql_account);
         $stmt_account->execute([$edit_student_password, $edit_student_email, $edit_department_id, $edit_studid]);
@@ -141,12 +139,10 @@ if(isset($_POST["edit_student"])) {
     }
 }
 
-// Handle search and filter
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 $selectedDepartment = isset($_GET['departmentFilter']) ? $_GET['departmentFilter'] : '';
 
-// Define $limit and $offset
-$limit = 10; // You can adjust this value based on your requirements
+$limit = 10; 
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
@@ -193,7 +189,7 @@ try {
             <div class="searchCont">
                 <?php include '../../components/search.php'; ?>
                 <?php if(!empty($searchTerm)): ?>
-                    <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
+                <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
                 <?php endif; ?>
             </div>
             <div class="headbtn">
@@ -216,14 +212,14 @@ try {
                     <img src='../../images/plus.png' alt='Image' class="icon" /> </button>
 
             </div>
-            <!-- Add this above the search bar -->
+
 
 
         </section>
 
         <section class="tableContainer">
             <?php include '../../components/table.component.php';
-            // Main file
+
             
             $head = array('ID', 'Profile', 'Name', 'Password', 'Email', 'Department', 'Course', 'Actions');
             $body = array();
@@ -249,10 +245,8 @@ try {
                 $actions = '<button type="button" onclick="editstudent(\''.$studid.'\', \''.$student_password.'\', \''.$student_email.'\', \''.$department_id.'\', \''.$firstname.'\', \''.$course.'\', \''.$lastname.'\')">Edit</button> <button type="button" onclick="showDeleteModal('.$studid.')">Delete</button>';
 
 
-                // Concatenate first and last names
                 $name = $firstname.' '.$lastname;
 
-                // Add row to the $body array
                 $body[] = array($studid, '<img src="../../'.$student_profile.'" alt="Profile" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $student_password, $course, $student_email, $department_name, $actions);
             }
 
@@ -427,15 +421,15 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
-        function applyDepartmentFilter() {
-            const selectedDepartment = document.getElementById('departmentFilter').value;
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('departmentFilter', selectedDepartment);
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
-        }
+    function applyDepartmentFilter() {
+        const selectedDepartment = document.getElementById('departmentFilter').value;
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('departmentFilter', selectedDepartment);
+        window.location.href = window.location.pathname + '?' + urlParams.toString();
+    }
 
-        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
-        const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'student_email')); ?>;
+    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+    const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'student_email')); ?>;
     </script>
     <script src="../../script/student.js"></script>
 </body>

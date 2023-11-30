@@ -22,7 +22,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if($row && $row['emp_password'] === $emp_password) {
-                // Fetch the user's role from the database
                 $roleQuery = "SELECT role_name FROM tb_roles WHERE role_id = :role_id";
                 $roleStmt = $pdo->prepare($roleQuery);
                 $roleStmt->bindParam(':role_id', $row['role_id'], PDO::PARAM_INT);
@@ -30,15 +29,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
                 $roleRow = $roleStmt->fetch(PDO::FETCH_ASSOC);
 
-                // Check if the user's role is "Admin"
                 if($roleRow && $roleRow['role_name'] === 'Admin') {
-                    // Grant access for Admin
                     $_SESSION['emp_email'] = $row['emp_email'];
                     $_SESSION['emp_name'] = $row['emp_name'];
                     header("Location: ./dashboard");
                     exit;
                 } else {
-                    // Redirect or show an error for non-Admin users
                     $error = "*** You do not have permission to access the dashboard. ***";
                 }
             } else {
@@ -83,9 +79,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                         <div class="error<?php if(!empty($error))
                             echo ' show'; ?>">
                             <?php if(!empty($error)): ?>
-                                <p>
-                                    <?php echo $error; ?>
-                                </p>
+                            <p>
+                                <?php echo $error; ?>
+                            </p>
                             <?php endif; ?>
                         </div>
 

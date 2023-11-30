@@ -3,27 +3,22 @@ if(session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Include configuration file
 include '../../config/config.php';
 
-// Redirect to login page if not logged in
 if(!isset($_SESSION['emp_email'])) {
     header("Location: ../signin.php");
     exit();
 }
 
-// Database connection details (move this to the config file)
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "db_ba3101";
 
 try {
-    // Create PDO connection
     $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Fetch employee account information
     $sqlEmpAccount = "SELECT empid, emp_profile, emp_email FROM tbempaccount WHERE emp_email = :emp_email";
     $stmtEmpAccount = $pdo->prepare($sqlEmpAccount);
     $stmtEmpAccount->bindParam(":emp_email", $_SESSION['emp_email']);
@@ -33,7 +28,6 @@ try {
     $emp_email = $empData['emp_email'];
     $empProfile = $empData['emp_profile'];
 
-    // Fetch employee info from tbempinfo based on the empid
     $sqlEmpInfo = "SELECT * FROM tbempinfo WHERE empid = :empid";
     $stmtEmpInfo = $pdo->prepare($sqlEmpInfo);
     $stmtEmpInfo->bindParam(":empid", $emp_id);
@@ -43,7 +37,6 @@ try {
     $firstname = $empInfo['firstname'];
     $department = $empInfo['department'];
 
-    // Fetch student information from tbstudinfo (you already have this part)
     $sqlStudInfo = "SELECT * FROM tbstudinfo";
     $stmtStudInfo = $pdo->prepare($sqlStudInfo);
     $stmtStudInfo->execute();
@@ -87,7 +80,6 @@ try {
                     ?>
                 </div>
                 <div class="profile-dropdown" id="profileDropdown">
-                    <!-- Add profile dropdown items as needed -->
                     <h5>
                         <?= htmlspecialchars($emp_email); ?>
                     </h5>

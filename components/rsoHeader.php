@@ -4,7 +4,6 @@ if(session_status() == PHP_SESSION_NONE) {
 }
 include '../../config/config.php';
 
-// Check if the RSO is logged in, otherwise redirect to login page
 if(!isset($_SESSION['rso_email']) || !isset($_SESSION['rso_name'])) {
     header("Location: ../signin.php");
     exit();

@@ -145,7 +145,6 @@ $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 $statusFilter = isset($_GET['status']) ? $_GET['status'] : '';
 $statusCondition = '';
 
-// Validate and set the appropriate status condition
 if($statusFilter === 'ongoing' || $statusFilter === 'upcoming' || $statusFilter === 'ended') {
     $statusCondition = (!empty($statusFilter)) ? ' AND status = :status' : '';
 }
@@ -163,7 +162,6 @@ try {
     $query->bindValue(':limit', $limit, PDO::PARAM_INT);
     $query->bindValue(':offset', $offset, PDO::PARAM_INT);
 
-    // Bind status parameter if a filter is applied
     if(!empty($statusFilter)) {
         $query->bindValue(':status', $statusFilter, PDO::PARAM_STR);
     }
@@ -183,7 +181,6 @@ try {
     $paginationQuery->bindValue(':department_id', $_SESSION['department_id'], PDO::PARAM_INT);
     $paginationQuery->bindValue(':searchTerm', '%'.$searchTerm.'%', PDO::PARAM_STR);
 
-    // Bind status parameter if a filter is applied
     if(!empty($statusFilter)) {
         $paginationQuery->bindValue(':status', $statusFilter, PDO::PARAM_STR);
     }
@@ -217,20 +214,20 @@ try {
             <div class="searchCont">
                 <?php include '../../components/search.php'; ?>
                 <?php if(!empty($searchTerm)): ?>
-                    <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
+                <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
                 <?php endif; ?>
             </div>
             <div class="headbtn">
                 <select id="status-filter" name="status">
                     <option value="">Status: All</option>
-                    <option value="ongoing" <?php echo ($statusFilter === 'ongoing') ? 'selected' : ''; ?>>Status: Ongoing
+                    <option value="ongoing" <?php echo ($statusFilter === 'ongoing') ? 'selected' : ''; ?>>Status:
+                        Ongoing
                     </option>
                     <option value="upcoming" <?php echo ($statusFilter === 'upcoming') ? 'selected' : ''; ?>>Status:
                         Upcoming
                     </option>
                     <option value="ended" <?php echo ($statusFilter === 'ended') ? 'selected' : ''; ?>>Status: Ended
                     </option>
-                    <!-- Add other status options as needed -->
                 </select>
 
                 <?php include '../../components/limit.php'; ?>
@@ -325,35 +322,26 @@ try {
     </main>
 
     <?php
-    // Include your PHP code here to set $requestUri
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
-        // Add this code in your event.js file
-        document.addEventListener("DOMContentLoaded", function () {
-            const statusFilter = document.getElementById('status-filter');
+    document.addEventListener("DOMContentLoaded", function() {
+        const statusFilter = document.getElementById('status-filter');
 
-            // Add an event listener for the status filter
-            statusFilter.addEventListener('change', function () {
-                const selectedStatus = statusFilter.value;
+        statusFilter.addEventListener('change', function() {
+            const selectedStatus = statusFilter.value;
 
-                // Get the current URL
-                const currentUrl = new URL(window.location.href);
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.delete('page');
+            currentUrl.searchParams.set('status', selectedStatus);
 
-                // Remove the 'page' query parameter if it exists
-                currentUrl.searchParams.delete('page');
-
-                // Update the 'status' query parameter or add it if not present
-                currentUrl.searchParams.set('status', selectedStatus);
-
-                // Reload the page with the updated URL
-                window.location.href = currentUrl.href;
-            });
+            window.location.href = currentUrl.href;
         });
+    });
 
 
-        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
-        const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'event_date')); ?>;
+    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+    const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'event_date')); ?>;
     </script>
     <script src="../../script/event.js"></script>
 </body>

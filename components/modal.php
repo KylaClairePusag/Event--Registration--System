@@ -1,5 +1,3 @@
-<!-- modal.php -->
-
 <?php
 
 function generateModal($modalId, $title, $fields, $buttonText, $action, $extraAttributes = '')

@@ -1,12 +1,8 @@
-// event.js
-
-// Function to close a modal by ID
 function closeModal(modalId) {
   const modal = document.getElementById(modalId);
   modal.close();
 }
 
-// Function to reset the add modal
 function resetAddModal() {
   const addModal = document.getElementById("addModal");
   const editModal = document.getElementById("editModal");
@@ -22,7 +18,6 @@ function resetAddModal() {
   }, 0);
 }
 
-// Function to add an overlay click listener to a modal
 function addOverlayClickListener(modalId) {
   const modal = document.getElementById(modalId);
   modal.addEventListener("click", function (event) {
@@ -33,14 +28,12 @@ function addOverlayClickListener(modalId) {
   });
 }
 
-// Function to show a modal and add overlay click listener
 function showModal(modalId) {
   const modal = document.getElementById(modalId);
   modal.showModal();
   addOverlayClickListener(modalId);
 }
 
-// Function to show details in the edit modal
 function editevent(
   event_id,
   event_title,
@@ -57,12 +50,10 @@ function editevent(
   document.getElementById("edit-department-id").value = department_id;
 }
 
-// Add overlay click listeners for modals
 addOverlayClickListener("deleteModal");
 addOverlayClickListener("editModal");
 addOverlayClickListener("addModal");
 
-// Function to change the limit and reload the page
 function changeLimit(newLimit) {
   const currentUrl = new URL(window.location.href);
   const searchParam = currentUrl.searchParams.get("search");
@@ -74,14 +65,12 @@ function changeLimit(newLimit) {
   window.location.reload();
 }
 
-// Function to change the page and reload
 function changePage(newPage) {
   const currentUrl = new URL(window.location.href);
   const limitParam = currentUrl.searchParams.get("limit");
   window.location.href = base_url + "?page=" + newPage + "&limit=" + limitParam;
 }
 
-// Function to clear search and reload
 function clearSearch() {
   const currentUrl = new URL(window.location.href);
   currentUrl.searchParams.delete("search");
@@ -90,7 +79,6 @@ function clearSearch() {
   window.location.reload();
 }
 
-// Event listener for search form submission
 document
   .getElementById("searchForm")
   .addEventListener("submit", function (event) {
@@ -99,23 +87,18 @@ document
     const searchTerm = searchInput.value;
     const currentUrl = new URL(window.location.href);
 
-    // Set or delete the 'search' parameter
     if (searchTerm.trim() !== "") {
       currentUrl.searchParams.set("search", searchTerm);
     } else {
       currentUrl.searchParams.delete("search");
     }
 
-    // Delete the 'page' parameter
     currentUrl.searchParams.delete("page");
-
-    // Other parameters can be handled similarly if needed
 
     history.pushState({}, "", currentUrl);
     window.location.reload();
   });
 
-// Function to show delete modal and handle delete button click
 function showDeleteModal(event_id) {
   showModal("deleteModal");
   const deleteBtn = document
@@ -135,7 +118,6 @@ function showDeleteModal(event_id) {
   });
 }
 
-// Function to delete an event
 function deleteevent() {
   const event_id = document.getElementById("edit-event-id").value;
   const form = document.createElement("form");

@@ -1,13 +1,11 @@
 <?php
 include '../../config/config.php';
 
-// Check if the student is logged in, otherwise redirect to the login page
 if(!isset($_SESSION['student_email'])) {
     header("Location: ../signin.php");
     exit();
 }
 
-// Database connection details
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -15,11 +13,9 @@ $dbname = "db_ba3101";
 
 
 try {
-    // Create PDO connection
     $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Prepare and execute the query to get student profile
     $sql = "SELECT student_profile, student_email FROM tbstudentaccount WHERE student_email = :student_email";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(":student_email", $_SESSION['student_email']);
@@ -58,7 +54,6 @@ try {
                 <img src="../../<?php echo $studentProfile; ?>" alt="Student Profile Image" class="profile-img"
                     onclick="toggleProfileDropdown()" />
                 <div class="profile-dropdown" id="profileDropdown">
-                    <!-- Add profile dropdown items as needed -->
                     <h5>
                         <?php echo htmlspecialchars($student_email); ?>
                     </h5>

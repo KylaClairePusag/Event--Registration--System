@@ -73,5 +73,4 @@ header .profile {
 nav ul li.active a {
   font-weight: 700;
   color: rgb(28, 22, 22);
-  /* Change the active color to red */
 }

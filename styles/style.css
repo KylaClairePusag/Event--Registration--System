@@ -16,7 +16,6 @@ h3 a {
   font-weight: 700;
 }
 
-/* Add your dropdown styles here */
 h5 {
   padding: 12px 16px;
 
@@ -54,15 +53,12 @@ h5 {
   display: block;
 }
 
-/* Style for the profile image */
 .profile-img {
   max-width: 50px;
-  /* Adjust the size as needed */
   border-radius: 50%;
   cursor: pointer;
 }
 
-/* Style for the profile dropdown */
 .profile-dropdown {
   border-radius: 10px;
   position: absolute;

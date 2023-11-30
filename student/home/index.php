@@ -40,12 +40,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancel'])) {
     exit;
 }
 
-// Fetch events data
 try {
-    // Retrieve department_id from the session
     $departmentId = $_SESSION['department_id'];
 
-    // Prepare SQL query with department_id condition and join with tb_department
     $query = $conn->prepare("SELECT e.event_id, e.event_title, e.event_detail, e.event_date, e.status, e.header_image, d.department_name FROM tb_event e
                             INNER JOIN tb_department d ON e.department_id = d.department_id
                             WHERE e.department_id = ?");
@@ -55,7 +52,6 @@ try {
         throw new Exception("Query failed: ".$query->error);
     }
 
-    // Fetch results
     $result = $query->get_result();
     $rows = $result->fetch_all(MYSQLI_ASSOC);
 } catch (Exception $ex) {
@@ -83,13 +79,12 @@ try {
         <div class="box-container">
 
             <?php if(empty($rows)) { ?>
-                <p>No events available</p>
+            <p>No events available</p>
             <?php } else { ?>
 
-                <?php foreach($rows as $row) { ?>
+            <?php foreach($rows as $row) { ?>
 
-                    <?php
-                    // Extract event details
+            <?php
                     $event_id = $row["event_id"];
                     $event_title = $row["event_title"];
                     $event_detail = $row["event_detail"];
@@ -98,14 +93,12 @@ try {
                     $header_image = $row["header_image"];
                     $department_name = $row["department_name"];
 
-                    // Count attendees for the event
                     $attendees_query = $conn->prepare("SELECT COUNT(*) as attendee_count FROM tb_attendees WHERE event_id = ?");
                     $attendees_query->bind_param('i', $event_id);
                     $attendees_query->execute();
                     $attendees_row = $attendees_query->get_result()->fetch_assoc();
                     $attendee_count = $attendees_row['attendee_count'];
 
-                    // Define a CSS class based on the status
                     $statusClass = '';
                     switch($status) {
                         case 'upcoming':
@@ -121,41 +114,41 @@ try {
                             break;
                     }
                     ?>
-                    <div class="event-box <?php echo $statusClass; ?>-box">
+            <div class="event-box <?php echo $statusClass; ?>-box">
 
-                        <div class="header">
-                            <img src="../../<?php echo $header_image; ?>" alt="Event Image">
-                        </div>
-                        <div class="event-content">
-                            <h2>
-                                <?php echo ucwords($event_title); ?>
-                            </h2>
-                            <div id="date">
-                                <img src="../../images/calendar.png" alt="">
-                                <h3>
-                                    <?php echo $event_date; ?>
-                                </h3>
-                            </div>
-                            <p id="details">
-                                <?php echo $event_detail; ?>
-                            </p>
-                            <p>Status: <span class="<?php echo $statusClass; ?>">
-                                    <?php echo $status; ?>
-                                </span></p>
-                            <p>Department:
-                                <?php echo ucwords($department_name); ?>
-                            </p>
-                            <p>Attendees:
-                                <?php echo $attendee_count; ?>
-                            </p>
-                        </div>
-                        <div class="events_button">
-                            <form action="" method="POST">
-                                <button type="button" id="viewBtn"
-                                    onclick="window.location.href='event.php?event_id=<?php echo $event_id; ?>'">View
-                                    Event</button>
-                                <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
-                                <?php
+                <div class="header">
+                    <img src="../../<?php echo $header_image; ?>" alt="Event Image">
+                </div>
+                <div class="event-content">
+                    <h2>
+                        <?php echo ucwords($event_title); ?>
+                    </h2>
+                    <div id="date">
+                        <img src="../../images/calendar.png" alt="">
+                        <h3>
+                            <?php echo $event_date; ?>
+                        </h3>
+                    </div>
+                    <p id="details">
+                        <?php echo $event_detail; ?>
+                    </p>
+                    <p>Status: <span class="<?php echo $statusClass; ?>">
+                            <?php echo $status; ?>
+                        </span></p>
+                    <p>Department:
+                        <?php echo ucwords($department_name); ?>
+                    </p>
+                    <p>Attendees:
+                        <?php echo $attendee_count; ?>
+                    </p>
+                </div>
+                <div class="events_button">
+                    <form action="" method="POST">
+                        <button type="button" id="viewBtn"
+                            onclick="window.location.href='event.php?event_id=<?php echo $event_id; ?>'">View
+                            Event</button>
+                        <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
+                        <?php
                                 $attendeeExists = false;
                                 $checkStmt->execute();
                                 $attendeeExists = $checkStmt->rowCount() > 0;
@@ -169,16 +162,15 @@ try {
                                     echo '<button id="cancelbtn" disabled>Past Event</button>';
                                 }
                                 ?>
-                            </form>
-                        </div>
-                    </div>
-                <?php } ?>
+                    </form>
+                </div>
+            </div>
+            <?php } ?>
 
             <?php } ?>
 
         </div>
 
-        <!-- The Attend Dialog -->
         <dialog id="attendDialog" class="modal">
             <div class="modal-content">
 
@@ -194,7 +186,6 @@ try {
             </div>
         </dialog>
 
-        <!-- The Cancel Dialog -->
         <dialog id="cancelDialog" class="modal">
             <div class="modal-content">
                 <button class="close" onclick="closeCancelDialog()">&times;</button>

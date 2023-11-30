@@ -1,12 +1,8 @@
-// script.js
-
-// Function to close a modal by ID
 function closeModal(modalId) {
   const modal = document.getElementById(modalId);
   modal.close();
 }
 
-// Function to reset the add modal
 function resetAddModal() {
   const addModal = document.getElementById("addModal");
   const editModal = document.getElementById("editModal");
@@ -30,7 +26,6 @@ function resetAddModal() {
   }, 0);
 }
 
-// Function to add an overlay click listener to a modal
 function addOverlayClickListener(modalId) {
   const modal = document.getElementById(modalId);
   modal.addEventListener("click", function (event) {
@@ -41,7 +36,6 @@ function addOverlayClickListener(modalId) {
   });
 }
 
-// Function to show a modal and add overlay click listener
 function showModal(modalId) {
   const modal = document.getElementById(modalId);
   modal.showModal();
@@ -67,16 +61,13 @@ function editstudent(
 
   showModal("editModal");
 
-  // Set values in the edit modal
   document.getElementById("edit-student-id").value = studid;
   document.getElementById("edit-student-password").value = student_password;
   document.getElementById("edit-email").value = student_email;
 
-  // Add this line to define the original email
   const originalEmail = student_email;
   document.getElementById("original-email").value = originalEmail;
 
-  // Set the selected option in the department dropdown
   const departmentDropdown = document.getElementById("edit-department");
   for (let i = 0; i < departmentDropdown.options.length; i++) {
     if (departmentDropdown.options[i].value == department_id) {
@@ -85,18 +76,16 @@ function editstudent(
     }
   }
 
-  // Set the values for course and lastname
   document.getElementById("edit-course").value = course;
   document.getElementById("edit-firstname").value = firstname;
   document.getElementById("edit-lastname").value = lastname;
 }
 
-// Add overlay click listeners for modals
 addOverlayClickListener("deleteModal");
 addOverlayClickListener("editModal");
 addOverlayClickListener("addModal");
 addOverlayClickListener("addNewEmpModal");
-// Function to change the limit and reload the page
+
 function changeLimit(newLimit) {
   const currentUrl = new URL(window.location.href);
   const searchParam = currentUrl.searchParams.get("search");
@@ -108,14 +97,12 @@ function changeLimit(newLimit) {
   window.location.reload();
 }
 
-// Function to change the page and reload
 function changePage(newPage) {
   const currentUrl = new URL(window.location.href);
   const limitParam = currentUrl.searchParams.get("limit");
   window.location.href = base_url + "?page=" + newPage + "&limit=" + limitParam;
 }
 
-// Function to clear search and reload
 function clearSearch() {
   const currentUrl = new URL(window.location.href);
   currentUrl.searchParams.delete("search");
@@ -132,23 +119,18 @@ document
     const searchTerm = searchInput.value;
     const currentUrl = new URL(window.location.href);
 
-    // Set or delete the 'search' parameter
     if (searchTerm.trim() !== "") {
       currentUrl.searchParams.set("search", searchTerm);
     } else {
       currentUrl.searchParams.delete("search");
     }
 
-    // Delete the 'page' parameter
     currentUrl.searchParams.delete("page");
-
-    // Other parameters can be handled similarly if needed
 
     history.pushState({}, "", currentUrl);
     window.location.reload();
   });
 
-// Function to show delete modal and handle delete button click
 function showDeleteModal(studid) {
   showModal("deleteModal");
   const deleteBtn = document
@@ -168,7 +150,6 @@ function showDeleteModal(studid) {
   });
 }
 
-// Function to delete an student
 function deletestudent() {
   const studid = document.getElementById("edit-student-id").value;
   const form = document.createElement("form");
@@ -185,12 +166,10 @@ function deletestudent() {
   form.submit();
 }
 
-// Function to check if the email is already taken
 function isEmailTaken(email) {
   return emailExistenceCheck.includes(email);
 }
 
-// Event listener for form submission in addModal
 document
   .getElementById("addModal")
   .querySelector("form")
@@ -223,7 +202,6 @@ document
     }
   });
 
-// Event listener for form submission in editModal
 document
   .getElementById("editModal")
   .querySelector("form")
@@ -247,7 +225,6 @@ document
     }
   });
 
-// Function to toggle password visibility
 function togglePasswordVisibility(passwordId) {
   const passwordInput = document.getElementById(passwordId);
   const viewIcon = document.querySelector('img[src="../../images/view.png"]');

@@ -5,14 +5,12 @@ function createTable($head, $body) {
         return;
     }
 
-    // Check if the password column is present in the $head array
     $hasPasswordColumn = in_array('Password', $head);
 
-    echo '<table class="event-table">'; // Added a class for styling
+    echo '<table class="event-table">'; 
     echo '<thead>';
     echo '<tr>';
     foreach($head as $column) {
-        // Only display the column if it is not the password column
         if(!$hasPasswordColumn || (strtolower($column) !== 'password')) {
             echo '<th>'.$column.'</th>';
         }
@@ -23,10 +21,8 @@ function createTable($head, $body) {
     foreach($body as $row) {
         echo '<tr>';
         foreach($row as $key => $cell) {
-            // Only display the cell if it corresponds to a non-password column
             if(!$hasPasswordColumn || (strtolower($head[$key]) !== 'password')) {
-                // Apply white-space: nowrap; and text-overflow: ellipsis; to the "Details" column
-                $nowrapStyle = (strtolower($head[$key]) === 'details') ? ' style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;"' : ''; // Adjust max-width as needed
+                $nowrapStyle = (strtolower($head[$key]) === 'details') ? ' style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;"' : ''; 
                 echo '<td'.$nowrapStyle.'>'.$cell.'</td>';
             }
         }

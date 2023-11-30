@@ -1,7 +1,5 @@
 <?php
-// Database connection setup
 include '../../config/config.php';
-// Get the current request URI
 $requestUri = $_SERVER['REQUEST_URI'];
 
 include '../../components/adminHeader.php';

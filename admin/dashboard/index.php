@@ -120,10 +120,9 @@ if(isset($_POST["edit_emp"])) {
     $edit_department_id = $_POST["edit_department_id"];
     $edit_firstname = $_POST["edit_firstname"];
     $edit_lastname = $_POST["edit_lastname"];
-    $edit_role = $_POST["edit_role"]; // Get the role from the form submission
+    $edit_role = $_POST["edit_role"]; 
 
     try {
-        // Update employee information
         $sql_info = "UPDATE tbempinfo SET firstname = ?, lastname = ?, department = ? WHERE empid IN (SELECT empid FROM tbempaccount WHERE empaccountId = ?)";
         $stmt_info = $pdo->prepare($sql_info);
         $stmt_info->execute([$edit_firstname, $edit_lastname, $edit_department_id, $edit_empaccountId]);
@@ -205,7 +204,7 @@ try {
         <section class="head">
             <?php include '../../components/search.php'; ?>
             <?php if(!empty($searchTerm)): ?>
-                <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
+            <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
             <?php endif; ?>
             <div class="headbtn">
                 <select id="filterRole" onchange='applyRoleFilter()'>
@@ -221,7 +220,6 @@ try {
                     ?>
                 </select>
                 <?php
-                // Add a filter for departments in the dropdown
                 echo "<select id='filterDepartment' onchange='applyDepartmentFilter()'>";
                 echo "<option value=''>All Departments</option>";
 
@@ -250,7 +248,6 @@ try {
         <section class="container">
             <section class="tableContainer">
                 <?php include '../../components/table.component.php';
-                // Main file
                 
                 $head = array('ID', 'Profile', 'Name', 'Password', 'Email', 'Department', 'Role', 'Actions');
                 $body = array();
@@ -279,10 +276,8 @@ try {
 
                     $actions = '<button type="button" onclick="editemp('.$empaccountId.', \''.$emp_password.'\', \''.$emp_email.'\', \''.$department_id.'\', \''.$firstname.'\', \''.$lastname.'\', \''.$role_id.'\')">Edit</button> <button type="button" onclick="showDeleteModal('.$empaccountId.')">Delete</button>';
 
-                    // Concatenate first and last names
                     $name = $firstname.' '.$lastname;
 
-                    // Add row to the $body array
                     $body[] = array($empaccountId, '<img src="../../'.$emp_profile.'" alt="Profile" class="profile-img" style="width: 30px; height: 30px; border-radius: 50px">', $name, $emp_password, $emp_email, $department_name, $role, $actions);
                 }
 
@@ -484,21 +479,21 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
-        function applyRoleFilter() {
-            const selectedRole = document.getElementById('filterRole').value;
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('role', selectedRole);
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
-        }
+    function applyRoleFilter() {
+        const selectedRole = document.getElementById('filterRole').value;
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('role', selectedRole);
+        window.location.href = window.location.pathname + '?' + urlParams.toString();
+    }
 
-        function applyDepartmentFilter() {
-            const selectedDepartment = document.getElementById('filterDepartment').value;
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('department', selectedDepartment);
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
-        }
-        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
-        const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'emp_email')); ?>;
+    function applyDepartmentFilter() {
+        const selectedDepartment = document.getElementById('filterDepartment').value;
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('department', selectedDepartment);
+        window.location.href = window.location.pathname + '?' + urlParams.toString();
+    }
+    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+    const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'emp_email')); ?>;
     </script>
     <script src="../../script/emp.js"></script>
 </body>

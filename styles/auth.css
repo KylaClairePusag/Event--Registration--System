@@ -219,7 +219,6 @@ form {
   display: block;
 }
 
-/* Responsive design adjustments */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
