@@ -136,20 +136,22 @@ try {
         <section class="tableContainer toggle-section" id="attendees">
             <?php
             $attendeesQuery = $conn->prepare("SELECT tbstudinfo.firstname AS student_firstname, 
-                                             tbstudinfo.lastname AS student_lastname, 
-                                             tbstudinfo.studid AS student_studid, 
-                                             tbstudinfo.course, 
-                                             tbstudentaccount.student_profile AS student_profile,
-                                             tbempinfo.firstname AS emp_firstname, 
-                                             tbempinfo.lastname AS emp_lastname, 
-                                             tbempinfo.department,
-                                             tbempaccount.emp_profile AS emp_profile
-                                FROM tb_attendees
-                                LEFT JOIN tbstudinfo ON tb_attendees.student_id = tbstudinfo.studid
-                                LEFT JOIN tbstudentaccount ON tb_attendees.student_id = tbstudentaccount.studid
-                                LEFT JOIN tbempinfo ON tb_attendees.empid = tbempinfo.empid
-                                LEFT JOIN tbempaccount ON tb_attendees.empid = tbempaccount.empid
-                                WHERE tb_attendees.event_id = ?");
+          tbstudinfo.lastname AS student_lastname, 
+          tbstudinfo.studid AS student_studid, 
+          tbstudinfo.course, 
+          tbstudentaccount.student_profile AS student_profile,
+          tbempinfo.firstname AS emp_firstname, 
+          tbempinfo.lastname AS emp_lastname, 
+          tbempinfo.department,
+          tbempaccount.emp_profile AS emp_profile,
+          tb_attendees.empid
+FROM tb_attendees
+LEFT JOIN tbstudinfo ON tb_attendees.student_id = tbstudinfo.studid
+LEFT JOIN tbstudentaccount ON tb_attendees.student_id = tbstudentaccount.studid
+LEFT JOIN tbempinfo ON tb_attendees.empid = tbempinfo.empid
+LEFT JOIN tbempaccount ON tb_attendees.empid = tbempaccount.empid
+WHERE tb_attendees.event_id = ?");
+
             $attendeesQuery->bind_param('i', $event_id);
             $attendeesQuery->execute();
             $attendeesResult = $attendeesQuery->get_result();
@@ -167,25 +169,31 @@ try {
 
             if(!empty($attendees)) {
                 echo '<div class="attendees-grid">';
+
                 foreach($attendees as $attendee) {
-                    echo '<div class="attendee-card" onclick="redirectToProfile('.$attendee['student_studid'].')" >';
                     if(!empty($attendee['student_firstname'])) {
+                        // Student card
+                        echo '<div class="attendee-card" onclick="redirectToProfilestud(\''.$attendee['student_studid'].'\')">';
                         $name = $attendee['student_firstname'].' '.$attendee['student_lastname'];
                         $course = $attendee['course'];
                         $profile = $attendee['student_profile'];
-                        $studid = isset($attendee['student_studid']) ? $attendee['student_studid'] : '';
                         $imgSrc = !empty($profile) ? "../../$profile" : "../../images/alt.png";
                         echo '<img src="'.$imgSrc.'" alt="'.$name.' - '.$course.'">';
                         echo '<p>'.$name.' (Student)</p>';
+                        echo '</div>';
                     } elseif(!empty($attendee['emp_firstname'])) {
+                        // Teacher card
+                        echo '<div class="attendee-card" onclick="redirectToProfileemp(\''.$attendee['empid'].'\')">';
                         $name = $attendee['emp_firstname'].' '.$attendee['emp_lastname'];
                         $course = $attendee['department'];
                         $imgSrc = !empty($attendee['emp_profile']) ? "../../".$attendee['emp_profile'] : "../../images/alt.png";
                         echo '<img src="'.$imgSrc.'" alt="'.$name.' - '.$course.'">';
                         echo '<p>'.$name.' (Teacher)</p>';
+                        echo '</div>';
                     }
-                    echo '</div>';
                 }
+
+
                 echo '</div>';
             } else {
                 echo "<p>No attendees for this event.</p>";
@@ -275,12 +283,18 @@ try {
         </div>
     </footer>
     <script>
-        function redirectToProfile(studid) {
+        function redirectToProfilestud(studid) {
             if (studid == <?php echo $_SESSION['student_id']; ?>) {
                 window.location.href = 'myprofile.php';
             } else {
-                window.location.href = 'profile.php?studid=' + studid;
+                window.location.href = 'studentProfile.php?studid=' + studid;
+
             }
+        }
+
+        function redirectToProfileemp(empid) {
+            window.location.href = 'teacherProfile.php?empid=' + empid;
+
         }
     </script>
     <script src="../../script/events.js"></script>

@@ -292,14 +292,19 @@ footer {
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
 }
 
 .image-item img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
+  object-fit: cover;
   cursor: pointer;
+  max-width: 100%;
+  max-height: 100%;
 }
+
 .attendees-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
