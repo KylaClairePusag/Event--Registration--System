@@ -59,7 +59,7 @@ try {
                 <div class="profile">
                     <?php
                     if(!empty($rsoProfile)) {
-                        echo '<img src="../../images/profiles/'.$rsoProfile.'" alt="RSO Profile Image" onclick="toggleProfileDropdown()" class="profile-img" >';
+                        echo '<img src="../../'.$rsoProfile.'" alt="RSO Profile Image" onclick="toggleProfileDropdown()" class="profile-img" >';
                     } else {
                         echo '<img src="../../images/alt.png" alt="RSO Profile Image" onclick="toggleProfileDropdown()" class="profile-img" >';
                     }

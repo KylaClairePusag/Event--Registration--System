@@ -192,7 +192,7 @@ try {
             <div class="searchCont">
                 <?php include '../../components/search.php'; ?>
                 <?php if(!empty($searchTerm)): ?>
-                <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
+                    <img src='../../images/cross.png' alt='Image' class="icon" onclick="clearSearch()" id='clearBtn' />
                 <?php endif; ?>
             </div>
             <div class="headbtn">
@@ -223,7 +223,7 @@ try {
         <section class="tableContainer">
             <?php include '../../components/table.component.php';
 
-            
+
             $head = array('ID', 'Profile', 'Name', 'Password', 'Department', 'Email', 'Course', 'Actions');
             $body = array();
 
@@ -261,7 +261,7 @@ try {
                 <div class="modal-content">
                     <button class="close" onclick="resetAddModal(true)">&times;</button>
 
-                    <h2>CREATE student ACCOUNT</h2>
+                    <h2>CREATE STUDENT ACCOUNT</h2>
                     <form method="POST" action="" enctype="multipart/form-data">
                         <div class="error-container">Email Already Taken</div>
 
@@ -281,10 +281,11 @@ try {
                             ?>
                         </select>
 
-                        <label for="student-password">Password:</label>
-                        <input type="password" id="student-password" name="student_password" required>
+
                         <label for="student-email">Email:</label>
                         <input type="email" id="student-email" name="email" required>
+                        <label for="student-password">Password:</label>
+                        <input type="password" id="student-password" name="student_password" required>
                         <label for="department">Department:</label>
                         <select id="department" name="department_id" required>
                             <option value="">Select a department</option>
@@ -318,12 +319,11 @@ try {
                         <label for="lastname">Last Name:</label>
                         <input type="text" id="lastname" name="lastname" required>
 
-                        <label for="student-password">Password:</label>
-                        <input type="password" id="student-password" name="student_password" required>
-
                         <label for="student-course">Course:</label>
                         <input type="text" id="course" name="course" required>
 
+                        <label for="student-password">Password:</label>
+                        <input type="password" id="student-password" name="student_password" required>
 
                         <label for="student-email">Email:</label>
                         <input type="email" id="student-emails" name="email" required>
@@ -355,7 +355,7 @@ try {
                 <div class="modal-content">
                     <button class="close" onclick="resetAddModal(true)">&times;</button>
 
-                    <h2>EDIT student ACCOUNT</h2>
+                    <h2>EDIT STUDENT ACCOUNT</h2>
                     <div class="error-container2">Email Already Taken</div>
 
                     <form method="POST" action="">
@@ -424,15 +424,15 @@ try {
     $requestUri = $_SERVER['REQUEST_URI'];
     ?>
     <script>
-    function applyDepartmentFilter() {
-        const selectedDepartment = document.getElementById('departmentFilter').value;
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('departmentFilter', selectedDepartment);
-        window.location.href = window.location.pathname + '?' + urlParams.toString();
-    }
+        function applyDepartmentFilter() {
+            const selectedDepartment = document.getElementById('departmentFilter').value;
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('departmentFilter', selectedDepartment);
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        }
 
-    const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
-    const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'student_email')); ?>;
+        const base_url = "<?php echo htmlspecialchars($requestUri, ENT_QUOTES, 'UTF-8'); ?>";
+        const emailExistenceCheck = <?php echo json_encode(array_column($rows, 'student_email')); ?>;
     </script>
     <script src="../../script/student.js"></script>
 </body>

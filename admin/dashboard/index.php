@@ -239,7 +239,7 @@ try {
                 <?php include '../../components/limit.php'; ?>
                 <button type="button" onclick="document.getElementById('addModal').showModal()">Add existing emp <img
                         src='../../images/plus.png' alt='Image' class="icon" /> </button>
-                <button type="button" onclick="document.getElementById('addNewEmpModal').showModal()">Add new emp <img
+                <button type="button" onclick="document.getElementById('addNewEmpModal').showModal()">Add NEW EMP<img
                         src='../../images/plus.png' alt='Image' class="icon" /> </button>
 
             </div>
@@ -292,7 +292,7 @@ try {
                 <div class="modal-content">
                     <button class="close" onclick="resetAddModal(true)">&times;</button>
 
-                    <h2>CREATE emp ACCOUNT</h2>
+                    <h2>CREATE Employee ACCOUNT</h2>
                     <form method="POST" action="" enctype="multipart/form-data">
                         <div class="error-container">Email Already Taken</div>
 
@@ -312,10 +312,11 @@ try {
                             ?>
                         </select>
 
-                        <label for="emp-password">Password:</label>
-                        <input type="password" id="emp-password" name="emp_password" required>
+
                         <label for="emp-email">Email:</label>
                         <input type="email" id="emp-email" name="email" required>
+                        <label for="emp-password">Password:</label>
+                        <input type="password" id="emp-password" name="emp_password" required>
                         <label for="department">Department:</label>
                         <select id="department" name="department_id" required>
                             <option value="">Select a department</option>

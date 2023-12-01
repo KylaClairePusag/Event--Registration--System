@@ -83,7 +83,7 @@ try {
                     <h5>
                         <?= htmlspecialchars($emp_email); ?>
                     </h5>
-
+                    <a href="myprofile.php">Profile</a>
                     <a href="../logout.php">Logout</a>
                 </div>
             </div>

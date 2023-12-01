@@ -196,10 +196,10 @@ try {
                         <div class="error-container">Email Already Taken</div>
                         <label for="rso-name">Name:</label>
                         <input type="text" id="rso-name" name="rso_name" required>
-                        <label for="rso-password">Password:</label>
-                        <input type="password" id="rso-password" name="rso_password" required>
                         <label for="rso-email">Email:</label>
                         <input type="email" id="rso-email" name="email" required>
+                        <label for="rso-password">Password:</label>
+                        <input type="password" id="rso-password" name="rso_password" required>
                         <label for="department">Department:</label>
                         <select id="department" name="department_id" required>
                             <option value="">Select a department</option>

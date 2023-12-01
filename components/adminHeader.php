@@ -104,7 +104,7 @@ try {
                 <div class="profile">
                     <?php
                     if(!empty($empProfile)) {
-                        echo '<img src="../../images/profiles/'.$empProfile.'" alt="emp Profile Image" onclick="toggleProfileDropdown()" class="profile-img" >';
+                        echo '<img src="../../'.$empProfile.'" alt="emp Profile Image" onclick="toggleProfileDropdown()" class="profile-img" >';
                     } else {
                         echo '<img src="../../images/alt.png" alt="emp Profile Image" onclick="toggleProfileDropdown()" class="profile-img" >';
                     }
